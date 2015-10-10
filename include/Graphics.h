@@ -1,19 +1,14 @@
 #ifndef _GRAPHICS_H
 #define _GRAPHICS_H
 
-#include "Common.h"
+class Graphics
+{
+public:
+	Graphics();
+	~Graphics();
 
-struct Vertex;
-
-void initOpenGL();
-
-void setViewport( int width, int height );
-
-GLuint createAndFillBuffer(Vertex *pVerts, int count);
-GLuint createAndFillBuffer(short *pIndieces,int count);
-
-string getRendererCapsAsString();
-
-void setCameraProperties(float xPos, float yPos, float zPos, float xLook, float yLook, float zLook, float xUp, float yUp, float zUp);
+	static void Init();
+	static void SetViewport(int width, int height);
+};
 
 #endif
