@@ -1,9 +1,8 @@
 #include "Common.h"
 #include "Graphics.h"
-#include "Vertex.h"
 #include "Input.h"
-#include "Shader.h"
 #include "Camera.h"
+#include "GameObject.h"
 
 void checkError(const char *file, int line)
 {
@@ -17,97 +16,21 @@ void printVec3(vec3 p)
 	printf("%f/%f/%f\n", p.x, p.y, p.z);
 }
 
-GLuint vbo, ebo, vao;
-float angle = 0;
 bool run = true;
 bool paused = false;
 vec3 color;
 
 Camera camera;
-GLuint shaderProgram = 0;
-
-Vertex verts[] = {
-	//front
-	{ vec3(-0.5f, 0.5f, 0.5f), vec4(1, 0, 0, 0) },	//top-left
-	{ vec3(-0.5f, -0.5f, 0.5f), vec4(0, 1, 0, 1) }, //bottom-left
-	{ vec3(0.5f, -0.5f, 0.5f), vec4(0, 0, 1, 1) }, //bottom-right
-	{ vec3(0.5f, 0.5f, 0.5f), vec4(0, 1, 0, 1) }, //top-right
-
-	//back
-	{ vec3(-0.5f, 0.5f, -0.5f), vec4(0, 1, 0, 1) },	//top-left
-	{ vec3(-0.5f, -0.5f, -0.5f), vec4(0, 0, 1, 1) }, //bottom-left
-	{ vec3(0.5f, -0.5f, -0.5f), vec4(0, 1, 0, 1) }, //bottom-right
-	{ vec3(0.5f, 0.5f, -0.5f), vec4(1, 0, 0, 1) } //top-right
-};
-
-int indices[] = {
-	0, 1, 2, //front
-	0, 3, 2,
-
-	4, 5, 1, //left
-	4, 1, 0,
-
-	3, 7, 2, //right
-	7, 6, 2,
-
-	0, 4, 7, //top
-	0, 3, 7,
-
-	1, 5, 6, //bottom
-	1, 2, 6,
-
-	4, 5, 6, //back
-	4, 7, 6
-};
+GameObject *obj;
 
 void InitScene()
 {
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-	CHECK_GL_ERROR();
-
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
-	CHECK_GL_ERROR();
-
-	glGenBuffers(1, &ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-	CHECK_GL_ERROR();
-
-	//Tell the shader that 0 is the position element
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), NULL);
-	CHECK_GL_ERROR();
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)(sizeof(vec3)));
-	CHECK_GL_ERROR();
-
-	string path = ASSET_PATH + SHADER_PATH;
-	Shader vShader(path + "/simpleVS.glsl", VERTEX_SHADER);
-	Shader fShader(path + "/simpleFS.glsl", FRAGMENT_SHADER);
-
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vShader.Get());
-	glAttachShader(shaderProgram, fShader.Get());
-	glLinkProgram(shaderProgram);
-	Shader::CheckForLinkErrors(shaderProgram);
-
-	glBindAttribLocation(shaderProgram, 0, "vertexPos");
-	CHECK_GL_ERROR();
-	glBindAttribLocation(shaderProgram, 1, "color");
-	CHECK_GL_ERROR();
+	obj = new GameObject();
 }
 
 void CleanUp()
 {
-	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &ebo);
-	glDeleteBuffers(1, &vao);
-
-	glDeleteProgram(shaderProgram);
+	delete obj;
 }
 
 float timer = 0;
@@ -137,7 +60,9 @@ void Update(float deltaTime)
 	ivec2 deltaPos = Input::GetMouseDelta();
 	camera.Rotate((float)deltaPos.x * deltaTime, (float)-deltaPos.y * deltaTime);
 
-	vec3 red(1, 0, 0), green(0, 1, 0), blue(0, 0, 1);
+	obj->AddRotation(vec3(5, 5, 0) * deltaTime);
+
+	/*vec3 red(1, 0, 0), green(0, 1, 0), blue(0, 0, 1);
 	timer += deltaTime;
 	if (timer > 15)
 	{
@@ -149,7 +74,7 @@ void Update(float deltaTime)
 	else if (timer > 5)
 		color = mix(green, blue, (timer - 5) / 5);
 	else
-		color = mix(red, green, timer / 5);
+		color = mix(red, green, timer / 5);*/
 }
 
 void Render()
@@ -157,16 +82,7 @@ void Render()
 	camera.Recalculate();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glBindVertexArray(vao);
-	glUseProgram(shaderProgram);
-
-	GLint loc = glGetUniformLocation(shaderProgram, "MVP");
-	glUniformMatrix4fv(loc, 1, GL_FALSE, value_ptr(camera.Get()));
-
-	loc = glGetUniformLocation(shaderProgram, "colorIn");
-	glUniform3f(loc, color.r, color.g, color.b);
-
-	glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
+	obj->Render(&camera);
 }
 
 int main(int argc, char * arg[])
@@ -181,7 +97,7 @@ int main(int argc, char * arg[])
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	SDL_Window *window = SDL_CreateWindow("Lab1", SDL_WINDOWPOS_CENTERED, 
+	SDL_Window *window = SDL_CreateWindow("GP2", SDL_WINDOWPOS_CENTERED, 
 							SDL_WINDOWPOS_CENTERED, 640, 480, 
 							SDL_WINDOW_OPENGL);
 	SDL_GLContext glContext = SDL_GL_CreateContext(window);
@@ -190,7 +106,8 @@ int main(int argc, char * arg[])
 	Graphics::SetViewport(640, 480);
 
 	SDL_SetRelativeMouseMode(SDL_TRUE);
-	
+	CHECK_GL_ERROR();
+
 	InitScene();
 	CHECK_GL_ERROR();
 

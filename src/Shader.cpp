@@ -16,7 +16,7 @@ Shader::~Shader()
 GLuint Shader::LoadShaderFromMemory(const char *pMem, SHADER_TYPE type)
 {
 	GLuint shader = glCreateShader(type);
-	//printf("Shader:\n%s\n", pMem);
+	//printf("Shader:\n%s\n\n", pMem);
 	glShaderSource(shader, 1, &pMem, NULL);
 	glCompileShader(shader);
 	return shader;
@@ -71,28 +71,6 @@ bool Shader::CheckForCompileErrors(const string& fileName)
 		free(msg);
 
 		glDeleteShader(shader);
-		return true;
-	}
-	return false;
-}
-
-bool Shader::CheckForLinkErrors(GLuint program)
-{
-	GLint isLinked = 0;
-	glGetProgramiv(program, GL_LINK_STATUS, &isLinked);
-
-	if (isLinked == GL_FALSE)
-	{
-		GLint length = 0;
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
-
-		char *msg = (char*)malloc(length);
-		glGetProgramInfoLog(program, length, &length, msg);
-
-		printf("Shader linking error: %s\n", msg);
-		free(msg);
-
-		glDeleteProgram(program);
 		return true;
 	}
 	return false;

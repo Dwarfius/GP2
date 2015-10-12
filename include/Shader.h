@@ -23,7 +23,6 @@ public:
 	GLuint LoadShaderFromMemory(const char *pMem, SHADER_TYPE type);
 	GLuint LoadShaderFromFile(const string& fileName, SHADER_TYPE type);
 	bool CheckForCompileErrors(const string& fileName);
-	static bool Shader::CheckForLinkErrors(GLuint program);
 };
 
 #endif

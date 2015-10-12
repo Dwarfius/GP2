@@ -19,19 +19,18 @@
 #ifdef __APPLE__
 #include <OpenGL/glu.h>
 #elif (_WIN64 || _WIN32)
-#include <gl\GLU.h>
+#include <gl/GLU.h>
 #endif
 
 using namespace std;
 using namespace glm;
 
-const string ASSET_PATH = "assets";
-const string SHADER_PATH = "/shaders";
+const string ASSET_PATH = "assets/";
+const string SHADER_PATH = "assets/shaders/";
 
 void checkError(const char *file, int line);
 #define CHECK_GL_ERROR() checkError(__FILE__, __LINE__)
 
 void printVec3(vec3 p);
-
 
 #endif

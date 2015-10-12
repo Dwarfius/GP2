@@ -6,15 +6,16 @@
 class Camera
 {
 private:
+	const GLfloat sensX = 3, sensY = 3;
 	GLfloat yaw, pitch;
 	vec3 pos, up, forward, right;
-	mat4 projMatrix, viewMatrix, worldMatrix, MVP;
+	mat4 projMatrix, viewMatrix, VP;
 
 public:
 	Camera();
 	~Camera();
 
-	mat4 Get() { return MVP; }
+	mat4 Get() { return VP; }
 
 	vec3 GetForward() { return forward; }
 	vec3 GetRight() { return right; }
@@ -26,7 +27,7 @@ public:
 
 	void LookAt(vec3 target) { forward = normalize(target - pos); }
 
-	void Rotate(GLfloat deltaYaw, GLfloat deltaPitch) { yaw += deltaYaw; pitch += deltaPitch; }
+	void Rotate(GLfloat deltaYaw, GLfloat deltaPitch) { yaw += deltaYaw * sensX; pitch += deltaPitch * sensY; }
 
 	void Recalculate();
 };

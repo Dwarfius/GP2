@@ -32,7 +32,6 @@ void Camera::Recalculate()
 
 	projMatrix = perspective(45.f, 640.f / 480.f, 0.1f, 100.f);
 	viewMatrix = lookAt(pos, pos + forward, up);
-	worldMatrix = translate(mat4(1), vec3(0, 0, 0));
 
-	MVP = projMatrix * viewMatrix * worldMatrix;
+	VP = projMatrix * viewMatrix;
 }
