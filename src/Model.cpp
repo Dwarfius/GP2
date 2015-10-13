@@ -3,16 +3,16 @@
 
 Vertex verts[] = {
 	//front
-	{ vec3(-0.5f, 0.5f, 0.5f), vec4(1, 0, 0, 0) },	//top-left
-	{ vec3(-0.5f, -0.5f, 0.5f), vec4(0, 1, 0, 1) }, //bottom-left
-	{ vec3(0.5f, -0.5f, 0.5f), vec4(0, 0, 1, 1) }, //bottom-right
-	{ vec3(0.5f, 0.5f, 0.5f), vec4(0, 1, 0, 1) }, //top-right
+	{ vec3(-0.5f, 0.5f, 0.5f), vec4(1, 1, 1, 1), vec2(0, 0) },	//top-left
+	{ vec3(-0.5f, -0.5f, 0.5f), vec4(1, 1, 1, 1), vec2(0, 1) }, //bottom-left
+	{ vec3(0.5f, -0.5f, 0.5f), vec4(1, 1, 1, 1), vec2(1, 1) }, //bottom-right
+	{ vec3(0.5f, 0.5f, 0.5f), vec4(1, 1, 1, 1), vec2(1, 0) }, //top-right
 
 												  //back
-	{ vec3(-0.5f, 0.5f, -0.5f), vec4(0, 1, 0, 1) },	//top-left
-	{ vec3(-0.5f, -0.5f, -0.5f), vec4(0, 0, 1, 1) }, //bottom-left
-	{ vec3(0.5f, -0.5f, -0.5f), vec4(0, 1, 0, 1) }, //bottom-right
-	{ vec3(0.5f, 0.5f, -0.5f), vec4(1, 0, 0, 1) } //top-right
+	{ vec3(-0.5f, 0.5f, -0.5f), vec4(1, 1, 1, 1), vec2(0, 0) },	//top-left
+	{ vec3(-0.5f, -0.5f, -0.5f), vec4(1, 1, 1, 1), vec2(0, 1) }, //bottom-left
+	{ vec3(0.5f, -0.5f, -0.5f), vec4(1, 1, 1, 1), vec2(1, 1) }, //bottom-right
+	{ vec3(0.5f, 0.5f, -0.5f), vec4(1, 1, 1, 1), vec2(1, 0) } //top-right
 };
 
 GLuint indices[] = {
@@ -60,6 +60,10 @@ Model::Model()
 	//tell the shader that 1 is the color element
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)(sizeof(vec3)));
+	CHECK_GL_ERROR();
+
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)(sizeof(vec3) + sizeof(vec4)));
 	CHECK_GL_ERROR();
 }
 

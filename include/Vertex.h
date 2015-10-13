@@ -7,6 +7,7 @@ struct Vertex
 {
 	vec3 pos;
 	vec4 color;
+	vec2 texture;
 };
 
 #endif

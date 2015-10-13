@@ -7,19 +7,23 @@ find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(GLM REQUIRED)
+find_package(SDL2_Image REQUIRED)
+find_package(SDL2_ttf REQUIRED)
 
 add_executable(GP2BaseCode 
 	src/main.cpp src/Graphics.cpp src/Input.cpp 
 	src/Shader.cpp src/Camera.cpp src/GameObject.cpp
 	src/Renderer.cpp src/ShaderProgram.cpp
-	src/Model.cpp
+	src/Model.cpp src/Texture.cpp
 	include/Common.h include/Graphics.h include/Input.h 
 	include/Shader.h include/Camera.h include/GameObject.h
 	include/Renderer.h include/ShaderProgram.h
-	include/Model.h)
+	include/Model.h include/Texture.h include/Vertex.h)
 include_directories(GP2BaseCode include/ ${OPENGL_INCLUDE_DIRS} 
-		${SDL2_INCLUDE_DIR} ${GLEW_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS})
-target_link_libraries(GP2BaseCode ${SDL2_LIBRARY} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
+		${SDL2_INCLUDE_DIR} ${GLEW_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS}
+		${SDL2IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR})
+target_link_libraries(GP2BaseCode ${SDL2_LIBRARY} ${OPENGL_LIBRARIES} 
+		${GLEW_LIBRARIES} ${SDL2IMAGE_LIBRARY} ${SDL2_TTF_LIBRARIES})
 
 if (MSVC)
 add_custom_command(TARGET GP2BaseCode POST_BUILD

@@ -31,9 +31,11 @@ void Graphics::Init()
 
 	//enable depth testing
 	glEnable(GL_DEPTH_TEST);
-
-	//set less or equal func for depth testing
-	glDepthFunc(GL_LEQUAL);
+	glDepthFunc(GL_LEQUAL); //set less or equal func for depth testing
+	
+	//enabling blending
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//turn on best perspective correction
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);

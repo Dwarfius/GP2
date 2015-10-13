@@ -9,24 +9,22 @@
 
 #include <GL/glew.h>
 #include <SDL.h>
+#include <SDL_Image.h>
 #include <SDL_opengl.h>
+#include <SDL_ttf.h>
 
 //maths
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#ifdef __APPLE__
-#include <OpenGL/glu.h>
-#elif (_WIN64 || _WIN32)
-#include <gl/GLU.h>
-#endif
-
 using namespace std;
 using namespace glm;
 
 const string ASSET_PATH = "assets/";
-const string SHADER_PATH = "assets/shaders/";
+const string SHADER_PATH = ASSET_PATH + "shaders/";
+const string TEXTURE_PATH = ASSET_PATH + "textures/";
+const string FONT_PATH = ASSET_PATH + "fonts/";
 
 void checkError(const char *file, int line);
 #define CHECK_GL_ERROR() checkError(__FILE__, __LINE__)

@@ -4,10 +4,12 @@
 #include "Common.h"
 #include "ShaderProgram.h"
 #include "Model.h"
+#include "Texture.h"
 
 class Renderer
 {
 private:
+	Texture *texture;
 	ShaderProgram *shaderProg;
 	Model *model;
 

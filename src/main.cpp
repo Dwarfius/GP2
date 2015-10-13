@@ -60,7 +60,7 @@ void Update(float deltaTime)
 	ivec2 deltaPos = Input::GetMouseDelta();
 	camera.Rotate((float)deltaPos.x * deltaTime, (float)-deltaPos.y * deltaTime);
 
-	obj->AddRotation(vec3(5, 5, 0) * deltaTime);
+	//obj->AddRotation(vec3(5, 5, 0) * deltaTime);
 
 	/*vec3 red(1, 0, 0), green(0, 1, 0), blue(0, 0, 1);
 	timer += deltaTime;
@@ -91,7 +91,21 @@ int main(int argc, char * arg[])
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
 		cout << "ERROR SDL_Init" << SDL_GetError() << endl;
-		return-1;
+		return -1;
+	}
+
+	int imageInitFlags = IMG_INIT_JPG | IMG_INIT_PNG;
+	int returnInitFlags = IMG_Init(imageInitFlags);
+	if ((returnInitFlags & imageInitFlags) != imageInitFlags)
+	{
+		cout << "Error initializing SDL_Image " << IMG_GetError() << endl;
+		return -1;
+	}
+
+	if (TTF_Init() == -1)
+	{
+		printf("TTF Init error: %s\n", TTF_GetError());
+		return -1;
 	}
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
@@ -161,6 +175,8 @@ int main(int argc, char * arg[])
 	CleanUp();
 	SDL_GL_DeleteContext(glContext);
 	SDL_DestroyWindow(window);
+	IMG_Quit();
+	TTF_Quit();
 	SDL_Quit();
 
     return 0;
