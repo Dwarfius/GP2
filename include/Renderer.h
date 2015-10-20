@@ -17,6 +17,10 @@ public:
 	Renderer();
 	~Renderer();
 
+	void AttachModel(Model *pModel) { model = pModel; }
+	void AttachShaderProgram(ShaderProgram *sP) { shaderProg = sP; }
+	void SetTexture(Texture *pTexture) { texture = pTexture; }
+
 	void Render(mat4 modelMat, mat4 vpMat);
 };
 

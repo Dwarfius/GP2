@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <vector>
 
 #include <GL/glew.h>
 #include <SDL.h>
@@ -25,6 +26,7 @@ const string ASSET_PATH = "assets/";
 const string SHADER_PATH = ASSET_PATH + "shaders/";
 const string TEXTURE_PATH = ASSET_PATH + "textures/";
 const string FONT_PATH = ASSET_PATH + "fonts/";
+const string MODEL_PATH = ASSET_PATH + "models/";
 
 void checkError(const char *file, int line);
 #define CHECK_GL_ERROR() checkError(__FILE__, __LINE__)

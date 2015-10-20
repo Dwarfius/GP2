@@ -5,12 +5,12 @@ GameObject::GameObject()
 	pos = vec3(0, 0, 0);
 	rotation = vec3(0, 0, 0);
 	size = vec3(1, 1, 1);
-	renderer = new Renderer();
 }
 
 GameObject::~GameObject()
 {
-	delete renderer;
+	if (!renderer)
+		delete renderer;
 }
 
 void GameObject::Update(float deltaTime)

@@ -3,16 +3,15 @@
 Renderer::Renderer()
 {
 	//texture = new Texture(TEXTURE_PATH + "texture.png");
-	texture = new Texture(FONT_PATH + "OratorStd.otf", "Hello World");
-	model = new Model();
-	shaderProg = new ShaderProgram(SHADER_PATH + "simpleVS.glsl", SHADER_PATH + "simpleFS.glsl");
+	//texture = new Texture(FONT_PATH + "OratorStd.otf", "Hello World");
+	//shaderProg = new ShaderProgram(SHADER_PATH + "simpleVS.glsl", SHADER_PATH + "simpleFS.glsl");
 }
 
 Renderer::~Renderer()
 {
-	delete texture;
-	delete shaderProg;
-	delete model;
+	//delete texture;
+	//delete shaderProg;
+	//delete model;
 }
 
 void Renderer::Render(mat4 modelMat, mat4 vpMat)
@@ -34,6 +33,6 @@ void Renderer::Render(mat4 modelMat, mat4 vpMat)
 	glBindVertexArray(model->Get());
 
 	//now on to draw stuff
-	glDrawElements(GL_TRIANGLES, model->Count(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, model->GetIndCount(), GL_UNSIGNED_INT, 0);
 	CHECK_GL_ERROR();
 }

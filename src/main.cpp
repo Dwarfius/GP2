@@ -1,8 +1,7 @@
 #include "Common.h"
 #include "Graphics.h"
 #include "Input.h"
-#include "Camera.h"
-#include "GameObject.h"
+#include "Game.h"
 
 void checkError(const char *file, int line)
 {
@@ -18,72 +17,6 @@ void printVec3(vec3 p)
 
 bool run = true;
 bool paused = false;
-vec3 color;
-
-Camera camera;
-GameObject *obj;
-
-void InitScene()
-{
-	obj = new GameObject();
-}
-
-void CleanUp()
-{
-	delete obj;
-}
-
-float timer = 0;
-void Update(float deltaTime)
-{
-	if (Input::GetKey(SDLK_ESCAPE))
-		run = false;
-
-	vec3 forward = camera.GetForward();
-	vec3 right = camera.GetRight();
-	if (Input::GetKey(SDLK_w))
-		camera.Translate(forward * deltaTime);
-	if (Input::GetKey(SDLK_s))
-		camera.Translate(-forward * deltaTime);
-	if (Input::GetKey(SDLK_d))
-		camera.Translate(right * deltaTime);
-	if (Input::GetKey(SDLK_a))
-		camera.Translate(-right * deltaTime);
-
-	/*if (Input::GetMouseBtnDown(SDL_BUTTON_LEFT))
-		printf("Left Down!\n");
-	if (Input::GetMouseBtn(SDL_BUTTON_LEFT))
-		printf("Left held down!\n");
-	if (Input::GetMouseBtnUp(SDL_BUTTON_LEFT))
-		printf("Left Up!\n");*/
-
-	ivec2 deltaPos = Input::GetMouseDelta();
-	camera.Rotate((float)deltaPos.x * deltaTime, (float)-deltaPos.y * deltaTime);
-
-	//obj->AddRotation(vec3(5, 5, 0) * deltaTime);
-
-	/*vec3 red(1, 0, 0), green(0, 1, 0), blue(0, 0, 1);
-	timer += deltaTime;
-	if (timer > 15)
-	{
-		color = red;
-		timer = 0;
-	}
-	else if (timer > 10)
-		color = mix(blue, red, (timer - 10) / 5);
-	else if (timer > 5)
-		color = mix(green, blue, (timer - 5) / 5);
-	else
-		color = mix(red, green, timer / 5);*/
-}
-
-void Render()
-{
-	camera.Recalculate();
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	obj->Render(&camera);
-}
 
 int main(int argc, char * arg[])
 {
@@ -122,7 +55,8 @@ int main(int argc, char * arg[])
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 	CHECK_GL_ERROR();
 
-	InitScene();
+	Game *game = new Game();
+	game->LoadResources();
 	CHECK_GL_ERROR();
 
 	Uint32 oldTicks = 0;
@@ -158,21 +92,22 @@ int main(int argc, char * arg[])
 		float deltaTime = (ticks - oldTicks) / 1000.f;
 		oldTicks = ticks;
 
+		if (Input::GetKey(SDLK_ESCAPE))
+			run = false;
 		if (Input::GetKeyDown(SDLK_SPACE))
 			paused = !paused;
-
 		if (paused)
 			continue;
 
-		Update(deltaTime);
+		game->Update(deltaTime);
 		CHECK_GL_ERROR();
-		Render();
+		game->Render();
 		CHECK_GL_ERROR();
 
 		SDL_GL_SwapWindow(window);
 	}
 
-	CleanUp();
+	game->ReleaseResources();
 	SDL_GL_DeleteContext(glContext);
 	SDL_DestroyWindow(window);
 	IMG_Quit();

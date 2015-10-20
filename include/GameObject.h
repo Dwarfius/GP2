@@ -16,6 +16,9 @@ public:
 	GameObject();
 	~GameObject();
 
+	void SetRenderer(Renderer *r) { renderer = r; }
+	Renderer* GetRenderer() { return renderer; }
+
 	void Update(float deltaTime);
 	void Render(Camera *camera);
 
