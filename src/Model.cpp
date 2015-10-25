@@ -200,7 +200,7 @@ void Model::processNode(FbxNode *node, int level)
 	FbxDouble3 rotation = node->LclRotation.Get();
 	FbxDouble3 scaling = node->LclScaling.Get();
 
-	printf("Node %s(%.3f, %.3f, %.3f)/(%.3f, %.3f, %.3f)/(%.3f, %.3f, %.3f)\n", 
+	printf("Node %s(%.1f, %.1f, %.1f)/(%.1f, %.1f, %.1f)/(%.1f, %.1f, %.1f)\n", 
 		name, translation[0], translation[1], translation[2],
 		rotation[0], rotation[1], rotation[2], scaling[0], scaling[1],
 		scaling[2]);
@@ -242,7 +242,7 @@ void Model::processMesh(FbxMesh *mesh, int level)
 	int numInds = mesh->GetPolygonVertexCount();
 
 	Vertex *pVerts = new Vertex[numVerts];
-	int *pIndices = new int[numInds];
+	int *pIndices = mesh->GetPolygonVertices();
 
 	for (int i = 0; i < numVerts; i++)
 	{
@@ -264,7 +264,6 @@ void Model::processMesh(FbxMesh *mesh, int level)
 	printf("Vertices %d Indices %d\n", numVerts, numInds);
 
 	delete[] pVerts;
-	delete[] pIndices;
 }
 
 void Model::processMeshTextCoords(FbxMesh *mesh, Vertex *verts, int numVerts)
