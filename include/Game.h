@@ -15,6 +15,7 @@ private:
 	vector<Texture*> textures;
 	vector<ShaderProgram*> shaders;
 	vector<Model*> models;
+	bool wireframeMode = false;
 
 public:
 	Game();

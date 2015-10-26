@@ -42,6 +42,15 @@ void Game::Update(float deltaTime)
 	if (Input::GetKey(SDLK_a))
 		camera->Translate(-right * deltaTime);
 
+	if (Input::GetKeyDown(SDLK_k))
+	{
+		if (wireframeMode)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		else
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		wireframeMode = !wireframeMode;
+	}
+
 	/*if (Input::GetMouseBtnDown(SDL_BUTTON_LEFT))
 	printf("Left Down!\n");
 	if (Input::GetMouseBtn(SDL_BUTTON_LEFT))
