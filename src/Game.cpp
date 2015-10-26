@@ -16,7 +16,6 @@ void Game::LoadResources()
 	Renderer *renderer = new Renderer();
 	Texture *texture = new Texture(TEXTURE_PATH + "Tank1DF.png");
 	Model *model = new Model(MODEL_PATH + "Tank1.FBX");
-	//Model *model = new Model();
 	renderer->SetTexture(texture);
 	renderer->AttachModel(model);
 	ShaderProgram *shader = new ShaderProgram(SHADER_PATH + "simpleVS.glsl", SHADER_PATH + "simpleFS.glsl");

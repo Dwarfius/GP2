@@ -205,12 +205,12 @@ void Model::processNode(FbxNode *node, int level)
 		rotation[0], rotation[1], rotation[2], scaling[0], scaling[1],
 		scaling[2]);
 
-	int attribCount = node->GetNodeAttributeCount();
-	for (int i = 0; i < attribCount; i++)
+	int count = node->GetNodeAttributeCount();
+	for (int i = 0; i < count; i++)
 		processAttrib(node->GetNodeAttributeByIndex(i), level + 1);
 
-	int childCount = node->GetChildCount();
-	for (int i = 0; i < childCount; i++)
+	count = node->GetChildCount();
+	for (int i = 0; i < count; i++)
 		processNode(node->GetChild(i), level + 1);
 
 	PrintTabs(level);
@@ -253,12 +253,12 @@ void Model::processMesh(FbxMesh *mesh, int level)
 	}
 
 	processMeshTextCoords(mesh, pVerts, numVerts);
-
+	uint initVertCount = vertices.size();
 	for (int i = 0; i < numVerts; i++)
 		vertices.push_back(pVerts[i]);
 
 	for (int i = 0; i < numInds; i++)
-		indices.push_back(pIndices[i]);
+		indices.push_back(initVertCount + pIndices[i]);
 
 	PrintTabs(level);
 	printf("Vertices %d Indices %d\n", numVerts, numInds);
