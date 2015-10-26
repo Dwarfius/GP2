@@ -16,7 +16,7 @@ Shader::~Shader()
 GLuint Shader::LoadShaderFromMemory(const char *pMem, SHADER_TYPE type)
 {
 	GLuint shader = glCreateShader(type);
-	//printf("Shader:\n%s\n\n", pMem);
+	printf("Shader:\n%s\n\n", pMem);
 	glShaderSource(shader, 1, &pMem, NULL);
 	glCompileShader(shader);
 	return shader;
@@ -24,33 +24,32 @@ GLuint Shader::LoadShaderFromMemory(const char *pMem, SHADER_TYPE type)
 
 GLuint Shader::LoadShaderFromFile(const string& fileName, SHADER_TYPE type)
 {
+	string fileContents;
 	ifstream file;
-	file.open(fileName.c_str(), ios::in);
+	file.open(fileName.c_str(), std::ios::in);
 	if (!file)
 	{
-		printf("Couldn't load file: %s\n", fileName.c_str());
+		cout << "File could not be loaded" << endl;
 		return 0;
 	}
 
+	//calculate file size
 	if (file.good())
 	{
-		file.seekg(0, ios::end);
+		file.seekg(0, std::ios::end);
 		unsigned long len = file.tellg();
-		file.seekg(0, ios::beg);
+		file.seekg(std::ios::beg);
 		if (len == 0)
 		{
-			printf("Empty file: %s\n", fileName.c_str());
+			std::cout << "File has no contents " << std::endl;
 			return 0;
 		}
 
-		char *contents = (char*)malloc(len);
-		memset(contents, 0, len);
-		file.read(contents, len);
-		//printf("%d-%d\n", len, strlen(contents));
+		fileContents.resize(len);
+		file.read(&fileContents[0], len);
 		file.close();
-		GLuint shader = LoadShaderFromMemory(contents, type);
-		free(contents);
-		return shader;
+		GLuint program = LoadShaderFromMemory(fileContents.c_str(), type);
+		return program;
 	}
 	return 0;
 }
