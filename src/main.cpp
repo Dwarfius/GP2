@@ -18,7 +18,7 @@ void printVec3(vec3 p)
 bool run = true;
 bool paused = false;
 
-int main(int argc, char * arg[])
+int main(int argc, char *argv[])
 {
 	//performing initialization
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
