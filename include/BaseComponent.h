@@ -9,13 +9,13 @@ class BaseComponent
 {
 protected:
 public:
-	GameObject *parentGO;
+	GameObject gameObject;
 
 	BaseComponent();
 	~BaseComponent();
 
-	void SetParentGO(GameObject *pgo) { parentGO = pgo; }
-	GameObject* GetParentGO() { return parentGO; }
+	void SetParentGO(GameObject *pgo) { gameObject = pgo; }
+	GameObject* GetParentGO() { return gameObject; }
 
 	void Update(float deltaTime);
 };

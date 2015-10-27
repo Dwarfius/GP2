@@ -15,7 +15,9 @@ GameObject::~GameObject()
 
 void GameObject::Update(float deltaTime)
 {
-
+	for (vector<BaseComponent*>::iterator it = components.begin(); it != components.end(); it++) {
+		(*it)->Update(deltaTime);
+	}
 }
 
 void GameObject::Render(Camera *camera)

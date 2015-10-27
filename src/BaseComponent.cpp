@@ -1,4 +1,4 @@
-#include "..\include\BaseComponent.h"
+#include "BaseComponent.h"
 
 BaseComponent::BaseComponent()
 {
