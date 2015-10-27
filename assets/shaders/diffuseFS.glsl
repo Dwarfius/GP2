@@ -19,5 +19,8 @@ void main()
 
 	FragColor = (ambientMaterialColor*ambientLightColor)+(diffuseMaterialColor*diffuseLightColor*diffuseTerm);
 
-	//FragColor = vec4(worldNormal, 1);
+	//if(diffuseTerm > 0)
+	//	FragColor = vec4(diffuseTerm, 0, 0, 1);
+	//else
+	//	FragColor = vec4(0, 1 + diffuseTerm, 0, 1);
 }

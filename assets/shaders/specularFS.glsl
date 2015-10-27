@@ -22,6 +22,8 @@ void main()
 	vec3 halfWayVec = normalize(cameraDirectionOut + lightDirection);
 	float specularTerm = pow(dot(worldNormal, halfWayVec), specularPower);
 
-	FragColor = (ambientMaterialColor*ambientLightColor) + (diffuseMaterialColor*diffuseLightColor*diffuseTerm) + (specularMaterialColor*specularLightColor*specularTerm);
+	FragColor = (ambientMaterialColor*ambientLightColor) + 
+		(diffuseMaterialColor*diffuseLightColor*diffuseTerm) + 
+		(specularMaterialColor*specularLightColor*specularTerm);
 	//FragColor = vec4(worldNormal, 1);
 }
