@@ -28,3 +28,9 @@ void GameObject::Render(Camera *camera)
 
 	renderer->Render(modelMatrix, camera->Get());
 }
+
+void GameObject::AttacheComponent(BaseComponent * com)
+{
+	components.push_back(com); 
+	com->SetParentGO(com->GetParentGO());
+}

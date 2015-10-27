@@ -24,6 +24,7 @@ GLuint Shader::LoadShaderFromMemory(const char *pMem, SHADER_TYPE type)
 
 GLuint Shader::LoadShaderFromFile(const string& fileName, SHADER_TYPE type)
 {
+	/*
 	ifstream file;
 	file.open(fileName.c_str(), ios::in);
 	if (!file)
@@ -52,6 +53,36 @@ GLuint Shader::LoadShaderFromFile(const string& fileName, SHADER_TYPE type)
 		free(contents);
 		return shader;
 	}
+	return 0;
+	*/
+	string fileContents;
+	ifstream file;
+	file.open(fileName.c_str(), std::ios::in);
+	if (!file)
+	{
+		cout << "File could not be loaded" << endl;
+		return 0;
+	}
+
+	//calculate file size
+	if (file.good())
+	{
+		file.seekg(0, std::ios::end);
+		unsigned long len = file.tellg();
+		file.seekg(std::ios::beg);
+		if (len == 0)
+		{
+			std::cout << "File has no contents " << std::endl;
+			return 0;
+		}
+
+		fileContents.resize(len);
+		file.read(&fileContents[0], len);
+		file.close();
+		GLuint program = LoadShaderFromMemory(fileContents.c_str(), type);
+		return program;
+	}
+
 	return 0;
 }
 

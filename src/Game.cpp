@@ -13,6 +13,8 @@ void Game::LoadResources()
 {
 	camera = new Camera();
 	GameObject *go = new GameObject();
+	CameraBehaviour *cb = new CameraBehaviour();
+	go->AttacheComponent(cb);
 	Renderer *renderer = new Renderer();
 	Texture *texture = new Texture(TEXTURE_PATH + "Tank1DF.png");
 	Model *model = new Model(MODEL_PATH + "Tank1.FBX");
