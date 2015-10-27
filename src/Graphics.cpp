@@ -37,6 +37,10 @@ void Graphics::Init()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	//turn on front and back face culling
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+
 	//turn on best perspective correction
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	CHECK_GL_ERROR();

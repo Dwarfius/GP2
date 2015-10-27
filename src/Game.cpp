@@ -13,12 +13,14 @@ void Game::LoadResources()
 {
 	camera = new Camera();
 	GameObject *go = new GameObject();
+	go->SetScale(vec3(0.1f, 0.1f, 0.1f));
 	Renderer *renderer = new Renderer();
 	Texture *texture = new Texture(TEXTURE_PATH + "Tank1DF.png");
-	Model *model = new Model(MODEL_PATH + "Tank1.FBX");
+	Model *model = new Model(MODEL_PATH + "utah-teapot.FBX");
 	renderer->SetTexture(texture);
 	renderer->AttachModel(model);
-	ShaderProgram *shader = new ShaderProgram(SHADER_PATH + "simpleVS.glsl", SHADER_PATH + "simpleFS.glsl");
+	ShaderProgram *shader = new ShaderProgram
+		(SHADER_PATH + "specularVS.glsl", SHADER_PATH + "specularFS.glsl");
 	renderer->AttachShaderProgram(shader);
 	go->SetRenderer(renderer);
 	gameObjects.push_back(go);

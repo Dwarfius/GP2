@@ -11,14 +11,16 @@ ShaderProgram::ShaderProgram(const string& vShaderFile, const string& fShaderFil
 	glAttachShader(program, fShader->Get());
 	
 	//standard attribs
-	glBindAttribLocation(program, 0, "vertexPos");
+	glBindAttribLocation(program, 0, "vertexPosition");
 	CHECK_GL_ERROR();
 	glBindAttribLocation(program, 1, "color");
 	CHECK_GL_ERROR();
 	glBindAttribLocation(program, 2, "uvs");
 	CHECK_GL_ERROR();
+	glBindAttribLocation(program, 3, "vertexNormal");
+	CHECK_GL_ERROR();
 
-	//after defined attribs, can link
+	//link shaders and attribs
 	glLinkProgram(program);
 	CheckForLinkErrors();
 	CHECK_GL_ERROR();

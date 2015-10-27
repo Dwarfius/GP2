@@ -26,5 +26,5 @@ void GameObject::Render(Camera *camera)
 	modelMatrix = rotate(modelMatrix, rotation.z, vec3(0, 0, 1));
 	modelMatrix = translate(modelMatrix, pos);
 
-	renderer->Render(modelMatrix, camera->Get());
+	renderer->Render(modelMatrix, camera);
 }

@@ -8,6 +8,7 @@ struct Vertex
 	vec3 pos;
 	vec4 color;
 	vec2 texture;
+	vec3 normal;
 };
 
 #endif
