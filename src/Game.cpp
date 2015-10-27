@@ -8,12 +8,12 @@ Game::Game()
 Game::~Game()
 {
 }
+	GameObject *go = new GameObject();
 
 void Game::LoadResources()
 {
 	camera = new Camera();
-	GameObject *go = new GameObject();
-	CameraBehaviour *cb = new CameraBehaviour();
+	CameraBehaviour *cb = new CameraBehaviour(camera);
 	go->AttacheComponent(cb);
 	Renderer *renderer = new Renderer();
 	Texture *texture = new Texture(TEXTURE_PATH + "Tank1DF.png");
@@ -33,7 +33,8 @@ void Game::ReleaseResources()
 
 void Game::Update(float deltaTime)
 {
-	vec3 forward = camera->GetForward();
+	go->Update(deltaTime);
+	/*vec3 forward = camera->GetForward();
 	vec3 right = camera->GetRight();
 	if (Input::GetKey(SDLK_w))
 		camera->Translate(forward * deltaTime);
@@ -42,7 +43,7 @@ void Game::Update(float deltaTime)
 	if (Input::GetKey(SDLK_d))
 		camera->Translate(right * deltaTime);
 	if (Input::GetKey(SDLK_a))
-		camera->Translate(-right * deltaTime);
+		camera->Translate(-right * deltaTime);*/
 
 	if (Input::GetKeyDown(SDLK_k))
 	{
@@ -58,10 +59,10 @@ void Game::Update(float deltaTime)
 	if (Input::GetMouseBtn(SDL_BUTTON_LEFT))
 	printf("Left held down!\n");
 	if (Input::GetMouseBtnUp(SDL_BUTTON_LEFT))
-	printf("Left Up!\n");*/
+	printf("Left Up!\n");
 
 	ivec2 deltaPos = Input::GetMouseDelta();
-	camera->Rotate((float)deltaPos.x * deltaTime, (float)-deltaPos.y * deltaTime);
+	camera->Rotate((float)deltaPos.x * deltaTime, (float)-deltaPos.y * deltaTime);*/
 }
 
 void Game::Render()
