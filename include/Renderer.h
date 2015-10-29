@@ -5,9 +5,10 @@
 #include "ShaderProgram.h"
 #include "Model.h"
 #include "Texture.h"
+#include "BaseComponent.h"
 #include "Camera.h"
 
-class Renderer
+class Renderer: public BaseComponent
 {
 private:
 	Texture *texture;

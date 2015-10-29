@@ -2,6 +2,7 @@
 #define _GAMEOBJECT_H
 
 #include "Common.h"
+#include "BaseComponent.h"
 #include "Renderer.h"
 #include "Camera.h"
 
@@ -11,6 +12,7 @@ private:
 	vec3 pos, rotation, size;
 	mat4 modelMatrix;
 	Renderer *renderer;
+	vector<BaseComponent*> components;
 
 public:
 	GameObject();
@@ -33,6 +35,8 @@ public:
 	vec3 GetScale() { return size; }
 	void SetScale(vec3 pScale) { size = pScale; }
 	void AddScale(vec3 delta) { size += delta; }
+
+	void AttacheComponent(BaseComponent *com);
 };
 
 #endif

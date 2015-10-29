@@ -105,6 +105,7 @@ int main(int argc, char *argv[])
 		CHECK_GL_ERROR();
 
 		SDL_GL_SwapWindow(window);
+		CHECK_GL_ERROR();
 	}
 
 	game->ReleaseResources();

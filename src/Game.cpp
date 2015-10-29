@@ -8,10 +8,13 @@ Game::Game()
 Game::~Game()
 {
 }
+	GameObject *camGO = new GameObject();
 
 void Game::LoadResources()
 {
 	camera = new Camera();
+	CameraBehaviour *cb = new CameraBehaviour(camera);
+	camGO->AttacheComponent(cb);
 	GameObject *go = new GameObject();
 	go->SetScale(vec3(0.1f, 0.1f, 0.1f));
 	Renderer *renderer = new Renderer();
@@ -33,7 +36,9 @@ void Game::ReleaseResources()
 
 void Game::Update(float deltaTime)
 {
-	vec3 forward = camera->GetForward();
+	camGO->Update(deltaTime);
+	//as a test I put this code into the camera behaviour component class
+	/*vec3 forward = camera->GetForward();
 	vec3 right = camera->GetRight();
 	if (Input::GetKey(SDLK_w))
 		camera->Translate(forward * deltaTime);
@@ -53,15 +58,15 @@ void Game::Update(float deltaTime)
 		wireframeMode = !wireframeMode;
 	}
 
-	/*if (Input::GetMouseBtnDown(SDL_BUTTON_LEFT))
+	if (Input::GetMouseBtnDown(SDL_BUTTON_LEFT))
 	printf("Left Down!\n");
 	if (Input::GetMouseBtn(SDL_BUTTON_LEFT))
 	printf("Left held down!\n");
 	if (Input::GetMouseBtnUp(SDL_BUTTON_LEFT))
-	printf("Left Up!\n");*/
+	printf("Left Up!\n");
 
 	ivec2 deltaPos = Input::GetMouseDelta();
-	camera->Rotate((float)deltaPos.x * deltaTime, (float)-deltaPos.y * deltaTime);
+	camera->Rotate((float)deltaPos.x * deltaTime, (float)-deltaPos.y * deltaTime);*/
 }
 
 void Game::Render()

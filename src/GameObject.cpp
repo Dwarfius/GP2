@@ -15,7 +15,9 @@ GameObject::~GameObject()
 
 void GameObject::Update(float deltaTime)
 {
-
+	for (vector<BaseComponent*>::iterator it = components.begin(); it != components.end(); it++) {
+		(*it)->Update(deltaTime);
+	}
 }
 
 void GameObject::Render(Camera *camera)
@@ -28,3 +30,10 @@ void GameObject::Render(Camera *camera)
 
 	renderer->Render(modelMatrix, camera);
 }
+
+void GameObject::AttacheComponent(BaseComponent * com)
+{
+	components.push_back(com);
+	com->SetParentGO(com->GetParentGO());
+}
+
