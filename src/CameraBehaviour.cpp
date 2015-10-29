@@ -23,6 +23,15 @@ void CameraBehaviour::Update(float deltaTime)
 	if (Input::GetKey(SDLK_a))
 		camera->Translate(-right * deltaTime);
 
+	if (Input::GetKeyDown(SDLK_k))
+	{
+		wireframeMode = !wireframeMode;
+		if (wireframeMode)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		else
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
 	ivec2 deltaPos = Input::GetMouseDelta();
 	camera->Rotate((float)deltaPos.x * deltaTime, (float)-deltaPos.y * deltaTime);
 }

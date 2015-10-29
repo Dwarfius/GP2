@@ -43,7 +43,7 @@ void Game::Update(float deltaTime)
 	if (Input::GetKey(SDLK_d))
 		camera->Translate(right * deltaTime);
 	if (Input::GetKey(SDLK_a))
-		camera->Translate(-right * deltaTime);*/
+		camera->Translate(-right * deltaTime);
 
 	if (Input::GetKeyDown(SDLK_k))
 	{
@@ -54,7 +54,7 @@ void Game::Update(float deltaTime)
 		wireframeMode = !wireframeMode;
 	}
 
-	/*if (Input::GetMouseBtnDown(SDL_BUTTON_LEFT))
+	if (Input::GetMouseBtnDown(SDL_BUTTON_LEFT))
 	printf("Left Down!\n");
 	if (Input::GetMouseBtn(SDL_BUTTON_LEFT))
 	printf("Left held down!\n");
