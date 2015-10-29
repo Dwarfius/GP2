@@ -34,8 +34,12 @@ void Graphics::Init()
 	glDepthFunc(GL_LEQUAL); //set less or equal func for depth testing
 	
 	//enabling blending
-	glEnable(GL_BLEND);
+	//glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	//turn on back face culling
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
 	//turn on best perspective correction
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);

@@ -16,7 +16,7 @@ Shader::~Shader()
 GLuint Shader::LoadShaderFromMemory(const char *pMem, SHADER_TYPE type)
 {
 	GLuint shader = glCreateShader(type);
-	//printf("Shader:\n%s\n\n", pMem);
+	printf("Shader:\n%s\n\n", pMem);
 	glShaderSource(shader, 1, &pMem, NULL);
 	glCompileShader(shader);
 	return shader;

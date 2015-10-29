@@ -17,6 +17,7 @@ private:
 	void processAttrib(FbxNodeAttribute *attrib, int level);
 	void processMesh(FbxMesh *mesh, int level);
 	void processMeshTextCoords(FbxMesh *mesh, Vertex *verts, int numVerts);
+	void processMeshNormals(FbxMesh *mesh, Vertex *verts, int count);
 public:
 	Model();
 	Model(const string& fileName);

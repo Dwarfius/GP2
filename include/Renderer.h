@@ -6,6 +6,7 @@
 #include "Model.h"
 #include "Texture.h"
 #include "BaseComponent.h"
+#include "Camera.h"
 
 class Renderer: public BaseComponent
 {
@@ -22,7 +23,7 @@ public:
 	void AttachShaderProgram(ShaderProgram *sP) { shaderProg = sP; }
 	void SetTexture(Texture *pTexture) { texture = pTexture; }
 
-	void Render(mat4 modelMat, mat4 vpMat);
+	void Render(mat4 modelMat, Camera *cam);
 };
 
 #endif

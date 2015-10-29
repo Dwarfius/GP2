@@ -109,8 +109,14 @@ Model::Model(const string& fileName)
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)(sizeof(vec3)));
 	CHECK_GL_ERROR();
 
+	//uv
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)(sizeof(vec3) + sizeof(vec4)));
+	CHECK_GL_ERROR();
+
+	//normals
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)(sizeof(vec3) + sizeof(vec4) + sizeof(vec2)));
 	CHECK_GL_ERROR();
 }
 
@@ -179,6 +185,9 @@ bool Model::loadFBXFromFile(const string& fileName)
 	//creating a scene to be filled with objects
 	FbxScene *scene = FbxScene::Create(manager, "myScene");
 	importer->Import(scene);
+
+	FbxGeometryConverter geomConverter(manager);
+	geomConverter.Triangulate(scene, true);
 
 	FbxNode *root = scene->GetRootNode();
 	if (root)
@@ -253,6 +262,7 @@ void Model::processMesh(FbxMesh *mesh, int level)
 	}
 
 	processMeshTextCoords(mesh, pVerts, numVerts);
+	processMeshNormals(mesh, pVerts, numVerts);
 	uint initVertCount = vertices.size();
 	for (int i = 0; i < numVerts; i++)
 		vertices.push_back(pVerts[i]);
@@ -296,6 +306,24 @@ void Model::processMeshTextCoords(FbxMesh *mesh, Vertex *verts, int numVerts)
 				verts[cornerIndex].texture.x = UV[0];
 				verts[cornerIndex].texture.y = 1.f - UV[1];
 			}
+		}
+	}
+}
+
+void Model::processMeshNormals(FbxMesh *mesh, Vertex *verts, int count)
+{
+	int polCount = mesh->GetPolygonCount();
+	for (int polInd = 0; polInd < polCount; polInd++)
+	{
+		for (int vertInd = 0; vertInd < 3; vertInd++)
+		{
+			int cornerIndex = mesh->GetPolygonVertex(polInd, vertInd);
+			FbxVector4 normal;
+			mesh->GetPolygonVertexNormal(polInd, vertInd, normal);
+			normal.Normalize();
+			verts[cornerIndex].normal.x = normal[0];
+			verts[cornerIndex].normal.y = normal[1];
+			verts[cornerIndex].normal.z = normal[2];
 		}
 	}
 }
