@@ -22,14 +22,16 @@ void GameObject::Update(float deltaTime)
 
 void GameObject::Render(Camera *camera)
 {
+	if (!renderer)
+		return;
+
 	modelMatrix = translate(mat4(1), pos);
 	modelMatrix = rotate(modelMatrix, rotation.x, vec3(1, 0, 0));
 	modelMatrix = rotate(modelMatrix, rotation.y, vec3(0, 1, 0));
 	modelMatrix = rotate(modelMatrix, rotation.z, vec3(0, 0, 1));
 	modelMatrix = scale(modelMatrix, size);
 
-	if(renderer)
-		renderer->Render(modelMatrix, camera);
+	renderer->Render(modelMatrix, camera);
 }
 
 void GameObject::AttacheComponent(BaseComponent * com)

@@ -26,7 +26,7 @@ public:
 	void AttachShaderProgram(ShaderProgram *sP) { shaderProg = sP; }
 	GLuint GetProgram() { return shaderProg->Get(); }
 	void SetTexture(Texture *pTexture) { texture = pTexture; }
-	GLuint GetTexture() { return texture->Get(); }
+	GLuint GetTexture() { return texture ? texture->Get() : 0; }
 
 	void Render(mat4 modelMat, Camera *cam);
 };
