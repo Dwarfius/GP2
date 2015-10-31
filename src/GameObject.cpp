@@ -15,20 +15,21 @@ GameObject::~GameObject()
 
 void GameObject::Update(float deltaTime)
 {
-	for (vector<BaseComponent*>::iterator it = components.begin(); it != components.end(); it++) {
+	for (auto it = components.begin(); it != components.end(); it++) {
 		(*it)->Update(deltaTime);
 	}
 }
 
 void GameObject::Render(Camera *camera)
 {
-	modelMatrix = scale(mat4(1), size);
+	modelMatrix = translate(mat4(1), pos);
 	modelMatrix = rotate(modelMatrix, rotation.x, vec3(1, 0, 0));
 	modelMatrix = rotate(modelMatrix, rotation.y, vec3(0, 1, 0));
 	modelMatrix = rotate(modelMatrix, rotation.z, vec3(0, 0, 1));
-	modelMatrix = translate(modelMatrix, pos);
+	modelMatrix = scale(modelMatrix, size);
 
-	renderer->Render(modelMatrix, camera);
+	if(renderer)
+		renderer->Render(modelMatrix, camera);
 }
 
 void GameObject::AttacheComponent(BaseComponent * com)

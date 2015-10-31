@@ -1,27 +1,36 @@
 #include "Renderer.h"
 
+GLuint Renderer::activeProg = 0, Renderer::activeText = 0, Renderer::activeVao = 0;
+
 Renderer::Renderer()
 {
-	//texture = new Texture(TEXTURE_PATH + "texture.png");
-	//texture = new Texture(FONT_PATH + "OratorStd.otf", "Hello World");
-	//shaderProg = new ShaderProgram(SHADER_PATH + "simpleVS.glsl", SHADER_PATH + "simpleFS.glsl");
 }
 
 Renderer::~Renderer()
 {
-	//delete texture;
-	//delete shaderProg;
-	//delete model;
 }
 
 void Renderer::Render(mat4 modelMat, Camera *cam)
 {
-	//binding the shader and sending settings
-	glUseProgram(shaderProg->Get());
+	//binding the shader
+	GLuint prog = shaderProg->Get();
+	if (prog != activeProg)
+	{
+		glUseProgram(prog);
+		CHECK_GL_ERROR();
+		activeProg = prog;
+	}
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture->Get());
+	GLuint text = texture->Get();
+	if (text != activeText)
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, text);
+		CHECK_GL_ERROR();
+		activeText = text;
+	}
 
+	//and sending settings
 	GLint loc = glGetUniformLocation(shaderProg->Get(), "MVP");
 	mat4 MVP = cam->Get() * modelMat;
 	glUniformMatrix4fv(loc, 1, GL_FALSE, value_ptr(MVP));
@@ -72,8 +81,13 @@ void Renderer::Render(mat4 modelMat, Camera *cam)
 	CHECK_GL_ERROR();
 	
 	//binding the vao
-	glBindVertexArray(model->Get());
-	CHECK_GL_ERROR();
+	GLuint vao = model->Get();
+	if (vao != activeVao)
+	{
+		glBindVertexArray(vao);
+		CHECK_GL_ERROR();
+		activeVao = vao;
+	}
 
 	//now on to draw stuff
 	glDrawElements(GL_TRIANGLES, model->GetIndCount(), GL_UNSIGNED_INT, 0);
