@@ -31,8 +31,8 @@ void Renderer::Render(mat4 modelMat, Camera *cam)
 	glUniformMatrix4fv(loc, 1, GL_FALSE, value_ptr(modelMat));
 	CHECK_GL_ERROR();
 
-	//loc = glGetUniformLocation(shaderProg->Get(), "texture0");
-	//glUniform1i(loc, 0);
+	loc = glGetUniformLocation(shaderProg->Get(), "texture0");
+	glUniform1i(loc, 0);
 
 	loc = glGetUniformLocation(shaderProg->Get(), "cameraPosition");
 	vec3 camPos = cam->GetPos();

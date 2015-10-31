@@ -263,6 +263,7 @@ void Model::processMesh(FbxMesh *mesh, int level)
 
 	processMeshTextCoords(mesh, pVerts, numVerts);
 	processMeshNormals(mesh, pVerts, numVerts);
+	
 	uint initVertCount = vertices.size();
 	for (int i = 0; i < numVerts; i++)
 		vertices.push_back(pVerts[i]);
