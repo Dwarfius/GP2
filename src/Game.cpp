@@ -81,7 +81,7 @@ void Game::Update(float deltaTime)
 {
 	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 	{
-		//(*iter)->AddRotation(vec3(0, deltaTime * 3, 0));
+		(*iter)->AddRotation(vec3(0, deltaTime * 15, 0));
 		(*iter)->Update(deltaTime);
 	}
 
@@ -92,6 +92,13 @@ void Game::Update(float deltaTime)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
+	fpsCounter++;
+	if ((fpsTimer += deltaTime) > 1)
+	{
+		printf("FPS: %d\n", fpsCounter);
+		fpsCounter = fpsTimer = 0;
 	}
 }
 

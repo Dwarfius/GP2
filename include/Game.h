@@ -20,6 +20,9 @@ private:
 	Font *font;
 	bool wireframeMode = false;
 
+	int fpsCounter = 0;
+	float fpsTimer = 0;
+
 public:
 	Game();
 	~Game();
