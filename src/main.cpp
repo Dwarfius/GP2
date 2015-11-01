@@ -15,6 +15,11 @@ void printVec3(vec3 p)
 	printf("%f/%f/%f\n", p.x, p.y, p.z);
 }
 
+void printRect(SDL_Rect r)
+{
+	printf("(%f, %f, %f, %f)\n", r.x, r.y, r.w, r.h);
+}
+
 bool run = true;
 bool paused = false;
 

@@ -11,6 +11,8 @@ Game::~Game()
 
 void Game::LoadResources()
 {
+	font = new Font(FONT_PATH + "OratorStd.otf");
+
 	textures.push_back(new Texture(TEXTURE_PATH + "Tank1DF.png"));
 	models.push_back(new Model(MODEL_PATH + "utah-teapot.FBX"));
 	shaders.push_back(new ShaderProgram(SHADER_PATH + "specularVS.glsl", SHADER_PATH + "specularFS.glsl"));
@@ -25,6 +27,7 @@ void Game::LoadResources()
 	for (int i = 0; i < 10; i++)
 	{
 		GameObject *go = new GameObject();
+		go->SetRotation(vec3(0, i * 36, 0));
 		go->SetScale(vec3(0.1f, 0.1f, 0.1f));
 		go->SetPos(vec3(i * 5, 0, 0));
 
@@ -40,6 +43,8 @@ void Game::LoadResources()
 
 void Game::ReleaseResources()
 {
+	delete font;
+
 	//clearing out all the objects
 	int count = gameObjects.size();
 	while (count-- > 0)
@@ -76,7 +81,7 @@ void Game::Update(float deltaTime)
 {
 	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 	{
-		(*iter)->AddRotation(vec3(0, deltaTime * 3, 0));
+		//(*iter)->AddRotation(vec3(0, deltaTime * 3, 0));
 		(*iter)->Update(deltaTime);
 	}
 

@@ -26,9 +26,9 @@ void GameObject::Render(Camera *camera)
 		return;
 
 	modelMatrix = translate(mat4(1), pos);
-	modelMatrix = rotate(modelMatrix, rotation.x, vec3(1, 0, 0));
-	modelMatrix = rotate(modelMatrix, rotation.y, vec3(0, 1, 0));
-	modelMatrix = rotate(modelMatrix, rotation.z, vec3(0, 0, 1));
+	modelMatrix = rotate(modelMatrix, radians(rotation.x), vec3(1, 0, 0));
+	modelMatrix = rotate(modelMatrix, radians(rotation.y), vec3(0, 1, 0));
+	modelMatrix = rotate(modelMatrix, radians(rotation.z), vec3(0, 0, 1));
 	modelMatrix = scale(modelMatrix, size);
 
 	renderer->Render(modelMatrix, camera);
