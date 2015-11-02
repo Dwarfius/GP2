@@ -56,9 +56,10 @@ int main(int argc, char *argv[])
 	CHECK_GL_ERROR();
 	Graphics::Init();
 	Graphics::SetViewport(640, 480);
-
-	SDL_SetRelativeMouseMode(SDL_TRUE);
 	CHECK_GL_ERROR();
+
+	if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)
+		printf("Failed to set mouse mode to Relative\n");
 
 	Game *game = new Game();
 	game->LoadResources();

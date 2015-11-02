@@ -24,5 +24,5 @@ void CameraBehaviour::Update(float deltaTime)
 		camera->Translate(-right * deltaTime);
 
 	ivec2 deltaPos = Input::GetMouseDelta();
-	camera->Rotate((float)deltaPos.x * deltaTime, (float)-deltaPos.y * deltaTime);
+	camera->Rotate((float)deltaPos.x, (float)-deltaPos.y);
 }
