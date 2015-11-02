@@ -6,8 +6,6 @@
 #include "Model.h"
 #include "Renderer.h"
 
-#define FONT_TEXTURE_SLOT 20;
-
 class Font
 {
 private:

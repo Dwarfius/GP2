@@ -61,7 +61,7 @@ Font::Font(const string& fileName)
 	glGetIntegerv(GL_ACTIVE_TEXTURE, &currActive);
 
 	//pushing our texture and setting standard settings
-	glActiveTexture(GL_TEXTURE20);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, atlasText);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
