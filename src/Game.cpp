@@ -98,8 +98,11 @@ void Game::Update(float deltaTime)
 	if ((fpsTimer += deltaTime) > 1)
 	{
 		printf("FPS: %d\n", fpsCounter);
+		fpsDisplay = fpsCounter;
 		fpsCounter = fpsTimer = 0;
 	}
+
+	font->Render("testy", { 0, 0, 100, 40 });
 }
 
 bool Comparer(GameObject *a, GameObject *b)
@@ -141,4 +144,6 @@ void Game::Render()
 
 	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 		(*iter)->Render(camera);
+
+	font->Flush(camera);
 }

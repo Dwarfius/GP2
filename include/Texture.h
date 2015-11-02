@@ -12,6 +12,7 @@ private:
 	GLuint ConvertSDLSurfaceToTexture(SDL_Surface *surf);
 
 public:
+	Texture(GLuint text) { textureId = text; }
 	Texture(const string& fileName);
 	~Texture();
 

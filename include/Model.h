@@ -9,9 +9,10 @@ class Model
 {
 private:
 	GLuint vao, vbo, ebo;
-	vector<Vertex> vertices;
-	vector<int> indices;
+	vector<Vertex> *vertices;
+	vector<int> *indices;
 
+	void SetUpAttribs();
 	bool loadFBXFromFile(const string& fileName);
 	void processNode(FbxNode *node, int level);
 	void processAttrib(FbxNodeAttribute *attrib, int level);
@@ -24,8 +25,13 @@ public:
 	~Model();
 
 	GLuint Get() { return vao; }
-	int GetVertCount() { return vertices.size(); }
-	int GetIndCount() { return indices.size(); }
+	int GetVertCount() { return vertices->size(); }
+	int GetIndCount() { return indices->size(); }
+
+	//takes ownership of verts! releases memory on it's own!
+	void SetVertices(vector<Vertex> *verts, GLuint flag, bool deletePrev);
+	//takes ownership of ints! releases memory on it's own!
+	void SetIndices(vector<int> *indcs, GLuint flag, bool deletePrev);
 };
 
 #endif
