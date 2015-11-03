@@ -35,4 +35,10 @@ void checkError(const char *file, int line);
 void printVec3(vec3 p);
 void printRect(SDL_Rect r);
 
+struct RECTF
+{
+	float x, y;
+	float w, h;
+};
+
 #endif

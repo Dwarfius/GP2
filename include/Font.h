@@ -2,17 +2,16 @@
 #define _FONT_H
 
 #include "Common.h"
-#include "Vertex.h"
-#include "Model.h"
 #include "Renderer.h"
 
 class Font
 {
 private:
+	Camera *guiCam;
 	//the size of the atlas texture
 	int width = 512, height = 512;
 	//contains normalized UVs
-	SDL_Rect rects[127 - 32];
+	RECTF rects[127 - 32];
 	//contains vertices for submitting to gpu
 	vector<Vertex> *vertices;
 	vector<int> *indices;
@@ -28,7 +27,7 @@ public:
 	~Font();
 
 	void Render(const string& text, const SDL_Rect rect);
-	void Flush(Camera *cam);
+	void Flush();
 };
 
 #endif

@@ -6,6 +6,11 @@ Camera::Camera()
 	pitch = 0;
 	pos = vec3(0, 0, 10);
 	up = vec3(0, 1, 0);
+
+	//setting up the matrix for UI rendering
+	//call Recalculate to get proper perspective matrix
+	projMatrix = ortho(0.f, 480.f, 0.f, 640.f);
+	VP = projMatrix;
 }
 
 Camera::~Camera()

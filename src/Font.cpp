@@ -2,6 +2,7 @@
 
 Font::Font(const string& fileName)
 {
+	guiCam = new Camera();
 	vertices = new vector<Vertex>();
 	indices = new vector<int>();
 
@@ -30,8 +31,9 @@ Font::Font(const string& fileName)
 		}
 		
 		SDL_Rect r = { x, y, w, h };
-		rects[glyph - 32] = r; //saving the unnormalized UVs
 		SDL_BlitSurface(glyphSurf, NULL, atlasSurf, &r);
+		RECTF rect = { x, y, w, h - 4 }; //adding a 4pixel boundary from the bottom
+		rects[glyph - 32] = rect; //saving the unnormalized UVs
 		x += w;
 		newY = glm::max(newY, h);
 		SDL_FreeSurface(glyphSurf);
@@ -41,7 +43,7 @@ Font::Font(const string& fileName)
 	int count = 127 - 32;
 	for (int i = 0; i < count; i++)
 	{
-		SDL_Rect r = rects[i];
+		RECTF r = rects[i];
 		r.x /= (float)width;
 		r.y /= (float)height;
 		r.w /= (float)width;
@@ -85,6 +87,7 @@ Font::~Font()
 	delete t;
 	delete m;
 	delete renderer;
+	delete guiCam;
 }
 
 void Font::Render(const string& text, const SDL_Rect rect)
@@ -94,10 +97,10 @@ void Font::Render(const string& text, const SDL_Rect rect)
 	int size = text.size();
 	int offset = 0;
 	int maxLength = 0; //will be used to determine the width of character
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i <= size; i++)
 	{
 		char c = text[i];
-		if (c == '\n' || i == size - 1)
+		if (c == '\n' || i == size)
 		{
 			string line = text.substr(offset, i - offset);
 			int length = line.length();
@@ -117,47 +120,48 @@ void Font::Render(const string& text, const SDL_Rect rect)
 		for (int x = 0; x < line.size(); x++)
 		{
 			char c = line[x];
-			SDL_Rect r = rects[c - 32];
+			RECTF r = rects[c - 32];
 			Vertex v;
-			//top left
-			v.pos = vec3(rect.x + x * width, rect.y + y * height, 0);
-			v.texture = vec2(r.x, r.y);
-			vertices->push_back(v);
-
-			//top right
-			v.pos = vec3(rect.x + (x + 1) * width, rect.y + y * height, 0);
-			v.texture = vec2(r.x + r.w, r.y);
-			vertices->push_back(v);
-
 			//bottom left
-			v.pos = vec3(rect.x + x * width, rect.y + (y + 1) * height, 0);
+			v.pos = vec3(rect.x + x * width, rect.y + y * height, 0);
 			v.texture = vec2(r.x, r.y + r.h);
 			vertices->push_back(v);
 
 			//bottom right
-			v.pos = vec3(rect.x + (x + 1) * width, rect.y + (y + 1) * height, 0);
+			v.pos = vec3(rect.x + (x + 1) * width, rect.y + y * height, 0);
 			v.texture = vec2(r.x + r.w, r.y + r.h);
 			vertices->push_back(v);
 
+			//top left
+			v.pos = vec3(rect.x + x * width, rect.y + (y + 1) * height, 0);
+			v.texture = vec2(r.x, r.y);
+			vertices->push_back(v);
+
+			//top right
+			v.pos = vec3(rect.x + (x + 1) * width, rect.y + (y + 1) * height, 0);
+			v.texture = vec2(r.x + r.w, r.y);
+			vertices->push_back(v);
+
 			//pushing the required indices to form quads
-			int indicesCount = indices->size();
-			indices->push_back(indicesCount);
-			indices->push_back(indicesCount + 1);
-			indices->push_back(indicesCount + 2);
-			indices->push_back(indicesCount + 2);
-			indices->push_back(indicesCount + 1);
-			indices->push_back(indicesCount + 3);
+			int vertsStartInd = vertices->size() - 4;
+			//winding order matters, turns out >.>
+			indices->push_back(vertsStartInd + 2); //top left
+			indices->push_back(vertsStartInd); //bottom left
+			indices->push_back(vertsStartInd + 1); //bottom right
+			indices->push_back(vertsStartInd + 1); //bottom right
+			indices->push_back(vertsStartInd + 3); //top right
+			indices->push_back(vertsStartInd + 2); //top left
 		}
 	}
 }
 
-void Font::Flush(Camera *cam)
+void Font::Flush()
 {
 	//flush all of the vertices to the GPU for drawing
 	m->SetVertices(vertices, GL_STREAM_DRAW, false);
 	m->SetIndices(indices, GL_STREAM_DRAW, false);
 
-	renderer->Render(mat4(1), cam);
+	renderer->Render(mat4(1), guiCam);
 
 	//clear out the memory to start rendering new ones
 	vertices->clear();
