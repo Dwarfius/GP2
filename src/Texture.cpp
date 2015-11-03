@@ -12,17 +12,6 @@ Texture::Texture(const string& fileName)
 	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-Texture::Texture(const string& font, const string& text)
-{
-	textureId = LoadTextureFromFont(font, 24, text);
-
-	glBindTexture(GL_TEXTURE_2D, textureId);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-}
-
 Texture::~Texture()
 {
 	glDeleteTextures(1, &textureId);
@@ -40,21 +29,6 @@ GLuint Texture::LoadTextureFromFile(const string& fileName)
 	GLuint textId = ConvertSDLSurfaceToTexture(surf);
 	SDL_FreeSurface(surf);
 
-	return textId;
-}
-
-GLuint Texture::LoadTextureFromFont(const string& fileName, int size, const string& text)
-{
-	TTF_Font *font = TTF_OpenFont(fileName.c_str(), size);
-	if (!font)
-	{
-		printf("Unable to load font %s-%s\n", fileName.c_str(), TTF_GetError());
-		return 0;
-	}
-
-	SDL_Surface *surf = TTF_RenderText_Blended(font, text.c_str(), { 255, 255, 0 });
-	GLuint textId = ConvertSDLSurfaceToTexture(surf);
-	TTF_CloseFont(font);
 	return textId;
 }
 

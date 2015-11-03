@@ -23,7 +23,7 @@ void main()
 	float specularTerm = pow(dot(worldNormal, halfWayVec), specularPower);
 
 	FragColor = (ambientMaterialColor*ambientLightColor) + 
-		(diffuseMaterialColor*diffuseLightColor*diffuseTerm) + 
+		(diffuseMaterialColor*diffuseLightColor*diffuseTerm) +
 		(specularMaterialColor*specularLightColor*specularTerm);
 	//FragColor = vec4(worldNormal, 1);
 }

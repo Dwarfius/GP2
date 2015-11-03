@@ -11,7 +11,7 @@ class GameObject
 private:
 	vec3 pos, rotation, size;
 	mat4 modelMatrix;
-	Renderer *renderer;
+	Renderer *renderer = NULL;
 	vector<BaseComponent*> components;
 
 public:
