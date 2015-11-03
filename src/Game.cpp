@@ -23,8 +23,8 @@ void Game::LoadResources()
 	cameraGameObject->AttacheComponent(cb);
 	gameObjects.push_back(cameraGameObject);
 
-	//testing 10 teapots
-	for (int i = 0; i < 10; i++)
+	//testing 1000 teapots
+	for (int i = 0; i < 1000; i++)
 	{
 		GameObject *go = new GameObject();
 		go->SetRotation(vec3(0, i * 36, 0));

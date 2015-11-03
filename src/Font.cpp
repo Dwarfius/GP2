@@ -161,7 +161,9 @@ void Font::Flush()
 	m->SetVertices(vertices, GL_STREAM_DRAW, false);
 	m->SetIndices(indices, GL_STREAM_DRAW, false);
 
+	glEnable(GL_BLEND);
 	renderer->Render(mat4(1), guiCam);
+	glDisable(GL_BLEND);
 
 	//clear out the memory to start rendering new ones
 	vertices->clear();
