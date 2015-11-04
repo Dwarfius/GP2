@@ -2,6 +2,8 @@
 #include "Vertices.h"
 #include "Common.h"
 
+ivec2 Graphics::viewportRect;
+
 Graphics::Graphics()
 {
 }
@@ -53,4 +55,5 @@ void Graphics::SetViewport(int width, int height)
 	
 	//setting up the viewport
 	glViewport(0, 0, (GLsizei)width, (GLsizei)height);
+	viewportRect = ivec2(width, height);
 }

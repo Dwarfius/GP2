@@ -5,6 +5,7 @@ Shader::Shader(const string& fileName, SHADER_TYPE type)
 	shader = LoadShaderFromFile(fileName, type);
 	if (CheckForCompileErrors(fileName))
 		shader = 0;
+	printf("======================\n");
 }
 
 Shader::~Shader()

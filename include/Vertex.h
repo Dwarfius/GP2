@@ -5,10 +5,32 @@
 
 struct Vertex
 {
-	vec3 pos;
-	vec4 color;
-	vec2 texture;
-	vec3 normal;
+	vec3 pos = vec3(0, 0, 0);
+	vec4 color = vec4(1, 1, 1, 1);
+	vec2 texture = vec2(0, 0);
+	vec3 normal = vec3(0, 0, 0);
+
+	Vertex() {}
+
+	Vertex(vec3 p)
+	{
+		pos = p;
+	}
+
+	Vertex(vec3 p, vec4 c) : Vertex(p)
+	{
+		color = c;
+	}
+
+	Vertex(vec3 p, vec4 c, vec2 t) : Vertex(p, c)
+	{
+		texture = t;
+	}
+
+	Vertex(vec3 p, vec4 c, vec2 t, vec3 n) : Vertex(p, c, t)
+	{
+		normal = n;
+	}
 };
 
 #endif

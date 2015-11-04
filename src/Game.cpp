@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Input.h"
+#include "PostProcessing.h"
 
 Game::Game()
 {
@@ -11,11 +12,16 @@ Game::~Game()
 
 void Game::LoadResources()
 {
+	PostProcessing::Init();
 	font = new Font(FONT_PATH + "OratorStd.otf");
 
 	textures.push_back(new Texture(TEXTURE_PATH + "Tank1DF.png"));
 	models.push_back(new Model(MODEL_PATH + "utah-teapot.FBX"));
-	shaders.push_back(new ShaderProgram(SHADER_PATH + "specularVS.glsl", SHADER_PATH + "specularFS.glsl"));
+	ShaderProgram *s = new ShaderProgram(SHADER_PATH + "specularVS.glsl", SHADER_PATH + "specularFS.glsl");
+	s->BindAttribLoc(0, "vertexPosition");
+	s->BindAttribLoc(3, "vertexNormal");
+	s->Link();
+	shaders.push_back(s);
 
 	GameObject *cameraGameObject = new GameObject();
 	camera = new Camera();
@@ -33,8 +39,8 @@ void Game::LoadResources()
 
 		Renderer *renderer = new Renderer();
 		renderer->SetTexture(textures[0]);
-		renderer->AttachModel(models[0]);
-		renderer->AttachShaderProgram(shaders[0]);
+		renderer->SetModel(models[0], GL_TRIANGLES);
+		renderer->SetShaderProgram(shaders[0]);
 
 		go->SetRenderer(renderer);
 		gameObjects.push_back(go);
@@ -43,6 +49,7 @@ void Game::LoadResources()
 
 void Game::ReleaseResources()
 {
+	PostProcessing::CleanUp();
 	delete font;
 
 	//clearing out all the objects
@@ -143,10 +150,13 @@ void Game::Render()
 	sort(gameObjects.begin(), gameObjects.end(), Comparer);
 
 	camera->Recalculate();
+	glBindFramebuffer(GL_FRAMEBUFFER, PostProcessing::Get());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 		(*iter)->Render(camera);
+
+	PostProcessing::RenderResult();
 
 	font->Flush();
 }

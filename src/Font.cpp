@@ -73,12 +73,19 @@ Font::Font(const string& fileName)
 	//restoring it
 	glActiveTexture(currActive);
 
-	shader = new ShaderProgram(SHADER_PATH + "simpleVS.glsl", SHADER_PATH + "simpleFS.glsl");
-	t = new Texture(atlasText);
 	m = new Model();
+	m->SetUpAttrib(0, 3, GL_FLOAT, 0);
+	m->SetUpAttrib(1, 2, GL_FLOAT, sizeof(vec3) + sizeof(vec4));
+
+	shader = new ShaderProgram(SHADER_PATH + "simpleVS.glsl", SHADER_PATH + "simpleFS.glsl");
+	shader->BindAttribLoc(0, "vertexPosition");
+	shader->BindAttribLoc(1, "uvs");
+	shader->Link();
+	t = new Texture(atlasText);
 	renderer = new Renderer();
-	renderer->AttachModel(m);
-	renderer->AttachShaderProgram(shader);
+	//CHANGE TO TRIANGLE FAN LATER
+	renderer->SetModel(m, GL_TRIANGLES);
+	renderer->SetShaderProgram(shader);
 	renderer->SetTexture(t);
 }
 

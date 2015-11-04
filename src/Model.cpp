@@ -18,8 +18,6 @@ Model::Model()
 	glGenBuffers(1, &ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	CHECK_GL_ERROR();
-
-	SetUpAttribs();
 }
 
 Model::Model(const string& fileName)
@@ -49,7 +47,17 @@ Model::Model(const string& fileName)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * GetIndCount(), indices->data(), GL_STATIC_DRAW);
 	CHECK_GL_ERROR();
 
-	SetUpAttribs();
+	//tell the VAO that 1 is the position element
+	SetUpAttrib(0, 3, GL_FLOAT, 0);
+
+	//tell the VAO that 1 is the color element
+	SetUpAttrib(1, 4, GL_FLOAT, sizeof(vec3));
+
+	//uv
+	SetUpAttrib(2, 2, GL_FLOAT, sizeof(vec3) + sizeof(vec4));
+
+	//normals
+	SetUpAttrib(3, 3, GL_FLOAT, sizeof(vec3) + sizeof(vec4) + sizeof(vec2));
 }
 
 void Model::SetVertices(vector<Vertex> *verts, GLuint flag, bool deletePrev)
@@ -78,26 +86,11 @@ void Model::SetIndices(vector<int> *indcs, GLuint flag, bool deletePrev)
 	CHECK_GL_ERROR();
 }
 
-void Model::SetUpAttribs()
+void Model::SetUpAttrib(int index, int count, int type, size_t offset)
 {
 	//Tell the shader that 0 is the position element
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), NULL);
-	CHECK_GL_ERROR();
-
-	//tell the shader that 1 is the color element
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)(sizeof(vec3)));
-	CHECK_GL_ERROR();
-
-	//uv
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)(sizeof(vec3) + sizeof(vec4)));
-	CHECK_GL_ERROR();
-
-	//normals
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)(sizeof(vec3) + sizeof(vec4) + sizeof(vec2)));
+	glEnableVertexAttribArray(index);
+	glVertexAttribPointer(index, count, type, GL_FALSE, sizeof(Vertex), (void**)offset);
 	CHECK_GL_ERROR();
 }
 

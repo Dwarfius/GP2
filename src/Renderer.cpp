@@ -2,14 +2,6 @@
 
 GLuint Renderer::activeProg = 0, Renderer::activeText = 0, Renderer::activeVao = 0;
 
-Renderer::Renderer()
-{
-}
-
-Renderer::~Renderer()
-{
-}
-
 void Renderer::Render(mat4 modelMat, Camera *cam)
 {
 	//binding the shader
@@ -31,10 +23,19 @@ void Renderer::Render(mat4 modelMat, Camera *cam)
 	}
 
 	//and sending settings
-	GLint loc = glGetUniformLocation(shaderProg->Get(), "MVP");
-	mat4 MVP = cam->Get() * modelMat;
-	glUniformMatrix4fv(loc, 1, GL_FALSE, value_ptr(MVP));
-	CHECK_GL_ERROR();
+	GLint loc;
+	if (cam)
+	{
+		loc = glGetUniformLocation(shaderProg->Get(), "MVP");
+		mat4 MVP = cam->Get() * modelMat;
+		glUniformMatrix4fv(loc, 1, GL_FALSE, value_ptr(MVP));
+		CHECK_GL_ERROR();
+
+		loc = glGetUniformLocation(shaderProg->Get(), "cameraPosition");
+		vec3 camPos = cam->GetPos();
+		glUniform3f(loc, camPos.x, camPos.y, camPos.z);
+		CHECK_GL_ERROR();
+	}
 
 	loc = glGetUniformLocation(shaderProg->Get(), "Model");
 	glUniformMatrix4fv(loc, 1, GL_FALSE, value_ptr(modelMat));
@@ -42,11 +43,6 @@ void Renderer::Render(mat4 modelMat, Camera *cam)
 
 	loc = glGetUniformLocation(shaderProg->Get(), "texture0");
 	glUniform1i(loc, 0);
-
-	loc = glGetUniformLocation(shaderProg->Get(), "cameraPosition");
-	vec3 camPos = cam->GetPos();
-	glUniform3f(loc, camPos.x, camPos.y, camPos.z);
-	CHECK_GL_ERROR();
 
 	loc = glGetUniformLocation(shaderProg->Get(), "lightDirection");
 	glUniform3f(loc, 0, 0, 1);
@@ -90,6 +86,17 @@ void Renderer::Render(mat4 modelMat, Camera *cam)
 	}
 
 	//now on to draw stuff
-	glDrawElements(GL_TRIANGLES, model->GetIndCount(), GL_UNSIGNED_INT, 0);
+	switch (renderMode)
+	{
+	case GL_TRIANGLES:
+		glDrawElements(GL_TRIANGLES, model->GetIndCount(), GL_UNSIGNED_INT, 0);
+		break;
+	case GL_TRIANGLE_FAN:
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, model->GetVertCount());
+		break;
+	default:
+		printf("Render mode unsupported!");
+		break;
+	}
 	CHECK_GL_ERROR();
 }
