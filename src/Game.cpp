@@ -23,6 +23,16 @@ void Game::LoadResources()
 	s->Link();
 	shaders.push_back(s);
 
+	s = new ShaderProgram(SHADER_PATH + "postProcVS.glsl", SHADER_PATH + "colorCorr1.glsl");
+	s->BindAttribLoc(0, "vertexPosition");
+	s->Link();
+	shaders.push_back(s);
+
+	s = new ShaderProgram(SHADER_PATH + "postProcVS.glsl", SHADER_PATH + "colorCorr2.glsl");
+	s->BindAttribLoc(0, "vertexPosition");
+	s->Link();
+	shaders.push_back(s);
+
 	GameObject *cameraGameObject = new GameObject();
 	camera = new Camera();
 	CameraBehaviour *cb = new CameraBehaviour(camera);
@@ -156,6 +166,8 @@ void Game::Render()
 	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 		(*iter)->Render(camera);
 
+	PostProcessing::Pass(shaders[1]);
+	PostProcessing::Pass(shaders[2]); //if you apply shader[1] again you should see the initial image
 	PostProcessing::RenderResult();
 
 	font->Flush();

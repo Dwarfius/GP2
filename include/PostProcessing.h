@@ -9,19 +9,23 @@
 class PostProcessing
 {
 private:
-	static GLuint FBODepthBuffer;
-	static GLuint fbo;
+	static GLuint fboDepthBuffer[2];
+	static GLuint fbo[2];
 	static Model *model;
 	static ShaderProgram *program;
 	static Renderer *renderer;
-	static Texture *texture;
+	static Texture *texture[2];
+	static int activeInd;
 
 	PostProcessing() {}
 public:
 	~PostProcessing() {}
 
 	static void Init();
-	static GLuint Get() { return fbo; }
+	static GLuint Get() { return fbo[activeInd]; }
+
+	//allows applying simple shaders (which use 1 texture)
+	static void Pass(ShaderProgram *newProgram);
 	static void RenderResult();
 	static void CleanUp();
 };
