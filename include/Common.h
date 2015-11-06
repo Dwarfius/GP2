@@ -7,6 +7,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 
 #include <GL/glew.h>
 #include <SDL.h>
@@ -32,5 +33,12 @@ void checkError(const char *file, int line);
 #define CHECK_GL_ERROR() checkError(__FILE__, __LINE__)
 
 void printVec3(vec3 p);
+void printRect(SDL_Rect r);
+
+struct RECTF
+{
+	float x, y;
+	float w, h;
+};
 
 #endif

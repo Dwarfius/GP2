@@ -16,6 +16,9 @@ public:
 	ShaderProgram(const string& vShaderFile, const string& fShaderFile);
 	~ShaderProgram();
 
+	void BindAttribLoc(GLuint loc, const char *name);
+	void Link();
+
 	GLuint Get() { return program; }
 };
 

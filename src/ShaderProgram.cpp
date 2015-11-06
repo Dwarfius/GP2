@@ -9,17 +9,21 @@ ShaderProgram::ShaderProgram(const string& vShaderFile, const string& fShaderFil
 	program = glCreateProgram();
 	glAttachShader(program, vShader->Get());
 	glAttachShader(program, fShader->Get());
-	
-	//standard attribs
-	glBindAttribLocation(program, 0, "vertexPosition");
-	CHECK_GL_ERROR();
-	glBindAttribLocation(program, 1, "color");
-	CHECK_GL_ERROR();
-	glBindAttribLocation(program, 2, "uvs");
-	CHECK_GL_ERROR();
-	glBindAttribLocation(program, 3, "vertexNormal");
-	CHECK_GL_ERROR();
+}
 
+ShaderProgram::~ShaderProgram()
+{
+	glDeleteProgram(program);
+}
+
+void ShaderProgram::BindAttribLoc(GLuint loc, const char *name)
+{
+	glBindAttribLocation(program, loc, name);
+	CHECK_GL_ERROR();
+}
+
+void ShaderProgram::Link()
+{
 	//link shaders and attribs
 	glLinkProgram(program);
 	CheckForLinkErrors();
@@ -28,11 +32,6 @@ ShaderProgram::ShaderProgram(const string& vShaderFile, const string& fShaderFil
 	//if they were linked we no longer need them
 	delete vShader;
 	delete fShader;
-}
-
-ShaderProgram::~ShaderProgram()
-{
-	glDeleteProgram(program);
 }
 
 bool ShaderProgram::CheckForLinkErrors()

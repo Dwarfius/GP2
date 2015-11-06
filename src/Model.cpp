@@ -1,49 +1,10 @@
 #include "Model.h"
 #include "Vertex.h"
 
-Vertex verts[] = {
-	//front
-	{ vec3(-0.5f, 0.5f, 0.5f), vec4(1, 1, 1, 1), vec2(0, 0) },	//top-left
-	{ vec3(-0.5f, -0.5f, 0.5f), vec4(1, 1, 1, 1), vec2(0, 1) }, //bottom-left
-	{ vec3(0.5f, -0.5f, 0.5f), vec4(1, 1, 1, 1), vec2(1, 1) }, //bottom-right
-	{ vec3(0.5f, 0.5f, 0.5f), vec4(1, 1, 1, 1), vec2(1, 0) }, //top-right
-
-												  //back
-	{ vec3(-0.5f, 0.5f, -0.5f), vec4(1, 1, 1, 1), vec2(0, 0) },	//top-left
-	{ vec3(-0.5f, -0.5f, -0.5f), vec4(1, 1, 1, 1), vec2(0, 1) }, //bottom-left
-	{ vec3(0.5f, -0.5f, -0.5f), vec4(1, 1, 1, 1), vec2(1, 1) }, //bottom-right
-	{ vec3(0.5f, 0.5f, -0.5f), vec4(1, 1, 1, 1), vec2(1, 0) } //top-right
-};
-
-GLuint indcs[] = {
-	0, 1, 2, //front
-	0, 3, 2,
-
-	4, 5, 1, //left
-	4, 1, 0,
-
-	3, 7, 2, //right
-	7, 6, 2,
-
-	0, 4, 7, //top
-	0, 3, 7,
-
-	1, 5, 6, //bottom
-	1, 2, 6,
-
-	4, 5, 6, //back
-	4, 7, 6
-};
-
 Model::Model()
 {
-	int count = sizeof(verts) / sizeof(Vertex);
-	for (int i = 0; i < count; i++)
-		vertices.push_back(verts[i]);
-
-	count = sizeof(indcs) / sizeof(GLuint);
-	for (int i = 0; i < count; i++)
-		indices.push_back(indcs[i]);
+	vertices = new vector<Vertex>();
+	indices = new vector<int>();
 
 	//generate and bind vao so that it keeps the current vbo and ebo and attribs
 	glGenVertexArrays(1, &vao);
@@ -52,37 +13,24 @@ Model::Model()
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * GetVertCount(), vertices.data(), GL_STATIC_DRAW);
 	CHECK_GL_ERROR();
 
 	glGenBuffers(1, &ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * GetIndCount(), indices.data(), GL_STATIC_DRAW);
-	CHECK_GL_ERROR();
-
-	//Tell the shader that 0 is the position element
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), NULL);
-	CHECK_GL_ERROR();
-
-	//tell the shader that 1 is the color element
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)(sizeof(vec3)));
-	CHECK_GL_ERROR();
-
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)(sizeof(vec3) + sizeof(vec4)));
 	CHECK_GL_ERROR();
 }
 
 Model::Model(const string& fileName)
 {
+	vertices = new vector<Vertex>();
+	indices = new vector<int>();
+
 	if (!loadFBXFromFile(fileName))
 	{
 		printf("Error loading model!\n");
 		return;
 	}
-	printf("Verts: %d Ints: %d\n", vertices.size(), indices.size());
+	printf("Verts: %d Ints: %d\n", vertices->size(), indices->size());
 
 	//generate and bind vao so that it keeps the current vbo and ebo and attribs
 	glGenVertexArrays(1, &vao);
@@ -91,32 +39,58 @@ Model::Model(const string& fileName)
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * GetVertCount(), vertices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * GetVertCount(), vertices->data(), GL_STATIC_DRAW);
 	CHECK_GL_ERROR();
 
 	glGenBuffers(1, &ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * GetIndCount(), indices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * GetIndCount(), indices->data(), GL_STATIC_DRAW);
 	CHECK_GL_ERROR();
 
-	//Tell the shader that 0 is the position element
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), NULL);
-	CHECK_GL_ERROR();
+	//tell the VAO that 1 is the position element
+	SetUpAttrib(0, 3, GL_FLOAT, 0);
 
-	//tell the shader that 1 is the color element
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)(sizeof(vec3)));
-	CHECK_GL_ERROR();
+	//tell the VAO that 1 is the color element
+	SetUpAttrib(1, 4, GL_FLOAT, sizeof(vec3));
 
 	//uv
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)(sizeof(vec3) + sizeof(vec4)));
-	CHECK_GL_ERROR();
+	SetUpAttrib(2, 2, GL_FLOAT, sizeof(vec3) + sizeof(vec4));
 
 	//normals
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void**)(sizeof(vec3) + sizeof(vec4) + sizeof(vec2)));
+	SetUpAttrib(3, 3, GL_FLOAT, sizeof(vec3) + sizeof(vec4) + sizeof(vec2));
+}
+
+void Model::SetVertices(vector<Vertex> *verts, GLuint flag, bool deletePrev)
+{
+	GLint activeBuffer;
+	glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &activeBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	if(deletePrev)
+		delete vertices;
+	vertices = verts;
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * GetVertCount(), vertices->data(), flag);
+	glBindBuffer(GL_ARRAY_BUFFER, activeBuffer);
+	CHECK_GL_ERROR();
+}
+
+void Model::SetIndices(vector<int> *indcs, GLuint flag, bool deletePrev)
+{
+	GLint activeBuffer; 
+	glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &activeBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	if(deletePrev)
+		delete indices;
+	indices = indcs;
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * GetIndCount(), indices->data(), flag);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, activeBuffer);
+	CHECK_GL_ERROR();
+}
+
+void Model::SetUpAttrib(int index, int count, int type, size_t offset)
+{
+	//Tell the shader that 0 is the position element
+	glEnableVertexAttribArray(index);
+	glVertexAttribPointer(index, count, type, GL_FALSE, sizeof(Vertex), (void**)offset);
 	CHECK_GL_ERROR();
 }
 
@@ -126,8 +100,8 @@ Model::~Model()
 	glDeleteBuffers(1, &ebo);
 	glDeleteBuffers(1, &vao);
 
-	vertices.clear();
-	indices.clear();
+	delete vertices;
+	delete indices;
 }
 
 //utility function
@@ -263,12 +237,13 @@ void Model::processMesh(FbxMesh *mesh, int level)
 
 	processMeshTextCoords(mesh, pVerts, numVerts);
 	processMeshNormals(mesh, pVerts, numVerts);
-	uint initVertCount = vertices.size();
+	
+	uint initVertCount = vertices->size();
 	for (int i = 0; i < numVerts; i++)
-		vertices.push_back(pVerts[i]);
+		vertices->push_back(pVerts[i]);
 
 	for (int i = 0; i < numInds; i++)
-		indices.push_back(initVertCount + pIndices[i]);
+		indices->push_back(initVertCount + pIndices[i]);
 
 	PrintTabs(level);
 	printf("Vertices %d Indices %d\n", numVerts, numInds);

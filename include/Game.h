@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "Model.h"
 #include "CameraBehaviour.h"
+#include "Font.h"
 
 class Game
 {
@@ -16,7 +17,12 @@ private:
 	vector<Texture*> textures;
 	vector<ShaderProgram*> shaders;
 	vector<Model*> models;
+	Font *font;
 	bool wireframeMode = false;
+
+	int fpsCounter = 0;
+	int fpsDisplay = 0;
+	float fpsTimer = 0;
 
 public:
 	Game();

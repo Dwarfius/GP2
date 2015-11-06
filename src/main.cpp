@@ -15,6 +15,11 @@ void printVec3(vec3 p)
 	printf("%f/%f/%f\n", p.x, p.y, p.z);
 }
 
+void printRect(SDL_Rect r)
+{
+	printf("(%f, %f, %f, %f)\n", r.x, r.y, r.w, r.h);
+}
+
 bool run = true;
 bool paused = false;
 
@@ -51,9 +56,10 @@ int main(int argc, char *argv[])
 	CHECK_GL_ERROR();
 	Graphics::Init();
 	Graphics::SetViewport(640, 480);
-
-	SDL_SetRelativeMouseMode(SDL_TRUE);
 	CHECK_GL_ERROR();
+
+	if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)
+		printf("Failed to set mouse mode to Relative\n");
 
 	Game *game = new Game();
 	game->LoadResources();

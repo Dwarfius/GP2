@@ -6,7 +6,7 @@
 class Camera
 {
 private:
-	const GLfloat sensX = 3, sensY = 3;
+	const GLfloat sensX = 1, sensY = 1;
 	GLfloat yaw, pitch;
 	vec3 pos, up, forward, right;
 	mat4 projMatrix, viewMatrix, VP;
