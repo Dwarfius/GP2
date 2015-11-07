@@ -5,6 +5,7 @@
 #include "BaseComponent.h"
 #include "Renderer.h"
 #include "Camera.h"
+#include <map>
 
 class GameObject
 {
@@ -12,11 +13,15 @@ private:
 	vec3 pos, rotation, size;
 	mat4 modelMatrix;
 	Renderer *renderer = NULL;
-	vector<BaseComponent*> components;
+	map<string, BaseComponent*> components;
+	string name = "default";
 
 public:
 	GameObject();
 	~GameObject();
+
+	void setName(string n) { name = n; }
+	string GetName() { return name; }
 
 	void SetRenderer(Renderer *r) { renderer = r; }
 	Renderer* GetRenderer() { return renderer; }
@@ -36,7 +41,8 @@ public:
 	void SetScale(vec3 pScale) { size = pScale; }
 	void AddScale(vec3 delta) { size += delta; }
 
-	void AttacheComponent(BaseComponent *com);
+	void AttachComponent(BaseComponent *com);
+	BaseComponent* GetComponent(string componentType);
 };
 
 #endif
