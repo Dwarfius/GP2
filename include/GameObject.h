@@ -20,7 +20,7 @@ public:
 	GameObject();
 	~GameObject();
 
-	void setName(string n) { name = n; }
+	void SetName(string n) { name = n; }
 	string GetName() { return name; }
 
 	void SetRenderer(Renderer *r) { renderer = r; }
