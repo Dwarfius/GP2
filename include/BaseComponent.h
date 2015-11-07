@@ -8,13 +8,13 @@ class GameObject;
 class BaseComponent
 {
 protected:
-	GameObject *gameObject;
+	GameObject *pGameObject;
 public:
 	BaseComponent();
 	~BaseComponent();
 
-	void SetParentGO(GameObject *pgo) { gameObject = pgo; }
-	GameObject* GetParentGO() { return gameObject; }
+	void SetParentGO(GameObject *pgo) { pGameObject = pgo; }
+	GameObject* GetParentGO() { return pGameObject; }
 
 	virtual void Update(float deltaTime);
 };

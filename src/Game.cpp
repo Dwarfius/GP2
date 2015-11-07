@@ -34,9 +34,11 @@ void Game::LoadResources()
 	shaders.push_back(s);
 
 	GameObject *cameraGameObject = new GameObject();
+	cameraGameObject->name = "CameraBehaviourObject";
 	camera = new Camera();
-	CameraBehaviour *cb = new CameraBehaviour(camera);
-	cameraGameObject->AttacheComponent(cb);
+	cameraGameObject->AttachComponent(new CameraBehaviour(camera));
+	//testing to see if attaching the same component doesn't cause the new component to overide the old one
+	cameraGameObject->AttachComponent(new CameraBehaviour(camera));
 	gameObjects.push_back(cameraGameObject);
 
 	//testing 1000 teapots
