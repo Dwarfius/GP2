@@ -34,7 +34,7 @@ void Game::LoadResources()
 	shaders.push_back(s);
 
 	GameObject *cameraGameObject = new GameObject();
-	cameraGameObject->name = "CameraBehaviourObject";
+	cameraGameObject->SetName("CameraBehaviourObject");
 	camera = new Camera();
 	cameraGameObject->AttachComponent(new CameraBehaviour(camera));
 	//testing to see if attaching the same component doesn't cause the new component to overide the old one
