@@ -83,7 +83,7 @@ Font::Font(const string& fileName)
 	shader->Link();
 	t = new Texture(atlasText);
 	renderer = new Renderer();
-	renderer->SetModel(m, GL_TRIANGLE_FAN);
+	renderer->SetModel(m, GL_TRIANGLES);
 	renderer->SetShaderProgram(shader);
 	renderer->SetTexture(t);
 }
@@ -147,6 +147,16 @@ void Font::Render(const string& text, const SDL_Rect rect)
 			v.pos = vec3(rect.x + (x + 1) * width, rect.y + (y + 1) * height, 0);
 			v.texture = vec2(r.x + r.w, r.y);
 			vertices->push_back(v);
+
+			//pushing the required indices to form quads
+			int vertsStartInd = vertices->size() - 4;
+			//winding order matters, turns out >.>
+			indices->push_back(vertsStartInd + 2); //top left
+			indices->push_back(vertsStartInd); //bottom left
+			indices->push_back(vertsStartInd + 1); //bottom right
+			indices->push_back(vertsStartInd + 1); //bottom right
+			indices->push_back(vertsStartInd + 3); //top right
+			indices->push_back(vertsStartInd + 2); //top left
 		}
 	}
 }
@@ -155,6 +165,7 @@ void Font::Flush()
 {
 	//flush all of the vertices to the GPU for drawing
 	m->SetVertices(vertices, GL_STREAM_DRAW, false);
+	m->SetIndices(indices, GL_STREAM_DRAW, false);
 
 	glEnable(GL_BLEND);
 	renderer->Render(mat4(1), guiCam);

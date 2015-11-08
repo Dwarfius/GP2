@@ -2,6 +2,14 @@
 
 GLuint Renderer::activeProg = 0, Renderer::activeText = 0, Renderer::activeVao = 0;
 
+Renderer::Renderer(Texture *t, ShaderProgram *s, Model *m, int mode)
+{
+	texture = t;
+	shaderProg = s;
+	model = m;
+	renderMode = mode;
+}
+
 void Renderer::Render(mat4 modelMat, Camera *cam)
 {
 	//binding the shader

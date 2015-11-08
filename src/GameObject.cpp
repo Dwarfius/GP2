@@ -41,6 +41,11 @@ void GameObject::AttachComponent(BaseComponent * com)
 		cout << "Component " << typeid(*com).name() << " is already attached to GO: " << name << endl;
 		return;
 	}
+	
+	Renderer *r = dynamic_cast<Renderer*>(com);
+	if (r)
+		renderer = r;
+
 	components[typeid(*com).name()] = com;
 	cout << typeid(*com).name() << endl;
 	com->SetParentGO(this);

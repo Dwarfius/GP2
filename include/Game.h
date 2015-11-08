@@ -6,7 +6,6 @@
 #include "ShaderProgram.h"
 #include "GameObject.h"
 #include "Model.h"
-#include "CameraBehaviour.h"
 #include "Font.h"
 
 class Game

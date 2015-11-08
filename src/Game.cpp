@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "Input.h"
 #include "PostProcessing.h"
+#include "CameraBehaviour.h"
+#include "TerrainComp.h"
 
 Game::Game()
 {
@@ -15,8 +17,18 @@ void Game::LoadResources()
 	PostProcessing::Init();
 	font = new Font(FONT_PATH + "OratorStd.otf");
 
+	//======================== TEXTURES ========================
 	textures.push_back(new Texture(TEXTURE_PATH + "Tank1DF.png"));
+	textures.push_back(new Texture(TEXTURE_PATH + "Grass_1.png"));
+
+	//========================  MODELS  ========================
 	models.push_back(new Model(MODEL_PATH + "utah-teapot.FBX"));
+	Model *terrainModel = new Model();
+	terrainModel->SetUpAttrib(0, 3, GL_FLOAT, 0);
+	terrainModel->SetUpAttrib(1, 2, GL_FLOAT, sizeof(vec3) + sizeof(vec4));
+	models.push_back(terrainModel);
+
+	//========================  SHADERS ========================
 	ShaderProgram *s = new ShaderProgram(SHADER_PATH + "specularVS.glsl", SHADER_PATH + "specularFS.glsl");
 	s->BindAttribLoc(0, "vertexPosition");
 	s->BindAttribLoc(3, "vertexNormal");
@@ -33,16 +45,29 @@ void Game::LoadResources()
 	s->Link();
 	shaders.push_back(s);
 
+	s = new ShaderProgram(SHADER_PATH + "simpleVS.glsl", SHADER_PATH + "simpleFS.glsl");
+	s->BindAttribLoc(0, "vertexPosition");
+	s->BindAttribLoc(1, "uvs");
+	s->Link();
+	shaders.push_back(s);
+
+	//======================== GAMEOBJECTS  ========================
 	GameObject *cameraGameObject = new GameObject();
 	cameraGameObject->SetName("CameraBehaviourObject");
 	camera = new Camera();
 	cameraGameObject->AttachComponent(new CameraBehaviour(camera));
 	//testing to see if attaching the same component doesn't cause the new component to overide the old one
-	cameraGameObject->AttachComponent(new CameraBehaviour(camera));
+	//cameraGameObject->AttachComponent(new CameraBehaviour(camera));
 	gameObjects.push_back(cameraGameObject);
 
-	//testing 1000 teapots
-	for (int i = 0; i < 1000; i++)
+	GameObject *terrain = new GameObject();
+	terrain->SetName("Terrain");
+	terrain->AttachComponent(new Renderer(textures[1], shaders[3], terrainModel, GL_TRIANGLES));
+	terrain->AttachComponent(new TerrainComp(TEXTURE_PATH + "heightmap.png", vec3(20, 20, 2)));
+	gameObjects.push_back(terrain);
+
+	//testing 10 teapots
+	for (int i = 0; i < 0; i++)
 	{
 		GameObject *go = new GameObject();
 		go->SetRotation(vec3(0, i * 36, 0));
@@ -54,7 +79,7 @@ void Game::LoadResources()
 		renderer->SetModel(models[0], GL_TRIANGLES);
 		renderer->SetShaderProgram(shaders[0]);
 
-		go->SetRenderer(renderer);
+		go->AttachComponent(renderer);
 		gameObjects.push_back(go);
 	}
 }
@@ -100,7 +125,7 @@ void Game::Update(float deltaTime)
 {
 	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 	{
-		(*iter)->AddRotation(vec3(0, deltaTime * 15, 0));
+		//(*iter)->AddRotation(vec3(0, deltaTime * 15, 0));
 		(*iter)->Update(deltaTime);
 	}
 
@@ -137,14 +162,14 @@ bool Comparer(GameObject *a, GameObject *b)
 		return true;
 
 	//first, sort by VAOs
-	GLuint aVao = aRenderer->GetModel();
-	GLuint bVao = bRenderer->GetModel();
+	GLuint aVao = aRenderer->GetModel()->Get();
+	GLuint bVao = bRenderer->GetModel()->Get();
 
 	if (aVao == bVao)
 	{
 		//since we have same VAOs, sort by texture
-		GLuint aText = aRenderer->GetTexture();
-		GLuint bText = bRenderer->GetTexture();
+		GLuint aText = aRenderer->GetTexture()->Get();
+		GLuint bText = bRenderer->GetTexture()->Get();
 
 		if (aText == bText) //since same texture, sort by shader
 			return aRenderer->GetProgram() > bRenderer->GetProgram();
@@ -168,8 +193,8 @@ void Game::Render()
 	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 		(*iter)->Render(camera);
 
-	PostProcessing::Pass(shaders[1]);
-	PostProcessing::Pass(shaders[2]); //if you apply shader[1] again you should see the initial image
+	//PostProcessing::Pass(shaders[1]);
+	//PostProcessing::Pass(shaders[2]); //if you apply shader[1] again you should see the initial image
 	PostProcessing::RenderResult();
 
 	font->Flush();
