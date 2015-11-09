@@ -19,7 +19,7 @@ void Game::LoadResources()
 
 	//======================== TEXTURES ========================
 	textures.push_back(new Texture(TEXTURE_PATH + "Tank1DF.png"));
-	textures.push_back(new Texture(TEXTURE_PATH + "Grass_1.png"));
+	textures.push_back(new Texture(TEXTURE_PATH + "wireframe.png"));
 
 	//========================  MODELS  ========================
 	models.push_back(new Model(MODEL_PATH + "utah-teapot.FBX"));
@@ -56,14 +56,12 @@ void Game::LoadResources()
 	cameraGameObject->SetName("CameraBehaviourObject");
 	camera = new Camera();
 	cameraGameObject->AttachComponent(new CameraBehaviour(camera));
-	//testing to see if attaching the same component doesn't cause the new component to overide the old one
-	//cameraGameObject->AttachComponent(new CameraBehaviour(camera));
 	gameObjects.push_back(cameraGameObject);
 
 	GameObject *terrain = new GameObject();
 	terrain->SetName("Terrain");
 	terrain->AttachComponent(new Renderer(textures[1], shaders[3], terrainModel, GL_TRIANGLES));
-	terrain->AttachComponent(new TerrainComp(TEXTURE_PATH + "heightmap.png", vec3(20, 20, 2)));
+	terrain->AttachComponent(new TerrainComp(TEXTURE_PATH + "heightmap.png", vec3(20, 20, 1)));
 	gameObjects.push_back(terrain);
 
 	//testing 10 teapots
