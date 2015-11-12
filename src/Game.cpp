@@ -12,6 +12,10 @@ Game::~Game()
 
 void Game::LoadResources()
 {
+	sceneManager->LoadSceneDirectories();
+	for (int i = 0; i < 3; i++) {
+		cout << sceneManager->scenes[i] << endl;
+	}
 	PostProcessing::Init();
 	font = new Font(FONT_PATH + "OratorStd.otf");
 

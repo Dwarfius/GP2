@@ -8,10 +8,12 @@
 #include "Model.h"
 #include "CameraBehaviour.h"
 #include "Font.h"
+#include "SceneManager.h"
 
 class Game
 {
 private:
+	SceneManager * sceneManager;
 	Camera *camera;
 	vector<GameObject*> gameObjects;
 	vector<Texture*> textures;

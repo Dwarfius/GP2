@@ -11,6 +11,6 @@ private:
 public:
 	Scene();
 	~Scene();
-	void Update();
+	void Update(float deltaTime);
 };
 #endif 
