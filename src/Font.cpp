@@ -85,7 +85,7 @@ Font::Font(const string& fileName)
 	renderer = new Renderer();
 	renderer->SetModel(m, GL_TRIANGLES);
 	renderer->SetShaderProgram(shader);
-	renderer->SetTexture(t);
+	renderer->AddTexture(t);
 }
 
 Font::~Font()

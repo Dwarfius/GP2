@@ -19,7 +19,9 @@ void Game::LoadResources()
 
 	//======================== TEXTURES ========================
 	textures.push_back(new Texture(TEXTURE_PATH + "Tank1DF.png"));
-	textures.push_back(new Texture(TEXTURE_PATH + "wireframe.png"));
+	textures.push_back(new Texture(TEXTURE_PATH + "grass.png"));
+	textures.push_back(new Texture(TEXTURE_PATH + "ground.jpg"));
+	textures.push_back(new Texture(TEXTURE_PATH + "rock.jpg"));
 
 	//========================  MODELS  ========================
 	models.push_back(new Model(MODEL_PATH + "utah-teapot.FBX"));
@@ -51,6 +53,12 @@ void Game::LoadResources()
 	s->Link();
 	shaders.push_back(s);
 
+	s = new ShaderProgram(SHADER_PATH + "terrainVS.glsl", SHADER_PATH + "terrainFS.glsl");
+	s->BindAttribLoc(0, "vertexPosition");
+	s->BindAttribLoc(1, "uvs");
+	s->Link();
+	shaders.push_back(s);
+
 	//======================== GAMEOBJECTS  ========================
 	GameObject *cameraGameObject = new GameObject();
 	cameraGameObject->SetName("CameraBehaviourObject");
@@ -60,8 +68,11 @@ void Game::LoadResources()
 
 	GameObject *terrain = new GameObject();
 	terrain->SetName("Terrain");
-	terrain->AttachComponent(new Renderer(textures[1], shaders[3], terrainModel, GL_TRIANGLES));
-	terrain->AttachComponent(new TerrainComp(TEXTURE_PATH + "heightmap.png", vec3(20, 20, 1)));
+	Renderer *r = new Renderer(textures[1], shaders[4], terrainModel, GL_TRIANGLES);
+	r->AddTexture(textures[2]);
+	r->AddTexture(textures[3]);
+	terrain->AttachComponent(r);
+	terrain->AttachComponent(new TerrainComp(TEXTURE_PATH + "heightmap.png", vec3(20, 20, 4)));
 	gameObjects.push_back(terrain);
 
 	//testing 10 teapots
@@ -73,7 +84,7 @@ void Game::LoadResources()
 		go->SetPos(vec3(i * 5, 0, 0));
 
 		Renderer *renderer = new Renderer();
-		renderer->SetTexture(textures[0]);
+		renderer->AddTexture(textures[0]);
 		renderer->SetModel(models[0], GL_TRIANGLES);
 		renderer->SetShaderProgram(shaders[0]);
 
@@ -165,6 +176,7 @@ bool Comparer(GameObject *a, GameObject *b)
 
 	if (aVao == bVao)
 	{
+		/* Not sorting by texture because we have 5 of textures assigned to renderer potentially
 		//since we have same VAOs, sort by texture
 		GLuint aText = aRenderer->GetTexture()->Get();
 		GLuint bText = bRenderer->GetTexture()->Get();
@@ -172,7 +184,9 @@ bool Comparer(GameObject *a, GameObject *b)
 		if (aText == bText) //since same texture, sort by shader
 			return aRenderer->GetProgram() > bRenderer->GetProgram();
 		else
-			return aText > bText;
+			return aText > bText;*/
+
+		return aRenderer->GetProgram() > bRenderer->GetProgram();
 	}
 	else
 		return aVao > bVao;
