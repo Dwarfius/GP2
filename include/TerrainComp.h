@@ -13,6 +13,7 @@ private:
 
 	//returns normalized vector of RGB color
 	vec3 GetPixel(SDL_Surface *s, int x, int y);
+	vec4 GetHeightRanges(float height);
 
 public:
 	TerrainComp(const string &fileName, vec3 size);

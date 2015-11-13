@@ -27,6 +27,7 @@ TerrainComp::TerrainComp(const string &fileName, vec3 size)
 			v.pos.y = size.z * pixel.r;
 			v.texture.x = x % 2;
 			v.texture.y = y % 2;
+			v.color = GetHeightRanges(pixel.r);
 			vertices->push_back(v);
 		}
 	}
@@ -74,4 +75,21 @@ vec3 TerrainComp::GetPixel(SDL_Surface *s, int x, int y)
 	uint8 r, g, b;
 	SDL_GetRGB(pixel, s->format, &r, &g, &b);
 	return vec3(r / 255.f, g / 255.f, b / 255.f);
+}
+
+vec4 TerrainComp::GetHeightRanges(float height)
+{
+	//defines the first and 3rd height ranges {0, T, 1-T, 0}
+	const float T = 0.4f;
+	//subrages around T and 1-T points, for blending
+	const float EPSILON = 0.1f;
+
+	float k0 = 1 - height / (T + EPSILON);
+	k0 = clamp(k0, 0.f, 1.f);
+	float k1 = 1 - abs(height - 0.5) / (0.5 - T + EPSILON);
+	k1 = clamp(k1, 0.f, 1.f);
+	float k2 = (height - (1 - T - EPSILON)) / (T + EPSILON);
+	k2 = clamp(k2, 0.f, 1.f);
+
+	return vec4(k0, k1, k2, 0);
 }

@@ -27,7 +27,8 @@ void Game::LoadResources()
 	models.push_back(new Model(MODEL_PATH + "utah-teapot.FBX"));
 	Model *terrainModel = new Model();
 	terrainModel->SetUpAttrib(0, 3, GL_FLOAT, 0);
-	terrainModel->SetUpAttrib(1, 2, GL_FLOAT, sizeof(vec3) + sizeof(vec4));
+	terrainModel->SetUpAttrib(1, 4, GL_FLOAT, sizeof(vec3));
+	terrainModel->SetUpAttrib(2, 2, GL_FLOAT, sizeof(vec3) + sizeof(vec4));
 	models.push_back(terrainModel);
 
 	//========================  SHADERS ========================
@@ -55,7 +56,8 @@ void Game::LoadResources()
 
 	s = new ShaderProgram(SHADER_PATH + "terrainVS.glsl", SHADER_PATH + "terrainFS.glsl");
 	s->BindAttribLoc(0, "vertexPosition");
-	s->BindAttribLoc(1, "uvs");
+	s->BindAttribLoc(1, "colors");
+	s->BindAttribLoc(2, "uvs");
 	s->Link();
 	shaders.push_back(s);
 
