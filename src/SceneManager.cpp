@@ -2,6 +2,7 @@
 
 SceneManager::SceneManager()
 {
+	sceneMgrConfigPath = GAMEDATA_PATH + "sceneMgrConfig.xml";
 }
 
 SceneManager::~SceneManager()
@@ -17,16 +18,15 @@ void xmlErrorCheck(XMLError error, string msg) {
 	}
 }
 
-void SceneManager::loadXML(const char* filename, XMLDocument* xml)
+void SceneManager::loadXML(string filename, XMLDocument* xml)
 {
-	eResult = xml->LoadFile(filename);
+	eResult = xml->LoadFile(filename.c_str());
 	xmlErrorCheck(eResult, "File loading");
 }
 
 void SceneManager::LoadSceneDirectories()
 {
-	const char * tchar = sceneMgrConfigPath.c_str();
-	loadXML(tchar, sceneMgrConfigXML);
+	loadXML(sceneMgrConfigPath, sceneMgrConfigXML);
 	XMLNode * SMCroot = sceneMgrConfigXML->FirstChild();
 	if (SMCroot == nullptr) {
 		XML_ERROR_FILE_READ_ERROR;

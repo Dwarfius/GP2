@@ -14,13 +14,13 @@ private:
 	Scene * currentScene;
 	XMLError eResult;
 	XMLDocument* sceneMgrConfigXML = new XMLDocument();
-	string sceneMgrConfigPath = GAMEDATA_PATH + "sceneMgrConfig.xml";
+	string sceneMgrConfigPath;
 	
 public:
 	map<int, string> scenes;
 	SceneManager();
 	~SceneManager();
-	void loadXML(const char* filename, XMLDocument* xml);
+	void loadXML(string filename, XMLDocument* xml);
 	void LoadSceneDirectories();
 	void LoadScene(int lvlOrder);
 	void LoadScene(string lvlName);
