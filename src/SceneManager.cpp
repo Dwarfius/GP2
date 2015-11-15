@@ -45,11 +45,11 @@ void SceneManager::LoadSceneDirectories()
 	while (DirectoryItem != nullptr) {
 		int tOrder;
 		string tDirectory;
-		eResult = DirectoryItem->QueryIntAttribute("Order", &tOrder);
+		eResult = DirectoryItem->QueryIntAttribute("order", &tOrder);
 		xmlErrorCheck(eResult, "SceneDirectoryItem loading");
 		tDirectory = DirectoryItem->GetText();
 		scenes[tOrder] = tDirectory;
-		DirectoryItem = SMCdirectories->NextSiblingElement("Scene");
+		DirectoryItem = DirectoryItem->NextSiblingElement("Scene");
 	}
 }
 

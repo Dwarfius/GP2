@@ -12,6 +12,7 @@ Game::~Game()
 
 void Game::LoadResources()
 {
+	sceneManager = new SceneManager();
 	sceneManager->LoadSceneDirectories();
 	for (int i = 0; i < 3; i++) {
 		cout << sceneManager->scenes[i] << endl;
