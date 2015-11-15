@@ -17,11 +17,11 @@ private:
 	vector<ShaderProgram*> shaders;
 	vector<Model*> models;
 	Font *font;
-	bool wireframeMode = false;
 
 	int fpsCounter = 0;
 	int fpsDisplay = 0;
 	float fpsTimer = 0;
+	bool debugMode = false;
 
 public:
 	Game();

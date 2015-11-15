@@ -142,8 +142,8 @@ void Game::Update(float deltaTime)
 
 	if (Input::GetKeyDown(SDLK_k))
 	{
-		wireframeMode = !wireframeMode;
-		if (wireframeMode)
+		debugMode = !debugMode;
+		if (debugMode)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -201,15 +201,23 @@ void Game::Render()
 	sort(gameObjects.begin(), gameObjects.end(), Comparer);
 
 	camera->Recalculate();
-	glBindFramebuffer(GL_FRAMEBUFFER, PostProcessing::Get());
+
+	if (debugMode)
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	else
+		glBindFramebuffer(GL_FRAMEBUFFER, PostProcessing::Get());
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 		(*iter)->Render(camera);
 
-	//PostProcessing::Pass(shaders[1]);
-	//PostProcessing::Pass(shaders[2]); //if you apply shader[1] again you should see the initial image
-	PostProcessing::RenderResult();
+	if (!debugMode)
+	{
+		//PostProcessing::Pass(shaders[1]);
+		//PostProcessing::Pass(shaders[2]); //if you apply shader[1] again you should see the initial image
+		PostProcessing::RenderResult();
+	}
 
 	font->Flush();
 }
