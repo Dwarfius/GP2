@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "Game.h"
 
 GLuint Renderer::activeProg = 0, Renderer::activeVao = 0;
 GLuint Renderer::activeTexts[TEXTURE_COUNT] = { 0, 0, 0, 0, 0 };
@@ -99,4 +100,7 @@ void Renderer::Render(mat4 modelMat, Camera *cam)
 		break;
 	}
 	CHECK_GL_ERROR();
+
+	Game::verticesRendered += model->GetVertCount();
+	Game::objectsRendered++;
 }

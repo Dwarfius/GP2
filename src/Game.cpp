@@ -4,6 +4,9 @@
 #include "CameraBehaviour.h"
 #include "TerrainComp.h"
 
+uint Game::verticesRendered;
+uint Game::objectsRendered;
+
 Game::Game()
 {
 }
@@ -160,7 +163,7 @@ void Game::Update(float deltaTime)
 	char fpsBuffer[30];
 	sprintf(fpsBuffer, "FPS: %d", fpsDisplay);
 	string fpsString(fpsBuffer);
-	font->Render(fpsString, { 0, 0, 100, 40 });
+	font->Render(fpsString, { 0, 0, 100, 25 });
 }
 
 bool Comparer(GameObject *a, GameObject *b)
@@ -178,16 +181,6 @@ bool Comparer(GameObject *a, GameObject *b)
 
 	if (aVao == bVao)
 	{
-		/* Not sorting by texture because we have 5 of textures assigned to renderer potentially
-		//since we have same VAOs, sort by texture
-		GLuint aText = aRenderer->GetTexture()->Get();
-		GLuint bText = bRenderer->GetTexture()->Get();
-
-		if (aText == bText) //since same texture, sort by shader
-			return aRenderer->GetProgram() > bRenderer->GetProgram();
-		else
-			return aText > bText;*/
-
 		return aRenderer->GetProgram() > bRenderer->GetProgram();
 	}
 	else
@@ -196,6 +189,8 @@ bool Comparer(GameObject *a, GameObject *b)
 
 void Game::Render()
 {
+	verticesRendered = objectsRendered = 0;
+
 	//premature optimization, but should help with large amounts of objects
 	//sort the gameobjects for rendering to avoid extra calls to glBind of VAO/Texture/Shader
 	sort(gameObjects.begin(), gameObjects.end(), Comparer);
@@ -218,6 +213,10 @@ void Game::Render()
 		//PostProcessing::Pass(shaders[2]); //if you apply shader[1] again you should see the initial image
 		PostProcessing::RenderResult();
 	}
+
+	char *msg = (char*)malloc(100);
+	sprintf(msg, "verts:%u\nobjts:%u", verticesRendered, objectsRendered);
+	font->Render(string(msg), { 0, 25, 100, 50 });
 
 	font->Flush();
 }

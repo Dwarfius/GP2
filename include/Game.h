@@ -32,5 +32,8 @@ public:
 
 	void Update(float deltaTime);
 	void Render();
+
+	static uint verticesRendered;
+	static uint objectsRendered;
 };
 
