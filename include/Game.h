@@ -14,6 +14,7 @@ class Game
 {
 private:
 	SceneManager * sceneManager;
+	Scene * currentScene;
 	Camera *camera;
 	vector<GameObject*> gameObjects;
 	vector<Texture*> textures;

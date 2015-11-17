@@ -12,16 +12,8 @@ Game::~Game()
 
 void Game::LoadResources()
 {
-	sceneManager = new SceneManager();
-	sceneManager->LoadSceneDirectories();
-	for (int i = 0; i < 3; i++) {
-		cout << sceneManager->scenes[i] << endl;
-	}
 	PostProcessing::Init();
 	font = new Font(FONT_PATH + "OratorStd.otf");
-
-	textures.push_back(new Texture(TEXTURE_PATH + "Tank1DF.png"));
-	models.push_back(new Model(MODEL_PATH + "utah-teapot.FBX"));
 	ShaderProgram *s = new ShaderProgram(SHADER_PATH + "specularVS.glsl", SHADER_PATH + "specularFS.glsl");
 	s->BindAttribLoc(0, "vertexPosition");
 	s->BindAttribLoc(3, "vertexNormal");
@@ -38,15 +30,20 @@ void Game::LoadResources()
 	s->Link();
 	shaders.push_back(s);
 
+	currentScene = new Scene();
+	currentScene->AddShader(shaders[0], "Specular");
+
+	sceneManager = new SceneManager();
+	sceneManager->LoadSceneDirectories();
+	sceneManager->LoadScene("Main", currentScene);
+
 	GameObject *cameraGameObject = new GameObject();
 	cameraGameObject->SetName("CameraBehaviourObject");
 	camera = new Camera();
 	cameraGameObject->AttachComponent(new CameraBehaviour(camera));
-	//testing to see if attaching the same component doesn't cause the new component to overide the old one
-	cameraGameObject->AttachComponent(new CameraBehaviour(camera));
-	gameObjects.push_back(cameraGameObject);
+	currentScene->AddGamObject(cameraGameObject);
 
-	//testing 1000 teapots
+	/*testing 1000 teapots
 	for (int i = 0; i < 1000; i++)
 	{
 		GameObject *go = new GameObject();
@@ -61,11 +58,12 @@ void Game::LoadResources()
 
 		go->SetRenderer(renderer);
 		gameObjects.push_back(go);
-	}
+	}*/
 }
 
 void Game::ReleaseResources()
 {
+	sceneManager->ReleaseResources();
 	PostProcessing::CleanUp();
 	delete font;
 
@@ -103,11 +101,12 @@ void Game::ReleaseResources()
 
 void Game::Update(float deltaTime)
 {
-	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
+	/*for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 	{
 		(*iter)->AddRotation(vec3(0, deltaTime * 15, 0));
 		(*iter)->Update(deltaTime);
-	}
+	}*/
+	currentScene->Update(deltaTime);
 
 	if (Input::GetKeyDown(SDLK_k))
 	{
@@ -170,8 +169,7 @@ void Game::Render()
 	glBindFramebuffer(GL_FRAMEBUFFER, PostProcessing::Get());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
-		(*iter)->Render(camera);
+	currentScene->Render(camera);
 
 	PostProcessing::Pass(shaders[1]);
 	PostProcessing::Pass(shaders[2]); //if you apply shader[1] again you should see the initial image

@@ -11,20 +11,22 @@ using namespace tinyxml2;
 class SceneManager 
 {
 private:
-	Scene * currentScene;
 	XMLError eResult;
-	XMLDocument* sceneMgrConfigXML = new XMLDocument();
 	string sceneMgrConfigPath;
 	
 public:
 	map<int, string> scenes;
 	SceneManager();
 	~SceneManager();
+	//loads and xml file
 	void loadXML(string filename, XMLDocument* xml);
+	//loads the scene directories for all the scenes in the deliverable
 	void LoadSceneDirectories();
-	void LoadScene(int lvlOrder);
-	void LoadScene(string lvlName);
-	void Update(float deltaTime);
+	//loads the scene, takes in the scene order int as a parameter
+	void LoadScene(int lvlOrder, Scene* currentScene);
+	//loads the scene, takes in the scene name(without the ".scn") as a parameter
+	void LoadScene(string lvlName, Scene* currentScene);
+	void ReleaseResources();
 
 };
 #endif 

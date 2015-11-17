@@ -1,7 +1,0 @@
-<SceneManagerConfiguration>
-    <SceneDirectories>
-        <Scene order="0">TestArea</Scene>
-		<Scene order="1">MainMenu</Scene>
-		<Scene order="2">MainLevel</Scene>
-    </SceneDirectories>
-</SceneManagerConfiguration>
