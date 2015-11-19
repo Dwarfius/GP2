@@ -1,26 +1,12 @@
 #include "Scene.h"
 
-Scene::Scene()
+Scene::Scene(ResourceManager* rM)
 {
+	resourceManager = rM;
 }
 
 Scene::~Scene()
 {
-}
-
-void Scene::AddShader(ShaderProgram * shader, string name)
-{
-	shaderPrograms[name] = shader;
-}
-
-void Scene::AddModel(const string& filename)
-{
-	models[filename] = new Model(MODEL_PATH + filename);
-}
-
-void Scene::AddTexture(const string & filename)
-{
-	textures[filename] = new Texture(TEXTURE_PATH + filename);
 }
 
 void Scene::NewGameObject(string& n, string& t, string& m, string& s, vec3& position, vec3& rotation, vec3& scale)
@@ -31,9 +17,9 @@ void Scene::NewGameObject(string& n, string& t, string& m, string& s, vec3& posi
 	go->SetRotation(rotation);
 	go->SetScale(scale);
 	Renderer *r = new Renderer();
-	r->SetModel(models[m], GL_TRIANGLES);
-	r->SetTexture(textures[t]);
-	r->SetShaderProgram(shaderPrograms[s]);
+	r->SetModel(resourceManager->GetModel(m), GL_TRIANGLES);
+	r->SetTexture(resourceManager->GetTexture(t));
+	r->SetShaderProgram(resourceManager->GetShader(s));
 	go->SetRenderer(r);
 	gameObjects.push_back(go);
 }
@@ -51,16 +37,6 @@ void Scene::ReleaseResources()
 	{
 		delete gameObjects[count];
 		gameObjects.pop_back();
-	}
-
-	for(auto iter = textures.begin(); iter != textures.end(); iter++)
-	{
-		delete iter->second;
-	}
-
-	for (auto iter = models.begin(); iter != models.end(); iter++)
-	{
-		delete iter->second;
 	}
 }
 

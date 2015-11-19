@@ -77,7 +77,7 @@ void SceneManager::LoadScene(int sceneOrder, Scene* currentScene)
 		return;
 	}
 	while (sceneItem != nullptr) {
-		currentScene->AddModel(sceneItem->GetText());
+		resourceManager->AddModel(sceneItem->GetText());
 		sceneItem = sceneItem->NextSiblingElement("Model");
 	}
 
@@ -92,7 +92,7 @@ void SceneManager::LoadScene(int sceneOrder, Scene* currentScene)
 		return;
 	}
 	while (sceneItem != nullptr) {
-		currentScene->AddTexture(sceneItem->GetText());
+		resourceManager->AddTexture(sceneItem->GetText());
 		sceneItem = sceneItem->NextSiblingElement("Texture");
 	}
 
@@ -113,9 +113,9 @@ void SceneManager::LoadScene(int sceneOrder, Scene* currentScene)
 		string tShaderProgramName;
 		tName = sceneItem->Attribute("name");
 		tTextureName = sceneItem->Attribute("texture");
-		currentScene->AddTexture(tTextureName);
+		resourceManager->AddTexture(tTextureName);
 		tModelName = sceneItem->Attribute("model");
-		currentScene->AddModel(tModelName);
+		resourceManager->AddModel(tModelName);
 		tShaderProgramName = sceneItem->Attribute("shader");
 		vec3 tPos;
 		sceneItem->QueryFloatAttribute("posx", &tPos.x);
@@ -150,8 +150,4 @@ void SceneManager::LoadScene(string lvlName, Scene* currentScene)
 	else {
 		LoadScene(sceneOrder, currentScene);
 	}
-}
-
-void SceneManager::ReleaseResources()
-{
 }

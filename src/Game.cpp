@@ -29,9 +29,10 @@ void Game::LoadResources()
 	s->BindAttribLoc(0, "vertexPosition");
 	s->Link();
 	shaders.push_back(s);
-
-	currentScene = new Scene();
-	currentScene->AddShader(shaders[0], "Specular");
+	
+	resourceManager = new ResourceManager();
+	currentScene = new Scene(resourceManager);
+	resourceManager->AddShader(shaders[0], "Specular");
 
 	sceneManager = new SceneManager();
 	sceneManager->LoadSceneDirectories();
@@ -63,7 +64,7 @@ void Game::LoadResources()
 
 void Game::ReleaseResources()
 {
-	sceneManager->ReleaseResources();
+	resourceManager->ReleaseResources();
 	PostProcessing::CleanUp();
 	delete font;
 

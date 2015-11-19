@@ -1,5 +1,5 @@
-#ifndef _LEVELMANAGER_H
-#define _LEVELMANAGER_H
+#ifndef _SCENEMANAGER_H
+#define _SCENEMANAGER_H
 
 #include "Common.h"
 #include "Scene.h"
@@ -13,6 +13,7 @@ class SceneManager
 private:
 	XMLError eResult;
 	string sceneMgrConfigPath;
+	ResourceManager* resourceManager;
 	
 public:
 	map<int, string> scenes;
@@ -26,7 +27,5 @@ public:
 	void LoadScene(int lvlOrder, Scene* currentScene);
 	//loads the scene, takes in the scene name(without the ".scn") as a parameter
 	void LoadScene(string lvlName, Scene* currentScene);
-	void ReleaseResources();
-
 };
 #endif 
