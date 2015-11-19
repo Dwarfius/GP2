@@ -1,0 +1,11 @@
+A simple reduction of glBufferData calls, centered around Font implementation - instead of tryind to render text
+at maximum speed, limit it's updates to 60 frames per second.
+
+Before: 20593 calls to glBufferData, each call taking up 0.645ms
+After(adjusted for different capture times): 3729 * 5/4(glDrawElements before / glDrawElements after) = 4661 
+calls to glBufferData, each call taking up 0.72ms
+Before, total time: 13,300,645 ns = 13.3 s
+After, total time: 2,688,550 ns * 5/4 = 3.360.687 ns = 3.4 s
+Time saved: 
+	*Absolute: 13.3 - 3.4 = 9.9 s
+	*Relative: 9.9/13.3 = 74.4%

@@ -77,7 +77,7 @@ Font::Font(const string& fileName)
 	m->SetUpAttrib(0, 3, GL_FLOAT, 0);
 	m->SetUpAttrib(1, 2, GL_FLOAT, sizeof(vec3) + sizeof(vec4));
 
-	shader = new ShaderProgram(SHADER_PATH + "simpleVS.glsl", SHADER_PATH + "simpleFS.glsl");
+	shader = new ShaderProgram(SHADER_PATH + "guiVS.glsl", SHADER_PATH + "guiFS.glsl");
 	shader->BindAttribLoc(0, "vertexPosition");
 	shader->BindAttribLoc(1, "uvs");
 	shader->Link();
@@ -161,14 +161,19 @@ void Font::Render(const string& text, const SDL_Rect rect)
 	}
 }
 
-void Font::Flush()
+void Font::Flush(float deltaTime)
 {
 	//flush all of the vertices to the GPU for drawing
-	m->SetVertices(vertices, GL_STREAM_DRAW, false);
-	m->SetIndices(indices, GL_STREAM_DRAW, false);
+	timer += deltaTime;
+	if (timer > 1.f / 60.f) //60fps text updating
+	{
+		m->SetVertices(vertices, GL_STREAM_DRAW, false);
+		m->SetIndices(indices, GL_STREAM_DRAW, false);
+		timer = 0;
+	}
 
 	glEnable(GL_BLEND);
-	renderer->Render(mat4(1), guiCam);
+	renderer->Render(guiCam);
 	glDisable(GL_BLEND);
 
 	//clear out the memory to start rendering new ones

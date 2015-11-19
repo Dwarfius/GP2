@@ -88,10 +88,14 @@ void Model::SetIndices(vector<int> *indcs, GLuint flag, bool deletePrev)
 
 void Model::SetUpAttrib(int index, int count, int type, size_t offset)
 {
-	//Tell the shader that 0 is the position element
 	glEnableVertexAttribArray(index);
 	glVertexAttribPointer(index, count, type, GL_FALSE, sizeof(Vertex), (void**)offset);
 	CHECK_GL_ERROR();
+}
+
+void Model::SetAttribDivisor(int index, int divisor)
+{
+	glVertexAttribDivisor(index, divisor);
 }
 
 Model::~Model()

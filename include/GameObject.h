@@ -41,6 +41,8 @@ public:
 	void SetScale(vec3 pScale) { size = pScale; }
 	void AddScale(vec3 delta) { size += delta; }
 
+	mat4 GetModelMatrix() { return modelMatrix; }
+
 	void AttachComponent(BaseComponent *com);
 	BaseComponent* GetComponent(string componentType);
 };

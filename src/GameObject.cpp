@@ -32,7 +32,7 @@ void GameObject::Render(Camera *camera)
 	modelMatrix = rotate(modelMatrix, radians(rotation.z), vec3(0, 0, 1));
 	modelMatrix = scale(modelMatrix, size);
 
-	renderer->Render(modelMatrix, camera);
+	renderer->Render(camera);
 }
 
 void GameObject::AttachComponent(BaseComponent * com)

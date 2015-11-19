@@ -2,6 +2,7 @@
 
 BaseComponent::BaseComponent()
 {
+	pGameObject = 0;
 }
 
 BaseComponent::~BaseComponent()

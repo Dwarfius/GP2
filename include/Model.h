@@ -35,6 +35,9 @@ public:
 	void SetIndices(vector<int> *indcs, GLuint flag, bool deletePrev);
 
 	void SetUpAttrib(int index, int count, int type, size_t offset);
+	//instancing related - divisor = 0 means grab new data after each vertex,
+	//divisor = N means grab new data after N instances processed.
+	void SetAttribDivisor(int index, int divisor);
 };
 
 #endif

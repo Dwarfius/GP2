@@ -38,7 +38,8 @@ public:
 	void SetTexture(int i, Texture *t) { textures[i] = t; }
 	Texture* GetTexture(int i) { return textures[i]; }
 
-	void Render(mat4 modelMat, Camera *cam);
+	void Render(Camera *cam);
+	void RenderInstanced(Camera *cam, int count);
 };
 
 #endif

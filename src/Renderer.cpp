@@ -12,9 +12,8 @@ Renderer::Renderer(Texture *t, ShaderProgram *s, Model *m, int mode)
 	renderMode = mode;
 }
 
-void Renderer::Render(mat4 modelMat, Camera *cam)
+void Renderer::Render(Camera *cam)
 {
-	//binding the shader
 	GLuint prog = shaderProg->Get();
 	if (prog != activeProg)
 	{
@@ -39,6 +38,8 @@ void Renderer::Render(mat4 modelMat, Camera *cam)
 			activeTexts[i] = text;
 		}
 	}
+
+	mat4 modelMat = pGameObject ? pGameObject->GetModelMatrix() : mat4(1);
 
 	if (cam)
 	{
@@ -103,4 +104,61 @@ void Renderer::Render(mat4 modelMat, Camera *cam)
 
 	Game::verticesRendered += model->GetVertCount();
 	Game::objectsRendered++;
+	Game::drawCalls++;
+}
+
+//FINISH THIS UP
+void Renderer::RenderInstanced(Camera *cam, int count)
+{
+	//binding the shader
+	GLuint prog = shaderProg->Get();
+	if (prog != activeProg)
+	{
+		glUseProgram(prog);
+		activeProg = prog;
+	}
+
+	//and sending settings
+	GLint loc;
+	for (int i = 0; i < textCount; i++)
+	{
+		GLuint text = textures[i]->Get();
+		if (text != activeTexts[i])
+		{
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, text);
+
+			string name = string("texture") + (char)(48 + i);
+			loc = glGetUniformLocation(shaderProg->Get(), name.c_str());
+			glUniform1i(loc, i);
+
+			activeTexts[i] = text;
+		}
+	}
+
+	//binding the vao
+	GLuint vao = model->Get();
+	if (vao != activeVao)
+	{
+		glBindVertexArray(vao);
+		activeVao = vao;
+	}
+
+	switch (renderMode)
+	{
+	case GL_TRIANGLES:
+		glDrawElementsInstanced(GL_TRIANGLES, model->GetIndCount(), GL_UNSIGNED_INT, 0, count);
+		break;
+	case GL_TRIANGLE_FAN:
+		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, model->GetVertCount(), count);
+		break;
+	default:
+		printf("Render mode unsupported!");
+		break;
+	}
+	CHECK_GL_ERROR();
+
+	Game::verticesRendered += model->GetVertCount() * count;
+	Game::objectsRendered += count;
+	Game::drawCalls++;
 }

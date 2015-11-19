@@ -31,9 +31,10 @@ public:
 	void ReleaseResources();
 
 	void Update(float deltaTime);
-	void Render();
+	void Render(float deltaTime);
 
 	static uint verticesRendered;
 	static uint objectsRendered;
+	static uint drawCalls;
 };
 

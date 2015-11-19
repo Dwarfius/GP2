@@ -6,6 +6,7 @@
 
 uint Game::verticesRendered;
 uint Game::objectsRendered;
+uint Game::drawCalls;
 
 Game::Game()
 {
@@ -187,9 +188,9 @@ bool Comparer(GameObject *a, GameObject *b)
 		return aVao > bVao;
 }
 
-void Game::Render()
+void Game::Render(float deltaTime)
 {
-	verticesRendered = objectsRendered = 0;
+	drawCalls = verticesRendered = objectsRendered = 0;
 
 	//premature optimization, but should help with large amounts of objects
 	//sort the gameobjects for rendering to avoid extra calls to glBind of VAO/Texture/Shader
@@ -214,9 +215,12 @@ void Game::Render()
 		PostProcessing::RenderResult();
 	}
 
-	char *msg = (char*)malloc(100);
-	sprintf(msg, "verts:%u\nobjts:%u", verticesRendered, objectsRendered);
-	font->Render(string(msg), { 0, 25, 100, 50 });
+	char *msg = (char*)malloc(50);
+	sprintf(msg, "verts:%u", verticesRendered);
+	font->Render(string(msg), { 0, 25, 100, 25 });
+	sprintf(msg, "objts:%u", objectsRendered);
+	font->Render(string(msg), { 0, 50, 100, 25 });
+	free(msg);
 
-	font->Flush();
+	font->Flush(deltaTime);
 }

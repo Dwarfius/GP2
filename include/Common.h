@@ -30,7 +30,12 @@ const string FONT_PATH = ASSET_PATH + "fonts/";
 const string MODEL_PATH = ASSET_PATH + "models/";
 
 void checkError(const char *file, int line);
+
+#ifdef DEBUG
 #define CHECK_GL_ERROR() checkError(__FILE__, __LINE__)
+#else
+#define CHECK_GL_ERROR()
+#endif
 
 void printVec3(vec3 p);
 void printRect(SDL_Rect r);
