@@ -28,6 +28,7 @@ const string SHADER_PATH = ASSET_PATH + "shaders/";
 const string TEXTURE_PATH = ASSET_PATH + "textures/";
 const string FONT_PATH = ASSET_PATH + "fonts/";
 const string MODEL_PATH = ASSET_PATH + "models/";
+const string GAMEDATA_PATH = ASSET_PATH + "gamedata/";
 
 void checkError(const char *file, int line);
 
