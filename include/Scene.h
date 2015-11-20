@@ -1,16 +1,30 @@
-#ifndef _LEVEL_H
-#define _LEVEL_H
+#ifndef _SCENE_H
+#define _SCENE_H
 
 #include "Common.h"
-#include "tinyxml2.h"
+#include "GameObject.h"
+#include "ResourceManager.h"
+#include <map>
 
 class Scene
 {
 private:
 	string name;
+	Camera *camera;
+	ResourceManager* resourceManager;
 public:
-	Scene();
+	vector<GameObject*> gameObjects;
+
+	Scene(ResourceManager* rM);
 	~Scene();
+	//adds a new gameobject to the vector
+	void NewGameObject(string& n, string& t, string& m, 
+		string& s, vec3& position, vec3& rotation, vec3& scale);
+	//adds a creted gameobject from outside the scene to the scene
+	void AddGamObject(GameObject* go);
+	//Deletes all the things!
+	void ReleaseResources();
 	void Update(float deltaTime);
+	void Render(Camera* camera);
 };
 #endif 

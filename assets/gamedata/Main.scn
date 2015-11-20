@@ -1,0 +1,13 @@
+<Scene name="Main">
+    <ModelList>
+		<Model>utah-teapot.fbx</Model>
+    </ModelList>
+	<TextureList>
+		<Texture>texture.png</Texture>
+	</TextureList>
+	<GameObjectList>
+		<GameObject name="Tea Pot" texture="texture.png" model="utah-teapot.fbx" 
+			shader = "Specular" posx="-5" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+			scalex="0.3" scaley="0.3" scalez="0.3"/>
+	</GameObjectList>
+</Scene>

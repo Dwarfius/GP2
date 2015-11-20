@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _GAME_H
+#define _GAME_H
 
 #include "Common.h"
 #include "Camera.h"
@@ -13,11 +14,9 @@ class Game
 {
 private:
 	SceneManager * sceneManager;
+	Scene * currentScene;
+	ResourceManager* resourceManager;
 	Camera *camera;
-	vector<GameObject*> gameObjects;
-	vector<Texture*> textures;
-	vector<ShaderProgram*> shaders;
-	vector<Model*> models;
 	Font *font;
 
 	int fpsCounter = 0;
@@ -40,3 +39,4 @@ public:
 	static uint drawCalls;
 };
 
+#endif
