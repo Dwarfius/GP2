@@ -15,10 +15,13 @@ private:
 	//contains vertices for submitting to gpu
 	vector<Vertex> *vertices;
 	vector<int> *indices;
+
 	Renderer *renderer;
 	Model *m;
 	Texture *t;
 	ShaderProgram *shader;
+
+	float timer = 0;
 
 	GLuint Font::ConvertSDLSurfaceToTexture(SDL_Surface *surf);
 
@@ -27,7 +30,7 @@ public:
 	~Font();
 
 	void Render(const string& text, const SDL_Rect rect);
-	void Flush();
+	void Flush(float deltaTime);
 };
 
 #endif

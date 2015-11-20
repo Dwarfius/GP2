@@ -8,29 +8,38 @@
 #include "BaseComponent.h"
 #include "Camera.h"
 
+#define TEXTURE_COUNT 5
+
 class Renderer: public BaseComponent
 {
 private:
-	Texture *texture;
+	Texture* textures[TEXTURE_COUNT];
 	ShaderProgram *shaderProg;
 	Model *model;
 	int renderMode = 0;
+	int textCount = 0;
 
-	static GLuint activeProg, activeText, activeVao;
+	static GLuint activeProg, activeVao;
+	static GLuint activeTexts[TEXTURE_COUNT];
 
 public:
-	Renderer() {}
+	Renderer() { }
+	Renderer(Texture *t, ShaderProgram *s, Model *m, int mode);
 	~Renderer() {}
 
 	//mode supports either GL_TRIANGLE_FAN or GL_TRIANGLES
 	void SetModel(Model *pModel, int mode) { model = pModel; renderMode = mode; }
-	GLuint GetModel() { return model->Get(); }
-	void SetShaderProgram(ShaderProgram *sP) { shaderProg = sP; }
-	GLuint GetProgram() { return shaderProg->Get(); }
-	void SetTexture(Texture *pTexture) { texture = pTexture; }
-	GLuint GetTexture() { return texture ? texture->Get() : 0; }
+	Model* GetModel() { return model; }
 
-	void Render(mat4 modelMat, Camera *cam);
+	void SetShaderProgram(ShaderProgram *sP) { shaderProg = sP; }
+	ShaderProgram* GetProgram() { return shaderProg; }
+
+	void AddTexture(Texture *t) { textures[textCount++] = t; }
+	void SetTexture(int i, Texture *t) { textures[i] = t; }
+	Texture* GetTexture(int i) { return textures[i]; }
+
+	void Render(Camera *cam);
+	void RenderInstanced(Camera *cam, int count);
 };
 
 #endif

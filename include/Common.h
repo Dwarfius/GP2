@@ -31,7 +31,12 @@ const string MODEL_PATH = ASSET_PATH + "models/";
 const string GAMEDATA_PATH = ASSET_PATH + "gamedata/";
 
 void checkError(const char *file, int line);
+
+#ifdef DEBUG
 #define CHECK_GL_ERROR() checkError(__FILE__, __LINE__)
+#else
+#define CHECK_GL_ERROR()
+#endif
 
 void printVec3(vec3 p);
 void printRect(SDL_Rect r);

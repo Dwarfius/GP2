@@ -42,10 +42,6 @@ void Graphics::Init()
 	//turn on back face culling
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-
-	//turn on best perspective correction
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-	CHECK_GL_ERROR();
 }
 
 void Graphics::SetViewport(int width, int height)

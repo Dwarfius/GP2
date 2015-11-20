@@ -73,7 +73,7 @@ void PostProcessing::Init()
 	program->Link();
 
 	renderer = new Renderer();
-	renderer->SetTexture(texture[0]);
+	renderer->AddTexture(texture[0]);
 	renderer->SetModel(model, GL_TRIANGLE_FAN);
 	renderer->SetShaderProgram(program);
 }
@@ -93,12 +93,12 @@ void PostProcessing::Pass(ShaderProgram *newProgram)
 {
 	renderer->SetShaderProgram(newProgram);
 	//binding a populated texture
-	renderer->SetTexture(texture[activeInd]);
+	renderer->SetTexture(0, texture[activeInd]);
 	//swapping so that we render from populated to clean
 	activeInd = ++activeInd % 2;
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo[activeInd]);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	renderer->Render(mat4(1), NULL);
+	renderer->Render(NULL);
 
 	//restore the shader
 	renderer->SetShaderProgram(program);
@@ -108,6 +108,6 @@ void PostProcessing::RenderResult()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	renderer->SetTexture(texture[activeInd]);
-	renderer->Render(mat4(1), NULL);
+	renderer->SetTexture(0, texture[activeInd]);
+	renderer->Render(NULL);
 }

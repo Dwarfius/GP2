@@ -18,7 +18,7 @@ void Scene::NewGameObject(string& n, string& t, string& m, string& s, vec3& posi
 	go->SetScale(scale);
 	Renderer *r = new Renderer();
 	r->SetModel(resourceManager->GetModel(m), GL_TRIANGLES);
-	r->SetTexture(resourceManager->GetTexture(t));
+	r->SetTexture(0, resourceManager->GetTexture(t));
 	r->SetShaderProgram(resourceManager->GetShader(s));
 	go->SetRenderer(r);
 	gameObjects.push_back(go);

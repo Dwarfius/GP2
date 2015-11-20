@@ -23,6 +23,7 @@ public:
 void AddShader(ShaderProgram* shader, string name);
 //adds model to the model map
 void AddModel(const string& filename);
+void AddModel(const string& name, Model *m) { models[name] = m; }
 //adds texture to the map
 void AddTexture(const string& filename);
 

@@ -22,6 +22,11 @@ void ShaderProgram::BindAttribLoc(GLuint loc, const char *name)
 	CHECK_GL_ERROR();
 }
 
+void ShaderProgram::GetUniformLoc(const char *name)
+{
+
+}
+
 void ShaderProgram::Link()
 {
 	//link shaders and attribs

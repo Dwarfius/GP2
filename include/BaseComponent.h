@@ -1,20 +1,20 @@
 #ifndef _BASECOMPONENT_H
 #define _BASECOMPONENT_H
 
-#include "Common.h"
-
+//forward declaring to awoid circular includes
 class GameObject;
 
 class BaseComponent
 {
 protected:
 	GameObject *pGameObject;
+
 public:
 	BaseComponent();
 	~BaseComponent();
 
-	void SetParentGO(GameObject *pgo) { pGameObject = pgo; }
-	GameObject* GetParentGO() { return pGameObject; }
+	virtual void SetParentGO(GameObject *pGO);
+	GameObject* GetParentGO();
 
 	virtual void Update(float deltaTime);
 };

@@ -77,15 +77,15 @@ Font::Font(const string& fileName)
 	m->SetUpAttrib(0, 3, GL_FLOAT, 0);
 	m->SetUpAttrib(1, 2, GL_FLOAT, sizeof(vec3) + sizeof(vec4));
 
-	shader = new ShaderProgram(SHADER_PATH + "simpleVS.glsl", SHADER_PATH + "simpleFS.glsl");
+	shader = new ShaderProgram(SHADER_PATH + "guiVS.glsl", SHADER_PATH + "guiFS.glsl");
 	shader->BindAttribLoc(0, "vertexPosition");
 	shader->BindAttribLoc(1, "uvs");
 	shader->Link();
 	t = new Texture(atlasText);
 	renderer = new Renderer();
-	renderer->SetModel(m, GL_TRIANGLE_FAN);
+	renderer->SetModel(m, GL_TRIANGLES);
 	renderer->SetShaderProgram(shader);
-	renderer->SetTexture(t);
+	renderer->AddTexture(t);
 }
 
 Font::~Font()
@@ -147,17 +147,33 @@ void Font::Render(const string& text, const SDL_Rect rect)
 			v.pos = vec3(rect.x + (x + 1) * width, rect.y + (y + 1) * height, 0);
 			v.texture = vec2(r.x + r.w, r.y);
 			vertices->push_back(v);
+
+			//pushing the required indices to form quads
+			int vertsStartInd = vertices->size() - 4;
+			//winding order matters, turns out >.>
+			indices->push_back(vertsStartInd + 2); //top left
+			indices->push_back(vertsStartInd); //bottom left
+			indices->push_back(vertsStartInd + 1); //bottom right
+			indices->push_back(vertsStartInd + 1); //bottom right
+			indices->push_back(vertsStartInd + 3); //top right
+			indices->push_back(vertsStartInd + 2); //top left
 		}
 	}
 }
 
-void Font::Flush()
+void Font::Flush(float deltaTime)
 {
 	//flush all of the vertices to the GPU for drawing
-	m->SetVertices(vertices, GL_STREAM_DRAW, false);
+	timer += deltaTime;
+	if (timer > 1.f / 60.f) //60fps text updating
+	{
+		m->SetVertices(vertices, GL_STREAM_DRAW, false);
+		m->SetIndices(indices, GL_STREAM_DRAW, false);
+		timer = 0;
+	}
 
 	glEnable(GL_BLEND);
-	renderer->Render(mat4(1), guiCam);
+	renderer->Render(guiCam);
 	glDisable(GL_BLEND);
 
 	//clear out the memory to start rendering new ones

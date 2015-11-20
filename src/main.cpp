@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
 
 		game->Update(deltaTime);
 		CHECK_GL_ERROR();
-		game->Render();
+		game->Render(deltaTime);
 		CHECK_GL_ERROR();
 
 		SDL_GL_SwapWindow(window);

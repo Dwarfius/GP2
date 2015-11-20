@@ -2,7 +2,7 @@
 #include "Input.h"
 #include "GameObject.h"
 
-CameraBehaviour::CameraBehaviour(Camera * c)
+CameraBehaviour::CameraBehaviour(Camera *c)
 {
 	camera = c;
 	speed = 1;
