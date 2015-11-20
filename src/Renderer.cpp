@@ -32,8 +32,7 @@ void Renderer::Render(Camera *cam)
 			glBindTexture(GL_TEXTURE_2D, text);
 
 			string name = string("texture") + (char)(48 + i);
-			loc = glGetUniformLocation(shaderProg->Get(), name.c_str());
-			glUniform1i(loc, i);
+			shaderProg->SetUniform(name, &i);
 
 			activeTexts[i] = text;
 		}
@@ -43,41 +42,38 @@ void Renderer::Render(Camera *cam)
 
 	if (cam)
 	{
-		loc = glGetUniformLocation(shaderProg->Get(), "MVP");
 		mat4 MVP = cam->Get() * modelMat;
-		glUniformMatrix4fv(loc, 1, GL_FALSE, value_ptr(MVP));
+		shaderProg->SetUniform("MVP", value_ptr(MVP));
 
-		loc = glGetUniformLocation(shaderProg->Get(), "cameraPosition");
 		vec3 camPos = cam->GetPos();
-		glUniform3f(loc, camPos.x, camPos.y, camPos.z);
+		shaderProg->SetUniform("cameraPosition", &camPos);
 	}
 
-	loc = glGetUniformLocation(shaderProg->Get(), "Model");
-	glUniformMatrix4fv(loc, 1, GL_FALSE, value_ptr(modelMat));
+	shaderProg->SetUniform("Model", value_ptr(modelMat));
 
-	loc = glGetUniformLocation(shaderProg->Get(), "lightDirection");
-	glUniform3f(loc, 0, 0, 1);
+	vec3 lightDir(0, 0, 1);
+	shaderProg->SetUniform("lightDirection", &lightDir);
 
-	loc = glGetUniformLocation(shaderProg->Get(), "ambientMaterialColor");
-	glUniform4f(loc, 0.3f, 0.3f, 0.3f, 1);
+	vec4 ambMatColor(0.3f, 0.3f, 0.3f, 1);
+	shaderProg->SetUniform("ambientMaterialColor", &ambMatColor);
 
-	loc = glGetUniformLocation(shaderProg->Get(), "diffuseMaterialColor");
-	glUniform4f(loc, 1, 0, 0, 1);
+	vec4 difMatColor(1, 0, 0, 1);
+	shaderProg->SetUniform("diffuseMaterialColor", &difMatColor);
 
-	loc = glGetUniformLocation(shaderProg->Get(), "specularMaterialColor");
-	glUniform4f(loc, 1, 1, 1, 1);
+	vec4 specMatColor(1, 1, 1, 1);
+	shaderProg->SetUniform("specularMaterialColor", &specMatColor);
 
-	loc = glGetUniformLocation(shaderProg->Get(), "specularPower");
-	glUniform1f(loc, 25);
+	float power = 25;
+	shaderProg->SetUniform("specularPower", &power);
 
-	loc = glGetUniformLocation(shaderProg->Get(), "ambientLightColor");
-	glUniform4f(loc, 0.3f, 0.3f, 0.3f, 1);
+	vec4 ambLightColor(0.3f, 0.3f, 0.3f, 1);
+	shaderProg->SetUniform("ambientLightColor", &ambLightColor);
 
-	loc = glGetUniformLocation(shaderProg->Get(), "diffuseLightColor");
-	glUniform4f(loc, 0.8f, 0.8f, 0.8f, 1);
+	vec4 difLightColor(0.8f, 0.8f, 0.8f, 1);
+	shaderProg->SetUniform("diffuseLightColor", &difLightColor);
 
-	loc = glGetUniformLocation(shaderProg->Get(), "specularLightColor");
-	glUniform4f(loc, 1, 1, 1, 1);
+	vec4 specLightColor(1, 1, 1, 1);
+	shaderProg->SetUniform("specularLightColor", &specLightColor);
 	
 	//binding the vao
 	GLuint vao = model->Get();

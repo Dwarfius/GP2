@@ -15,7 +15,6 @@ GameObject::~GameObject()
 
 void GameObject::Update(float deltaTime)
 {
-	
 	for (auto it = components.begin(); it != components.end(); it++) {
 		(*(it->second)).Update(deltaTime);
 	}

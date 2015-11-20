@@ -8,6 +8,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <map>
 
 #include <GL/glew.h>
 #include <SDL.h>

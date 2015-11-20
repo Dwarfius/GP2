@@ -23,7 +23,6 @@ public:
 	void SetName(string n) { name = n; }
 	string GetName() { return name; }
 
-	void SetRenderer(Renderer *r) { renderer = r; }
 	Renderer* GetRenderer() { return renderer; }
 
 	void Update(float deltaTime);
