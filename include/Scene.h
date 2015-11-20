@@ -11,9 +11,10 @@ class Scene
 private:
 	string name;
 	Camera *camera;
-	vector<GameObject*> gameObjects;
 	ResourceManager* resourceManager;
 public:
+	vector<GameObject*> gameObjects;
+
 	Scene(ResourceManager* rM);
 	~Scene();
 	//adds a new gameobject to the vector

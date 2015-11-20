@@ -17,10 +17,6 @@ private:
 	Scene * currentScene;
 	ResourceManager* resourceManager;
 	Camera *camera;
-	vector<GameObject*> gameObjects;
-	vector<Texture*> textures;
-	vector<ShaderProgram*> shaders;
-	vector<Model*> models;
 	Font *font;
 	bool wireframeMode = false;
 

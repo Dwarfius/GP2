@@ -5,7 +5,8 @@
 #include "GameObject.h"
 #include <map>
 
-class ResourceManager {
+class ResourceManager 
+{
 private:
 map<string, ShaderProgram*> shaderPrograms;
 map<string, Texture*> textures;
@@ -24,7 +25,8 @@ void AddShader(ShaderProgram* shader, string name);
 void AddModel(const string& filename);
 //adds texture to the map
 void AddTexture(const string& filename);
-ShaderProgram* GetShader(string& name);
+
+ShaderProgram* GetShader(string name);
 Texture* GetTexture(string& name);
 Model* GetModel(string& name);
 //Deletes all the things!

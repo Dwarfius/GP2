@@ -12,29 +12,28 @@ Game::~Game()
 
 void Game::LoadResources()
 {
+	resourceManager = new ResourceManager();
+	currentScene = new Scene(resourceManager);
+	sceneManager = new SceneManager(resourceManager);
+
 	PostProcessing::Init();
 	font = new Font(FONT_PATH + "OratorStd.otf");
 	ShaderProgram *s = new ShaderProgram(SHADER_PATH + "specularVS.glsl", SHADER_PATH + "specularFS.glsl");
 	s->BindAttribLoc(0, "vertexPosition");
 	s->BindAttribLoc(3, "vertexNormal");
 	s->Link();
-	shaders.push_back(s);
+	resourceManager->AddShader(s, "Specular");
 
 	s = new ShaderProgram(SHADER_PATH + "postProcVS.glsl", SHADER_PATH + "colorCorr1.glsl");
 	s->BindAttribLoc(0, "vertexPosition");
 	s->Link();
-	shaders.push_back(s);
+	resourceManager->AddShader(s, "PostProcess1");
 
 	s = new ShaderProgram(SHADER_PATH + "postProcVS.glsl", SHADER_PATH + "colorCorr2.glsl");
 	s->BindAttribLoc(0, "vertexPosition");
 	s->Link();
-	shaders.push_back(s);
-	
-	resourceManager = new ResourceManager();
-	currentScene = new Scene(resourceManager);
-	resourceManager->AddShader(shaders[0], "Specular");
+	resourceManager->AddShader(s, "PostProcess2");
 
-	sceneManager = new SceneManager();
 	sceneManager->LoadSceneDirectories();
 	sceneManager->LoadScene("Main", currentScene);
 
@@ -43,23 +42,6 @@ void Game::LoadResources()
 	camera = new Camera();
 	cameraGameObject->AttachComponent(new CameraBehaviour(camera));
 	currentScene->AddGamObject(cameraGameObject);
-
-	/*testing 1000 teapots
-	for (int i = 0; i < 1000; i++)
-	{
-		GameObject *go = new GameObject();
-		go->SetRotation(vec3(0, i * 36, 0));
-		go->SetScale(vec3(0.1f, 0.1f, 0.1f));
-		go->SetPos(vec3(i * 5, 0, 0));
-
-		Renderer *renderer = new Renderer();
-		renderer->SetTexture(textures[0]);
-		renderer->SetModel(models[0], GL_TRIANGLES);
-		renderer->SetShaderProgram(shaders[0]);
-
-		go->SetRenderer(renderer);
-		gameObjects.push_back(go);
-	}*/
 }
 
 void Game::ReleaseResources()
@@ -67,46 +49,11 @@ void Game::ReleaseResources()
 	resourceManager->ReleaseResources();
 	PostProcessing::CleanUp();
 	delete font;
-
-	//clearing out all the objects
-	int count = gameObjects.size();
-	while (count-- > 0)
-	{
-		delete gameObjects[count];
-		gameObjects.pop_back();
-	}
-
-	count = textures.size();
-	while (count-- > 0)
-	{
-		delete textures[count];
-		textures.pop_back();
-	}
-
-	count = shaders.size();
-	while (count-- > 0)
-	{
-		delete shaders[count];
-		shaders.pop_back();
-	}
-
-	count = models.size();
-	while (count-- > 0)
-	{
-		delete models[count];
-		models.pop_back();
-	}
-
 	delete camera;
 }
 
 void Game::Update(float deltaTime)
 {
-	/*for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
-	{
-		(*iter)->AddRotation(vec3(0, deltaTime * 15, 0));
-		(*iter)->Update(deltaTime);
-	}*/
 	currentScene->Update(deltaTime);
 
 	if (Input::GetKeyDown(SDLK_k))
@@ -164,7 +111,7 @@ void Game::Render()
 {
 	//premature optimization, but should help with large amounts of objects
 	//sort the gameobjects for rendering to avoid extra calls to glBind of VAO/Texture/Shader
-	sort(gameObjects.begin(), gameObjects.end(), Comparer);
+	sort(currentScene->gameObjects.begin(), currentScene->gameObjects.end(), Comparer);
 
 	camera->Recalculate();
 	glBindFramebuffer(GL_FRAMEBUFFER, PostProcessing::Get());
@@ -172,8 +119,8 @@ void Game::Render()
 
 	currentScene->Render(camera);
 
-	PostProcessing::Pass(shaders[1]);
-	PostProcessing::Pass(shaders[2]); //if you apply shader[1] again you should see the initial image
+	PostProcessing::Pass(resourceManager->GetShader("PostProcess1"));
+	PostProcessing::Pass(resourceManager->GetShader("PostProcess2")); //if you apply shader[1] again you should see the initial image
 	PostProcessing::RenderResult();
 
 	font->Flush();

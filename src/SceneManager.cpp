@@ -1,9 +1,10 @@
 #include "SceneManager.h"
 #include "GameObject.h"
 
-SceneManager::SceneManager()
+SceneManager::SceneManager(ResourceManager* rM)
 {
 	sceneMgrConfigPath = GAMEDATA_PATH + "sceneMgrConfig.scn";
+	resourceManager = rM;
 }
 
 SceneManager::~SceneManager()
