@@ -6,11 +6,11 @@
 class CameraBehaviour: public BaseComponent
 {
 private:
-	float speed;
 	Camera *camera;
 	bool wireframeMode = false;
 public:
-	CameraBehaviour(Camera * c);
+	float speed;
+	CameraBehaviour(Camera * c, float tS);
 	~CameraBehaviour();
 	void Update(float deltaTime);
 };

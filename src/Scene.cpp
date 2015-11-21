@@ -3,15 +3,19 @@
 Scene::Scene(ResourceManager* rM)
 {
 	resourceManager = rM;
+	//register components here
+	componentIDValues[""] = COMPONENT_NOTFOUND;
+	componentIDValues["CameraBehaviour"] = CAMERA_BEHAVIOUR;
+	componentIDValues["Terrain"] = TERRAIN;
+	camera = new Camera();
 }
 
 Scene::~Scene()
 {
 }
 
-void Scene::NewGameObject(string& n, string& t, string& m, string& s, vec3& position, vec3& rotation, vec3& scale)
+void Scene::AddGameObject(string& n, string& t, string& m, string& s, vec3& position, vec3& rotation, vec3& scale, GameObject* go)
 {
-	GameObject *go = new GameObject();
 	go->SetName(n);
 	go->SetPos(position);
 	go->SetRotation(rotation);
@@ -24,7 +28,31 @@ void Scene::NewGameObject(string& n, string& t, string& m, string& s, vec3& posi
 	gameObjects.push_back(go);
 }
 
-void Scene::AddGamObject(GameObject * go)
+void Scene::AttachComponent(string & compID, GameObject * go, XMLElement* attributesElement)
+{
+	string tID = compID;
+	auto iter = componentIDValues.find(tID);
+	if (iter == componentIDValues.end()) {
+		tID = "";
+	}
+	switch (componentIDValues[tID]) {
+	case COMPONENT_NOTFOUND:
+		cout << "Component " << compID << " does not exist" << endl;
+		return;
+		break;
+	case CAMERA_BEHAVIOUR: {
+		float fTemp;
+		attributesElement->QueryFloatAttribute("speed", &fTemp);
+		go->AttachComponent(new CameraBehaviour(camera, fTemp));
+	}
+		break;
+	case TERRAIN:
+		//go->AttachComponent(new TerrainComp());
+		break;
+	}
+}
+
+void Scene::AddGameObject(GameObject * go)
 {
 	gameObjects.push_back(go);
 }
@@ -38,6 +66,8 @@ void Scene::ReleaseResources()
 		delete gameObjects[count];
 		gameObjects.pop_back();
 	}
+
+	delete camera;
 }
 
 void Scene::Update(float deltaTime)

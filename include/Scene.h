@@ -4,7 +4,19 @@
 #include "Common.h"
 #include "GameObject.h"
 #include "ResourceManager.h"
+#include "tinyxml2.h"
 #include <map>
+
+#include "CameraBehaviour.h"
+#include "TerrainComp.h"
+
+static enum componentID {
+	COMPONENT_NOTFOUND,
+	CAMERA_BEHAVIOUR,
+	TERRAIN
+};
+
+using namespace tinyxml2;
 
 class Scene
 {
@@ -12,16 +24,20 @@ private:
 	string name;
 	Camera *camera;
 	ResourceManager* resourceManager;
+	map<string, componentID> componentIDValues;
 public:
 	vector<GameObject*> gameObjects;
-
 	Scene(ResourceManager* rM);
 	~Scene();
+
+	Camera* GetSceneCamera() { return camera; }
+
 	//adds a new gameobject to the vector
-	void NewGameObject(string& n, string& t, string& m, 
-		string& s, vec3& position, vec3& rotation, vec3& scale);
+	void AddGameObject(string& n, string& t, string& m, 
+		string& s, vec3& position, vec3& rotation, vec3& scale, GameObject* go);
+	void AttachComponent(string& compID, GameObject* go, XMLElement* attributesElement);
 	//adds a creted gameobject from outside the scene to the scene
-	void AddGamObject(GameObject* go);
+	void AddGameObject(GameObject* go);
 	//Deletes all the things!
 	void ReleaseResources();
 	void Update(float deltaTime);

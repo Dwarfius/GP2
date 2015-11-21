@@ -56,9 +56,6 @@ void Game::LoadResources()
 	s->Link();
 	resourceManager->AddShader(s, "PostProcess2");
 
-	sceneManager->LoadSceneDirectories();
-	sceneManager->LoadScene("Main", currentScene);
-
 	s = new ShaderProgram(SHADER_PATH + "terrainVS.glsl", SHADER_PATH + "terrainFS.glsl");
 	s->BindAttribLoc(0, "vertexPosition");
 	s->BindAttribLoc(1, "colors");
@@ -66,12 +63,16 @@ void Game::LoadResources()
 	s->Link();
 	resourceManager->AddShader(s, "Terrain");
 
+	//======================== SCENEMANAGEMENT  ====================
+	sceneManager->LoadSceneDirectories();
+	sceneManager->LoadScene("Main", currentScene);
+
 	//======================== GAMEOBJECTS  ========================
-	GameObject *cameraGameObject = new GameObject();
+	/*GameObject *cameraGameObject = new GameObject();
 	cameraGameObject->SetName("CameraBehaviourObject");
 	camera = new Camera();
 	cameraGameObject->AttachComponent(new CameraBehaviour(camera));
-	currentScene->AddGamObject(cameraGameObject);
+	currentScene->AddGamObject(cameraGameObject);*/
 }
 
 void Game::ReleaseResources()
@@ -79,7 +80,6 @@ void Game::ReleaseResources()
 	resourceManager->ReleaseResources();
 	PostProcessing::CleanUp();
 	delete font;
-	delete camera;
 }
 
 void Game::Update(float deltaTime)
@@ -138,7 +138,7 @@ void Game::Render(float deltaTime)
 	//sort the gameobjects for rendering to avoid extra calls to glBind of VAO/Texture/Shader
 	sort(currentScene->gameObjects.begin(), currentScene->gameObjects.end(), Comparer);
 
-	camera->Recalculate();
+	currentScene->GetSceneCamera()->Recalculate();
 
 	if (debugMode)
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -147,7 +147,7 @@ void Game::Render(float deltaTime)
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	currentScene->Render(camera);
+	currentScene->Render(currentScene->GetSceneCamera());
 
 	if (!debugMode)
 	{

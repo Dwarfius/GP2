@@ -5,9 +5,22 @@
 	<TextureList>
 		<Texture>texture.png</Texture>
 	</TextureList>
-	<GameObjectList>
-		<GameObject name="Tea Pot" texture="texture.png" model="utah-teapot.fbx" 
+	<GameObjectList>		
+		<GameObject name="CameraBehaviourObject" hasModel="false" texture="" model="" shader = "" 
+			posx="0" posy="0" posz="0" 
+			rotx="0" roty="0" rotz="0" 
+			scalex="1" scaley="1" scalez="1">
+			<ComponentList>
+				<Component ID="CameraBehaviour">
+					<Attributes speed="20"/>
+				</Component>
+			</ComponentList>
+		</GameObject>
+		<GameObject name="Tea Pot" hasModel="True" texture="texture.png" model="utah-teapot.fbx" 
 			shader = "Specular" posx="-5" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
-			scalex="0.3" scaley="0.3" scalez="0.3"/>
+			scalex="0.3" scaley="0.3" scalez="0.3">
+			<ComponentList>		
+			</ComponentList>
+		</GameObject>			
 	</GameObjectList>
 </Scene>
