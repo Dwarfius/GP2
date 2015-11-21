@@ -31,6 +31,33 @@ void GameObject::Render(Camera *camera)
 	modelMatrix = rotate(modelMatrix, radians(rotation.z), vec3(0, 0, 1));
 	modelMatrix = scale(modelMatrix, size);
 
+	renderer->Ready();
+	ShaderProgram *program = renderer->GetProgram();
+	program->SetUniform("Model", value_ptr(modelMatrix));
+	vec3 lightDir(0, 0, 1);
+	program->SetUniform("lightDirection", &lightDir);
+
+	vec4 ambMatColor(0.3f, 0.3f, 0.3f, 1);
+	program->SetUniform("ambientMaterialColor", &ambMatColor);
+
+	vec4 difMatColor(1, 0, 0, 1);
+	program->SetUniform("diffuseMaterialColor", &difMatColor);
+
+	vec4 specMatColor(1, 1, 1, 1);
+	program->SetUniform("specularMaterialColor", &specMatColor);
+
+	float power = 25;
+	program->SetUniform("specularPower", &power);
+
+	vec4 ambLightColor(0.3f, 0.3f, 0.3f, 1);
+	program->SetUniform("ambientLightColor", &ambLightColor);
+
+	vec4 difLightColor(0.8f, 0.8f, 0.8f, 1);
+	program->SetUniform("diffuseLightColor", &difLightColor);
+
+	vec4 specLightColor(1, 1, 1, 1);
+	program->SetUniform("specularLightColor", &specLightColor);
+
 	renderer->Render(camera);
 }
 

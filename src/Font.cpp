@@ -173,6 +173,7 @@ void Font::Flush(float deltaTime)
 	}
 
 	glEnable(GL_BLEND);
+	renderer->Ready();
 	renderer->Render(guiCam);
 	glDisable(GL_BLEND);
 

@@ -16,13 +16,14 @@ void PostProcessing::Init()
 
 	//creating all the required objects
 	//creating the 2 frame buffers - needed to be able to swap between 2 during post processing passes
+
 	glGenFramebuffers(2, fbo);
 	GLuint FBOtexture[2]; //texture for our frame buffer
 	glGenTextures(2, FBOtexture);
 	glGenRenderbuffers(2, fboDepthBuffer); //and the depth buffers
 	CHECK_GL_ERROR();
 
-	//creating enough resources for 2 fbos
+	//creating required resources for 2 fbos
 	for (int i = 0; i < 2; i++)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo[i]);
@@ -48,7 +49,7 @@ void PostProcessing::Init()
 		CHECK_GL_ERROR();
 
 		//marking that frag shader will render to the bound buffer
-		GLenum bufferToDraw[1] = { GL_COLOR_ATTACHMENT0 };
+		GLenum bufferToDraw[] = { GL_COLOR_ATTACHMENT0 };
 		glDrawBuffers(1, bufferToDraw);
 		CHECK_GL_ERROR();
 
@@ -109,5 +110,6 @@ void PostProcessing::RenderResult()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	renderer->SetTexture(0, texture[activeInd]);
+	renderer->Ready();
 	renderer->Render(NULL);
 }

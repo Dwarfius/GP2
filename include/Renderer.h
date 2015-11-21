@@ -38,7 +38,11 @@ public:
 	void SetTexture(int i, Texture *t) { textures[i] = t; }
 	Texture* GetTexture(int i) { return textures[i]; }
 
+	//binds the shader so that uniforms can be sent
+	void Ready();
+	//call Ready() before this!
 	void Render(Camera *cam);
+	//call Ready() before this!
 	void RenderInstanced(Camera *cam, int count);
 };
 

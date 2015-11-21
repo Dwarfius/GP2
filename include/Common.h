@@ -33,7 +33,7 @@ const string GAMEDATA_PATH = ASSET_PATH + "gamedata/";
 
 void checkError(const char *file, int line);
 
-#ifdef DEBUG
+#ifdef _DEBUG
 #define CHECK_GL_ERROR() checkError(__FILE__, __LINE__)
 #else
 #define CHECK_GL_ERROR()

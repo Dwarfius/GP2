@@ -1,6 +1,7 @@
-#version 150
+#version 330
 
-out vec4 FragColor;
+layout(location = 0) out vec4 FragColor;
+layout(location = 1) out vec4 Normal;
 
 in vec3 worldNormal;
 in vec3 cameraDirectionOut;
@@ -25,5 +26,5 @@ void main()
 	FragColor = (ambientMaterialColor*ambientLightColor) + 
 		(diffuseMaterialColor*diffuseLightColor*diffuseTerm) +
 		(specularMaterialColor*specularLightColor*specularTerm);
-	//FragColor = vec4(worldNormal, 1);
+	Normal = vec4(worldNormal, 0);
 }

@@ -3,6 +3,7 @@
 #include "PostProcessing.h"
 #include "CameraBehaviour.h"
 #include "TerrainComp.h"
+#include "DefRenderer.h"
 
 uint Game::verticesRendered;
 uint Game::objectsRendered;
@@ -22,17 +23,20 @@ void Game::LoadResources()
 	currentScene = new Scene(resourceManager);
 	sceneManager = new SceneManager(resourceManager);
 
+	DefRenderer::Init();
 	PostProcessing::Init();
 	font = new Font(FONT_PATH + "OratorStd.otf");
+	CHECK_GL_ERROR();
 
 	//======================== TEXTURES ========================
-	resourceManager->AddTexture(TEXTURE_PATH + "Tank1DF.png");
-	resourceManager->AddTexture(TEXTURE_PATH + "grass.png");
-	resourceManager->AddTexture(TEXTURE_PATH + "ground.jpg");
-	resourceManager->AddTexture(TEXTURE_PATH + "rock.jpg");
+	resourceManager->AddTexture("Tank1DF.png");
+	resourceManager->AddTexture("grass.png");
+	resourceManager->AddTexture("ground.jpg");
+	resourceManager->AddTexture("rock.jpg");
+	CHECK_GL_ERROR();
 
 	//========================  MODELS  ========================
-	resourceManager->AddModel(MODEL_PATH + "utah-teapot.FBX");
+	resourceManager->AddModel("utah-teapot.FBX");
 	Model *terrainModel = new Model();
 	terrainModel->SetUpAttrib(0, 3, GL_FLOAT, 0);
 	terrainModel->SetUpAttrib(1, 4, GL_FLOAT, sizeof(vec3));
@@ -123,9 +127,7 @@ bool Comparer(GameObject *a, GameObject *b)
 	GLuint bVao = bRenderer->GetModel()->Get();
 
 	if (aVao == bVao)
-	{
 		return aRenderer->GetProgram() > bRenderer->GetProgram();
-	}
 	else
 		return aVao > bVao;
 }
@@ -140,14 +142,17 @@ void Game::Render(float deltaTime)
 
 	camera->Recalculate();
 
+	glBindFramebuffer(GL_FRAMEBUFFER, DefRenderer::Get());
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	currentScene->Render(camera);
+
 	if (debugMode)
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	else
 		glBindFramebuffer(GL_FRAMEBUFFER, PostProcessing::Get());
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	currentScene->Render(camera);
+	DefRenderer::RenderGather();
 
 	if (!debugMode)
 	{

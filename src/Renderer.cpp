@@ -12,7 +12,7 @@ Renderer::Renderer(Texture *t, ShaderProgram *s, Model *m, int mode)
 	renderMode = mode;
 }
 
-void Renderer::Render(Camera *cam)
+void Renderer::Ready()
 {
 	GLuint prog = shaderProg->Get();
 	if (prog != activeProg)
@@ -20,7 +20,10 @@ void Renderer::Render(Camera *cam)
 		glUseProgram(prog);
 		activeProg = prog;
 	}
+}
 
+void Renderer::Render(Camera *cam)
+{
 	//and sending settings
 	GLint loc;
 	for (int i = 0; i < textCount; i++)
@@ -38,10 +41,9 @@ void Renderer::Render(Camera *cam)
 		}
 	}
 
-	mat4 modelMat = pGameObject ? pGameObject->GetModelMatrix() : mat4(1);
-
 	if (cam)
 	{
+		mat4 modelMat = pGameObject ? pGameObject->GetModelMatrix() : mat4(1);
 		mat4 MVP = cam->Get() * modelMat;
 		shaderProg->SetUniform("MVP", value_ptr(MVP));
 
@@ -49,32 +51,6 @@ void Renderer::Render(Camera *cam)
 		shaderProg->SetUniform("cameraPosition", &camPos);
 	}
 
-	shaderProg->SetUniform("Model", value_ptr(modelMat));
-
-	vec3 lightDir(0, 0, 1);
-	shaderProg->SetUniform("lightDirection", &lightDir);
-
-	vec4 ambMatColor(0.3f, 0.3f, 0.3f, 1);
-	shaderProg->SetUniform("ambientMaterialColor", &ambMatColor);
-
-	vec4 difMatColor(1, 0, 0, 1);
-	shaderProg->SetUniform("diffuseMaterialColor", &difMatColor);
-
-	vec4 specMatColor(1, 1, 1, 1);
-	shaderProg->SetUniform("specularMaterialColor", &specMatColor);
-
-	float power = 25;
-	shaderProg->SetUniform("specularPower", &power);
-
-	vec4 ambLightColor(0.3f, 0.3f, 0.3f, 1);
-	shaderProg->SetUniform("ambientLightColor", &ambLightColor);
-
-	vec4 difLightColor(0.8f, 0.8f, 0.8f, 1);
-	shaderProg->SetUniform("diffuseLightColor", &difLightColor);
-
-	vec4 specLightColor(1, 1, 1, 1);
-	shaderProg->SetUniform("specularLightColor", &specLightColor);
-	
 	//binding the vao
 	GLuint vao = model->Get();
 	if (vao != activeVao)
@@ -103,17 +79,8 @@ void Renderer::Render(Camera *cam)
 	Game::drawCalls++;
 }
 
-//FINISH THIS UP
 void Renderer::RenderInstanced(Camera *cam, int count)
 {
-	//binding the shader
-	GLuint prog = shaderProg->Get();
-	if (prog != activeProg)
-	{
-		glUseProgram(prog);
-		activeProg = prog;
-	}
-
 	//and sending settings
 	GLint loc;
 	for (int i = 0; i < textCount; i++)
@@ -138,6 +105,21 @@ void Renderer::RenderInstanced(Camera *cam, int count)
 	{
 		glBindVertexArray(vao);
 		activeVao = vao;
+	}
+
+	if (cam)
+	{
+		mat4 modelMat = pGameObject ? pGameObject->GetModelMatrix() : mat4(1);
+		mat4 MVP = cam->Get() * modelMat;
+		shaderProg->SetUniform("MVP", value_ptr(MVP));
+
+		vec3 camPos = cam->GetPos();
+		shaderProg->SetUniform("cameraPosition", &camPos);
+	}
+	if (!pGameObject)
+	{
+		mat4 model(1);
+		shaderProg->SetUniform("Model", value_ptr(model));
 	}
 
 	switch (renderMode)

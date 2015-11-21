@@ -1,4 +1,4 @@
-#version 150
+#version 330
 
 in vec2 vertexUV;
 
@@ -8,6 +8,5 @@ out vec4 FragColor;
 
 void main()
 {
-	FragColor = texture(texture0, vertexUV);	
-	//FragColor = vec4(vertexUV, 0, 1);
+	FragColor = texture(texture0, vertexUV);
 }
