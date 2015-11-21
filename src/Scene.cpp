@@ -44,7 +44,7 @@ void Scene::Update(float deltaTime)
 {
 	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 	{
-		(*iter)->AddRotation(vec3(0, deltaTime * 15, 0));
+		//(*iter)->AddRotation(vec3(0, deltaTime * 15, 0));
 		(*iter)->Update(deltaTime);
 	}
 }

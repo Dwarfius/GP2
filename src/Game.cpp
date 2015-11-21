@@ -36,7 +36,6 @@ void Game::LoadResources()
 	CHECK_GL_ERROR();
 
 	//========================  MODELS  ========================
-	resourceManager->AddModel("utah-teapot.FBX");
 	Model *terrainModel = new Model();
 	terrainModel->SetUpAttrib(0, 3, GL_FLOAT, 0);
 	terrainModel->SetUpAttrib(1, 4, GL_FLOAT, sizeof(vec3));
@@ -102,7 +101,6 @@ void Game::Update(float deltaTime)
 	fpsCounter++;
 	if ((fpsTimer += deltaTime) > 1)
 	{
-		printf("FPS: %d\n", fpsCounter);
 		fpsDisplay = fpsCounter;
 		fpsCounter = fpsTimer = 0;
 	}

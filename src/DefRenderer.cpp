@@ -17,11 +17,14 @@ void DefRenderer::Init()
 	CHECK_GL_ERROR();
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
 	for (int i = 0; i < 3; i++)
 	{
 		glBindTexture(GL_TEXTURE_2D, FBOtexture[i]);
 		if(i == 2)
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, screen.x, screen.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		else if (i == 1)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen.x, screen.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 		else
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen.x, screen.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -87,7 +90,7 @@ void DefRenderer::RenderGather()
 	
 	vec3 sunDir(0, -1, 0);
 	program->SetUniform("sunDir", &sunDir);
-	vec4 sunColor(1, 1, 1, 1);
+	vec4 sunColor(1, 1, 0, 0.5f);
 	program->SetUniform("sunColor", &sunColor);
 
 	renderer->Render(NULL);
