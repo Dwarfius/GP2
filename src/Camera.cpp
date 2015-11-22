@@ -35,7 +35,7 @@ void Camera::Recalculate()
 	right = normalize(cross(vec3(0, 1, 0), -forward));
 	up = cross(-forward, right);
 
-	projMatrix = perspective(45.f, 640.f / 480.f, 0.1f, 100.f);
+	projMatrix = perspective(45.f, 640.f / 480.f, 0.1f, 200.f);
 	viewMatrix = lookAt(pos, pos + forward, up);
 
 	VP = projMatrix * viewMatrix;

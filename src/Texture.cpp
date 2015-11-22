@@ -21,7 +21,6 @@ Texture::Texture(const string & posX, const string & negX, const string & posY, 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
 Texture::~Texture()
@@ -55,8 +54,10 @@ GLuint Texture::LoadCubmapFromFiles(const string & posX, const string & negX, co
 	textureFaces[5] = negZ;
 
 	GLuint textId = 0;
+	glGenTextures(1, &textId);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textId);
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++) 
+	{
 		SDL_Surface *surf = IMG_Load(textureFaces[i].c_str());
 		if (!surf)
 		{
@@ -64,7 +65,7 @@ GLuint Texture::LoadCubmapFromFiles(const string & posX, const string & negX, co
 			return 0;
 		}
 
-		textId = ConvertSDLSurfaceToCubeMap(surf, i, textId);
+		ConvertSDLSurfaceToCubeMap(surf, i, textId);
 		SDL_FreeSurface(surf);
 	}
 	return textId;
@@ -108,7 +109,7 @@ GLuint Texture::ConvertSDLSurfaceToTexture(SDL_Surface *surf)
 	return textId;
 }
 
-GLuint Texture::ConvertSDLSurfaceToCubeMap(SDL_Surface * surf, int i, GLuint textId)
+void Texture::ConvertSDLSurfaceToCubeMap(SDL_Surface * surf, int i, GLuint textId)
 {
 	GLint nColors = surf->format->BytesPerPixel;
 	GLenum textureFormat;
@@ -131,15 +132,8 @@ GLuint Texture::ConvertSDLSurfaceToCubeMap(SDL_Surface * surf, int i, GLuint tex
 		internalFormat = GL_RGB8;
 	}
 	else //no idea
-	{
-		printf("Unsupported format!");
-		return 0;
-	}
+		printf("Cubemap %d - Unsupported format!", i);
 
-	glGenTextures(1, &textId);
-	glActiveTexture(GL_TEXTURE0);
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, internalFormat, surf->w, surf->h, 0,
 		textureFormat, GL_UNSIGNED_BYTE, surf->pixels);
-
-	return textId;
 }

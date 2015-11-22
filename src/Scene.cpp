@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "Skybox.h"
 
 Scene::Scene(ResourceManager* rM)
 {
@@ -7,6 +8,7 @@ Scene::Scene(ResourceManager* rM)
 	componentIDValues[""] = COMPONENT_NOTFOUND;
 	componentIDValues["CameraBehaviour"] = CAMERA_BEHAVIOUR;
 	componentIDValues["Terrain"] = TERRAIN;
+	componentIDValues["Skybox"] = SKYBOX;
 	camera = new Camera();
 }
 
@@ -22,9 +24,9 @@ void Scene::AddGameObject(string& n, string& t, string& m, string& s, vec3& posi
 	go->SetScale(scale);
 	Renderer *r = new Renderer();
 	r->SetModel(resourceManager->GetModel(m), GL_TRIANGLES);
-	r->SetTexture(0, resourceManager->GetTexture(t));
+	r->AddTexture(resourceManager->GetTexture(t));
 	r->SetShaderProgram(resourceManager->GetShader(s));
-	go->SetRenderer(r);
+	go->AttachComponent(r);
 	gameObjects.push_back(go);
 }
 
@@ -48,6 +50,13 @@ void Scene::AttachComponent(string & compID, GameObject * go, XMLElement* attrib
 		break;
 	case TERRAIN:
 		//go->AttachComponent(new TerrainComp());
+		break;
+	case SKYBOX:
+	{
+		string name = attributesElement->Attribute("texture");
+		ResourceManager *rm = resourceManager;
+		go->AttachComponent(new Skybox(rm->GetTexture(name), rm->GetModel("skyModel"), rm->GetShader("SkyBox")));
+	}
 		break;
 	}
 }
@@ -74,7 +83,7 @@ void Scene::Update(float deltaTime)
 {
 	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 	{
-		(*iter)->AddRotation(vec3(0, deltaTime * 15, 0));
+		//(*iter)->AddRotation(vec3(0, deltaTime * 15, 0));
 		(*iter)->Update(deltaTime);
 	}
 }

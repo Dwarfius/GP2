@@ -13,7 +13,8 @@
 static enum componentID {
 	COMPONENT_NOTFOUND,
 	CAMERA_BEHAVIOUR,
-	TERRAIN
+	TERRAIN,
+	SKYBOX
 };
 
 using namespace tinyxml2;

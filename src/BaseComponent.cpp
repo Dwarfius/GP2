@@ -18,7 +18,3 @@ inline GameObject* BaseComponent::GetParentGO()
 {
 	return pGameObject;
 }
-
-void BaseComponent::Update(float deltaTime)
-{
-}

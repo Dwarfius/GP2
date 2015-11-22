@@ -9,6 +9,8 @@ class ShaderProgram
 private:
 	Shader *vShader, *fShader;
 	GLuint program;
+	map<string, GLint> locations;
+	map<string, GLenum> types;
 
 	bool CheckForLinkErrors();
 
@@ -17,8 +19,8 @@ public:
 	~ShaderProgram();
 
 	void BindAttribLoc(GLuint loc, const char *name);
-	void GetUniformLoc(const char *name);
 	void Link();
+	void SetUniform(const string& name, void *value);
 
 	GLuint Get() { return program; }
 };

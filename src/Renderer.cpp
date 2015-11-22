@@ -4,15 +4,15 @@
 GLuint Renderer::activeProg = 0, Renderer::activeVao = 0;
 GLuint Renderer::activeTexts[TEXTURE_COUNT] = { 0, 0, 0, 0, 0 };
 
-Renderer::Renderer(Texture *t, ShaderProgram *s, Model *m, int mode)
+Renderer::Renderer(Texture *t, bool cubeMap, ShaderProgram *s, Model *m, int mode)
 {
-	AddTexture(t);
+	AddTexture(t, cubeMap);
 	shaderProg = s;
 	model = m;
 	renderMode = mode;
 }
 
-void Renderer::Render(Camera *cam)
+void Renderer::Ready()
 {
 	GLuint prog = shaderProg->Get();
 	if (prog != activeProg)
@@ -20,74 +20,47 @@ void Renderer::Render(Camera *cam)
 		glUseProgram(prog);
 		activeProg = prog;
 	}
+}
 
+void Renderer::Render(Camera *cam)
+{
 	//and sending settings
 	GLint loc;
-	for (int i = 0; i < textCount; i++)
+	if (isCubeMap)
 	{
-		GLuint text = textures[i]->Get();
-		if (text != activeTexts[i])
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, textures[0]->Get());
+
+		int id = 0;
+		shaderProg->SetUniform("skybox", &id);
+	}
+	else
+	{
+		for (int i = 0; i < textCount; i++)
 		{
-			if (isCubeMap) {
+			GLuint text = textures[i]->Get();
+			if (text != activeTexts[i])
+			{
 				glActiveTexture(GL_TEXTURE0 + i);
 				glBindTexture(GL_TEXTURE_2D, text);
 
 				string name = string("texture") + (char)(48 + i);
-				loc = glGetUniformLocation(shaderProg->Get(), name.c_str());
-				glUniform1i(loc, i);
+				shaderProg->SetUniform(name, &i);
+				activeTexts[i] = text;
 			}
-			else {
-				glActiveTexture(GL_TEXTURE0 + i);
-				glBindTexture(GL_TEXTURE_CUBE_MAP, text);
-
-				string name = string("skybox");
-				loc = glGetUniformLocation(shaderProg->Get(), name.c_str());
-				glUniform1i(loc, i);
-			}
-			activeTexts[i] = text;
 		}
 	}
 
-	mat4 modelMat = pGameObject ? pGameObject->GetModelMatrix() : mat4(1);
-
 	if (cam)
 	{
-		loc = glGetUniformLocation(shaderProg->Get(), "MVP");
+		mat4 modelMat = pGameObject ? pGameObject->GetModelMatrix() : mat4(1);
 		mat4 MVP = cam->Get() * modelMat;
-		glUniformMatrix4fv(loc, 1, GL_FALSE, value_ptr(MVP));
+		shaderProg->SetUniform("MVP", value_ptr(MVP));
 
-		loc = glGetUniformLocation(shaderProg->Get(), "cameraPosition");
 		vec3 camPos = cam->GetPos();
-		glUniform3f(loc, camPos.x, camPos.y, camPos.z);
+		shaderProg->SetUniform("cameraPosition", &camPos);
 	}
 
-	loc = glGetUniformLocation(shaderProg->Get(), "Model");
-	glUniformMatrix4fv(loc, 1, GL_FALSE, value_ptr(modelMat));
-
-	loc = glGetUniformLocation(shaderProg->Get(), "lightDirection");
-	glUniform3f(loc, 0, 0, 1);
-
-	loc = glGetUniformLocation(shaderProg->Get(), "ambientMaterialColor");
-	glUniform4f(loc, 0.3f, 0.3f, 0.3f, 1);
-
-	loc = glGetUniformLocation(shaderProg->Get(), "diffuseMaterialColor");
-	glUniform4f(loc, 1, 0, 0, 1);
-
-	loc = glGetUniformLocation(shaderProg->Get(), "specularMaterialColor");
-	glUniform4f(loc, 1, 1, 1, 1);
-
-	loc = glGetUniformLocation(shaderProg->Get(), "specularPower");
-	glUniform1f(loc, 25);
-
-	loc = glGetUniformLocation(shaderProg->Get(), "ambientLightColor");
-	glUniform4f(loc, 0.3f, 0.3f, 0.3f, 1);
-
-	loc = glGetUniformLocation(shaderProg->Get(), "diffuseLightColor");
-	glUniform4f(loc, 0.8f, 0.8f, 0.8f, 1);
-
-	loc = glGetUniformLocation(shaderProg->Get(), "specularLightColor");
-	glUniform4f(loc, 1, 1, 1, 1);
-	
 	//binding the vao
 	GLuint vao = model->Get();
 	if (vao != activeVao)
@@ -106,7 +79,7 @@ void Renderer::Render(Camera *cam)
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, model->GetVertCount());
 		break;
 	default:
-		printf("Render mode unsupported!");
+		printf("Render mode unsupported!\n");
 		break;
 	}
 	CHECK_GL_ERROR();
@@ -116,17 +89,8 @@ void Renderer::Render(Camera *cam)
 	Game::drawCalls++;
 }
 
-//FINISH THIS UP
 void Renderer::RenderInstanced(Camera *cam, int count)
 {
-	//binding the shader
-	GLuint prog = shaderProg->Get();
-	if (prog != activeProg)
-	{
-		glUseProgram(prog);
-		activeProg = prog;
-	}
-
 	//and sending settings
 	GLint loc;
 	for (int i = 0; i < textCount; i++)
@@ -151,6 +115,21 @@ void Renderer::RenderInstanced(Camera *cam, int count)
 	{
 		glBindVertexArray(vao);
 		activeVao = vao;
+	}
+
+	if (cam)
+	{
+		mat4 modelMat = pGameObject ? pGameObject->GetModelMatrix() : mat4(1);
+		mat4 MVP = cam->Get() * modelMat;
+		shaderProg->SetUniform("MVP", value_ptr(MVP));
+
+		vec3 camPos = cam->GetPos();
+		shaderProg->SetUniform("cameraPosition", &camPos);
+	}
+	if (!pGameObject)
+	{
+		mat4 model(1);
+		shaderProg->SetUniform("Model", value_ptr(model));
 	}
 
 	switch (renderMode)

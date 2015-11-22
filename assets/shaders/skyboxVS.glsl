@@ -1,11 +1,12 @@
 #version 150
 in vec3 vertexPosition;
+
 out vec3 TexCoords;
 
-uniform mat4 MVP;
+uniform mat4 VP;
 
 void main()
 {
-    gl_Position =   MVP * vec4(vertexPosition, 1.0);  
+    gl_Position =  VP * vec4(vertexPosition * 100, 1.0);  
     TexCoords = vertexPosition;
 }  

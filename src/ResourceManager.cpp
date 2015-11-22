@@ -15,7 +15,8 @@ void ResourceManager::AddShader(ShaderProgram * shader, string name)
 
 void ResourceManager::AddModel(const string & filename)
 {
-	models[filename] = new Model(MODEL_PATH + filename);
+	if(models.find(filename) == models.end())
+		models[filename] = new Model(MODEL_PATH + filename);
 }
 
 void ResourceManager::AddTexture(const string & filename)

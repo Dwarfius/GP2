@@ -30,5 +30,8 @@ public:
 	void Rotate(GLfloat deltaYaw, GLfloat deltaPitch) { yaw += deltaYaw * sensX; pitch += deltaPitch * sensY; }
 
 	void Recalculate();
+
+	mat4 GetView() { return viewMatrix; }
+	mat4 GetProj() { return projMatrix; }
 };
 #endif
