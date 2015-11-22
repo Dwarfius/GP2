@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include "Skybox.h"
 #include "TerrainComp.h"
+#include "TimeDay.h"
 
 Scene::Scene(ResourceManager* rM)
 {
@@ -10,6 +11,7 @@ Scene::Scene(ResourceManager* rM)
 	componentIDValues["CameraBehaviour"] = CAMERA_BEHAVIOUR;
 	componentIDValues["Terrain"] = TERRAIN;
 	componentIDValues["Skybox"] = SKYBOX;
+	componentIDValues["TimeDay"] = TIMEDAY;
 	camera = new Camera();
 }
 
@@ -25,6 +27,17 @@ GameObject* Scene::AddGameObject(const string& name, const vec3& position, const
 	go->SetRotation(rotation);
 	go->SetScale(scale);
 	go->AttachComponent(r);
+	gameObjects.push_back(go);
+	return go;
+}
+
+GameObject * Scene::AddGameObject(const string & name, const vec3 & position, const vec3 & rotation, const vec3 & scale)
+{
+	GameObject *go = new GameObject();
+	go->SetName(name);
+	go->SetPos(position);
+	go->SetRotation(rotation);
+	go->SetScale(scale);
 	gameObjects.push_back(go);
 	return go;
 }
@@ -63,6 +76,11 @@ void Scene::AttachComponent(string & compID, GameObject * go, XMLElement* attrib
 		go->AttachComponent(new Skybox(rm->GetTexture(name), rm->GetModel("skyModel"), rm->GetShader("SkyBox")));
 	}
 		break;
+	case TIMEDAY:
+	{
+		go->AttachComponent(new TimeDay());
+	}
+	break;
 	}
 }
 

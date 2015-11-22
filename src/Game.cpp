@@ -79,7 +79,6 @@ void Game::LoadResources()
 
 	DefRenderer::Init();
 	PostProcessing::Init();
-	font = new Font(FONT_PATH + "OratorStd.otf");
 	CHECK_GL_ERROR();
 
 	//======================== TEXTURES ========================
@@ -142,7 +141,6 @@ void Game::ReleaseResources()
 {
 	resourceManager->ReleaseResources();
 	PostProcessing::CleanUp();
-	delete font;
 }
 
 void Game::Update(float deltaTime)
@@ -168,7 +166,7 @@ void Game::Update(float deltaTime)
 	char fpsBuffer[30];
 	sprintf(fpsBuffer, "FPS: %d", fpsDisplay);
 	string fpsString(fpsBuffer);
-	font->Render(fpsString, { 0, 0, 100, 25 });
+	resourceManager->GetFont("OratorStd.otf")->Render(fpsString, { 0, 0, 100, 25 });
 }
 
 bool Comparer(GameObject *a, GameObject *b)
@@ -181,8 +179,14 @@ bool Comparer(GameObject *a, GameObject *b)
 		return true;
 
 	//first, sort by VAOs
-	GLuint aVao = aRenderer->GetModel()->Get();
-	GLuint bVao = bRenderer->GetModel()->Get();
+	Model *aModel = aRenderer->GetModel();
+	Model *bModel = bRenderer->GetModel();
+	if (!aModel)
+		return false;
+	if (!bModel)
+		return true;
+	GLuint aVao = aModel->Get();
+	GLuint bVao = bModel->Get();
 
 	if (aVao == bVao)
 		return aRenderer->GetProgram() > bRenderer->GetProgram();
@@ -221,10 +225,11 @@ void Game::Render(float deltaTime)
 
 	char *msg = (char*)malloc(50);
 	sprintf(msg, "verts:%u", verticesRendered);
-	font->Render(string(msg), { 0, 25, 100, 25 });
+	Font* tF = resourceManager->GetFont("OratorStd.otf");
+	tF->Render(string(msg), { 0, 25, 100, 25 });
 	sprintf(msg, "objts:%u", objectsRendered);
-	font->Render(string(msg), { 0, 50, 100, 25 });
+	tF->Render(string(msg), { 0, 50, 100, 25 });
 	free(msg);
 
-	font->Flush(deltaTime);
+	resourceManager->FlushFonts(deltaTime);
 }

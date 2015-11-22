@@ -16,7 +16,6 @@ private:
 	SceneManager * sceneManager;
 	Scene * currentScene;
 	ResourceManager* resourceManager;
-	Font *font;
 
 	int fpsCounter = 0;
 	int fpsDisplay = 0;

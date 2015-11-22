@@ -4,6 +4,7 @@
 #include "Common.h"
 #include "Scene.h"
 #include "tinyxml2.h"
+#include "Font.h"
 #include <map>
 
 using namespace tinyxml2;

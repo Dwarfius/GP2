@@ -14,8 +14,8 @@ class Renderer: public BaseComponent
 {
 private:
 	Texture* textures[TEXTURE_COUNT];
-	ShaderProgram *shaderProg;
-	Model *model;
+	ShaderProgram *shaderProg = NULL;
+	Model *model = NULL;
 	int renderMode = 0;
 	int textCount = 0;
 
