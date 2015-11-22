@@ -22,6 +22,7 @@ private:
 	ShaderProgram *shader;
 
 	float timer = 0;
+	bool preRenderStage = false;
 
 	GLuint Font::ConvertSDLSurfaceToTexture(SDL_Surface *surf);
 

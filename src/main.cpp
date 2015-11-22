@@ -3,6 +3,19 @@
 #include "Input.h"
 #include "Game.h"
 
+#define SCREEN_W 1280
+#define SCREEN_H 768
+
+vector<string> split(const string& s, const char delim) 
+{
+	std::vector<std::string> elems;
+	std::stringstream ss(s);
+	std::string item;
+	while (std::getline(ss, item, delim))
+		elems.push_back(item);
+	return elems;
+}
+
 void checkError(const char *file, int line)
 {
 	GLenum err = glGetError();
@@ -50,12 +63,12 @@ int main(int argc, char *argv[])
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_Window *window = SDL_CreateWindow("GP2", SDL_WINDOWPOS_CENTERED, 
-							SDL_WINDOWPOS_CENTERED, 640, 480, 
+							SDL_WINDOWPOS_CENTERED, SCREEN_W, SCREEN_H,
 							SDL_WINDOW_OPENGL);
 	SDL_GLContext glContext = SDL_GL_CreateContext(window);
 	CHECK_GL_ERROR();
 	Graphics::Init();
-	Graphics::SetViewport(640, 480);
+	Graphics::SetViewport(SCREEN_W, SCREEN_H);
 	CHECK_GL_ERROR();
 
 	if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)

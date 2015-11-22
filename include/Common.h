@@ -42,6 +42,8 @@ void checkError(const char *file, int line);
 void printVec3(vec3 p);
 void printRect(SDL_Rect r);
 
+vector<string> split(const string& s, const char delim);
+
 struct RECTF
 {
 	float x, y;

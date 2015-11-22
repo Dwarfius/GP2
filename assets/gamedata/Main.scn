@@ -4,26 +4,54 @@
     </ModelList>
 	<TextureList>
 		<Texture>texture.png</Texture>
+		<Texture>grass.png</Texture>
+		<Texture>ground.png</Texture>
+		<Texture>rock.jpg</Texture>	
 	</TextureList>
+	<FontList>
+		<Font>OratorStd.otf</Font>
+	</FontList>
 	<GameObjectList>		
-		<GameObject name="CameraBehaviourObject" hasModel="True" texture="" model="" shader = "" 
+		<GameObject name="SceneManagementObject" hasRenderer="false" texture="" model="" shader = "" 
+			posx="0" posy="0" posz="0" 
+			rotx="0" roty="0" rotz="0" 
+			scalex="1" scaley="1" scalez="1">
+			<ComponentList>
+				<Component ID="TimeDay"/>
+			</ComponentList>
+		</GameObject>
+		<GameObject name="CameraBehaviourObject" hasRenderer="true" texture="" model="" shader = "" 
 			posx="0" posy="0" posz="0" 
 			rotx="0" roty="0" rotz="0" 
 			scalex="1" scaley="1" scalez="1">
 			<ComponentList>
 				<Component ID="CameraBehaviour">
-					<Attributes speed="20"/>
+					<Attributes speed="5"/>
 				</Component>
 				<Component ID="Skybox">
 					<Attributes texture="skyTexture"/>
 				</Component>
 			</ComponentList>
 		</GameObject>
-		<GameObject name="Tea Pot" hasModel="True" texture="texture.png" model="utah-teapot.fbx" 
+		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" 
 			shader = "Specular" posx="-5" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
 			scalex="0.3" scaley="0.3" scalez="0.3">
 			<ComponentList>		
 			</ComponentList>
-		</GameObject>			
+		</GameObject>
+		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" 
+			shader = "Specular" posx="15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+			scalex="0.3" scaley="0.3" scalez="0.3">
+			<ComponentList>		
+			</ComponentList>
+		</GameObject>
+		<GameObject name="Terrain" hasRenderer="true" texture="grass.png,ground.png,rock.jpg" model="Terrain" shader="Terrain"
+			posx="0" posy="0" posz="0" rotx="0" roty="0" rotz="0" scalex="1" scaley="1" scalez="1">
+			<ComponentList>
+				<Component ID="Terrain">
+					<Attributes texture="heightmap.png" scalex="100" scaley="4" scalez="100"/>
+				</Component>
+			</ComponentList>
+		</GameObject>
 	</GameObjectList>
 </Scene>

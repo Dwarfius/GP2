@@ -89,7 +89,7 @@ BaseComponent * GameObject::GetComponent(string componentType)
 		return NULL;
 	}
 	else {
-		cout << "Component: " << componentType << " returned." << endl;
+		//cout << "Component: " << componentType << " returned." << endl;
 		return components.find("class " + componentType)->second;
 	}
 }

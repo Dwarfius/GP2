@@ -90,6 +90,19 @@ XMLError SceneManager::LoadScene(int sceneOrder, Scene* currentScene)
 		sceneItem = sceneItem->NextSiblingElement("Texture");
 	}
 
+	sceneData = sceneData->NextSiblingElement("FontList");
+	if (sceneData == nullptr) {
+		return XML_ERROR_PARSING_ELEMENT;
+	}
+	sceneItem = sceneData->FirstChildElement("Font");
+	if (sceneData == nullptr) {
+		return XML_ERROR_PARSING_ELEMENT;
+	}
+	while (sceneItem != nullptr) {
+		resourceManager->AddFont(sceneItem->GetText());
+		sceneItem = sceneItem->NextSiblingElement("Font");
+	}
+
 	sceneData = sceneData->NextSiblingElement("GameObjectList");
 	if (sceneData == nullptr) {
 		return XML_ERROR_PARSING_ELEMENT;
@@ -103,11 +116,13 @@ XMLError SceneManager::LoadScene(int sceneOrder, Scene* currentScene)
 		string tTextureName;
 		string tModelName;
 		string tShaderProgramName;
+		bool hasRenderer = true;
 		tName = sceneItem->Attribute("name");
-		tTextureName = sceneItem->Attribute("texture");
-		resourceManager->AddTexture(tTextureName);
+		sceneItem->QueryBoolAttribute("hasRenderer", &hasRenderer);
+		string textures = sceneItem->Attribute("texture");
+		vector<string> splits = split(textures, ',');
+
 		tModelName = sceneItem->Attribute("model");
-		resourceManager->AddModel(tModelName);
 		tShaderProgramName = sceneItem->Attribute("shader");
 
 		vec3 tPos;
@@ -123,14 +138,28 @@ XMLError SceneManager::LoadScene(int sceneOrder, Scene* currentScene)
 		sceneItem->QueryFloatAttribute("scaley", &tScale.y);
 		sceneItem->QueryFloatAttribute("scalez", &tScale.z);
 
-		GameObject * go = new GameObject();
+		GameObject *go;
+		if (hasRenderer) {
+			Renderer *renderer = new Renderer();
+			if (tModelName.length() > 0)
+			{
+				Model *m = resourceManager->GetModel(tModelName);
+				if (m)
+					renderer->SetModel(m, GL_TRIANGLES);
+			}
 
-		bool hasModel = true;
-		sceneItem->QueryBoolAttribute("hasModel", &hasModel);
-		if (hasModel) {
-			currentScene->AddGameObject(tName, tTextureName, tModelName, tShaderProgramName, tPos, tRot, tScale, go);
+			for (int i = 0; i < splits.size(); i++)
+				renderer->AddTexture(resourceManager->GetTexture(splits[i]));
+
+			if (tShaderProgramName.length() > 0)
+			{
+				ShaderProgram *shader = resourceManager->GetShader(tShaderProgramName);
+				if (shader)
+					renderer->SetShaderProgram(shader);
+			}
+			go = currentScene->AddGameObject(tName, tPos, tRot, tScale, renderer);
 		}
-		else { currentScene->AddGameObject(go); }
+		else { go = currentScene->AddGameObject(tName, tPos, tRot, tScale); }
 
 		XMLElement * gameObjectElement = sceneItem->FirstChildElement("ComponentList");
 		XMLElement * componentElement = gameObjectElement->FirstChildElement("Component");
