@@ -87,7 +87,7 @@ void Game::LoadResources()
 	resourceManager->AddTexture("grass.png");
 	resourceManager->AddTexture("ground.jpg");
 	resourceManager->AddTexture("rock.jpg");
-	Texture* skyTexture = new Texture(TEXTURE_PATH + "SkyBoxTestSides.png", TEXTURE_PATH + "SkyBoxTestSides.png", TEXTURE_PATH + "SkyBoxTestTop.png", TEXTURE_PATH + "SkyBoxTestBot.png", TEXTURE_PATH + "SkyBoxTestSides.png", TEXTURE_PATH + "SkyBoxTestSides.png");
+	Texture* skyTexture = new Texture(TEXTURE_PATH + "hazy_lake_front.jpg", TEXTURE_PATH + "hazy_lake_back.jpg", TEXTURE_PATH + "hazy_lake_top.jpg", TEXTURE_PATH + "SkyBoxTestBot.png", TEXTURE_PATH + "hazy_lake_left.jpg", TEXTURE_PATH + "hazy_lake_right.jpg");
 	resourceManager->AddTexture("skyTexture", skyTexture);
 	//========================  MODELS  ========================
 	Model *terrainModel = new Model();
