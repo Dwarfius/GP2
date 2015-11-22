@@ -13,7 +13,7 @@ TerrainComp::TerrainComp(const string &fileName, vec3 size)
 	int w = surf->w;
 	float wStep = size.x / w;
 	int h = surf->h;
-	float hStep = size.y / h;
+	float hStep = size.z / h;
 	
 	//first, creating the vertices
 	for (int y = 0; y < h; y++)
@@ -24,7 +24,7 @@ TerrainComp::TerrainComp(const string &fileName, vec3 size)
 			Vertex v;
 			v.pos.x = x * wStep;
 			v.pos.z = y * hStep;
-			v.pos.y = size.z * pixel.r;
+			v.pos.y = size.y * pixel.r;
 			v.texture.x = x % 2;
 			v.texture.y = y % 2;
 			v.color = GetHeightRanges(pixel.r);

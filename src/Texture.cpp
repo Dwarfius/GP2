@@ -12,9 +12,9 @@ Texture::Texture(const string& fileName)
 	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-Texture::Texture(const string & posX, const string & negX, const string & posY, const string & negY, const string & posZ, const string & negZ)
+Texture::Texture(const string& right, const string& left, const string& top, const string& bottom, const string& back, const string& front)
 {
-	textureId = LoadCubmapFromFiles(posX, negX, posY, negY, posZ, negZ);
+	textureId = LoadCubmapFromFiles(right, left, top, bottom, back, front);
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

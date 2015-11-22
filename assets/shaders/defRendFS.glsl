@@ -18,10 +18,6 @@ void main()
 	vec3 normal = texture(texture1, vertexUV).xyz * 2 - 1;
 	float coeff = -dot(normal, sunDir);
 	
-	//FragColor = vec4(0, color.y, 0, 1) * 2 - 1;
-	//FragColor = abs(vec4(normal, 1));
-	//FragColor = vec4(0, normal.y, 0, 1) * 2 - 1;
-	//FragColor = vec4(coeff, coeff, coeff, 1);
-	//FragColor = vec4(-sunDir, 1);
-	FragColor = color + coeff * sunColor;
+	//FragColor = color;
+	FragColor = mix(color, sunColor, coeff);
 }

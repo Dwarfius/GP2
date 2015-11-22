@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "Skybox.h"
+#include "TerrainComp.h"
 
 Scene::Scene(ResourceManager* rM)
 {
@@ -16,18 +17,16 @@ Scene::~Scene()
 {
 }
 
-void Scene::AddGameObject(string& n, string& t, string& m, string& s, vec3& position, vec3& rotation, vec3& scale, GameObject* go)
+GameObject* Scene::AddGameObject(const string& name, const vec3& position, const vec3& rotation, const vec3& scale, Renderer *r)
 {
-	go->SetName(n);
+	GameObject *go = new GameObject();
+	go->SetName(name);
 	go->SetPos(position);
 	go->SetRotation(rotation);
 	go->SetScale(scale);
-	Renderer *r = new Renderer();
-	r->SetModel(resourceManager->GetModel(m), GL_TRIANGLES);
-	r->AddTexture(resourceManager->GetTexture(t));
-	r->SetShaderProgram(resourceManager->GetShader(s));
 	go->AttachComponent(r);
 	gameObjects.push_back(go);
+	return go;
 }
 
 void Scene::AttachComponent(string & compID, GameObject * go, XMLElement* attributesElement)
@@ -49,7 +48,13 @@ void Scene::AttachComponent(string & compID, GameObject * go, XMLElement* attrib
 	}
 		break;
 	case TERRAIN:
-		//go->AttachComponent(new TerrainComp());
+	{
+		string texture = TEXTURE_PATH + attributesElement->Attribute("texture");
+		float scaleX = attributesElement->FloatAttribute("scalex");
+		float scaleY = attributesElement->FloatAttribute("scaley");
+		float scaleZ = attributesElement->FloatAttribute("scalez");
+		go->AttachComponent(new TerrainComp(texture, vec3(scaleX, scaleY, scaleZ)));
+	}
 		break;
 	case SKYBOX:
 	{
@@ -83,7 +88,7 @@ void Scene::Update(float deltaTime)
 {
 	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 	{
-		(*iter)->AddRotation(vec3(0, deltaTime * 15, 0));
+		//(*iter)->AddRotation(vec3(0, deltaTime * 15, 0));
 		(*iter)->Update(deltaTime);
 	}
 }
