@@ -19,5 +19,5 @@ void main()
 	float coeff = -dot(normal, sunDir);
 	
 	//FragColor = color;
-	FragColor = mix(color, sunColor, coeff);
+	FragColor = mix(color-sunColor, color+sunColor, coeff * 2 - 1);
 }

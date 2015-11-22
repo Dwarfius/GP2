@@ -98,6 +98,10 @@ Font::~Font()
 
 void Font::Render(const string& text, const SDL_Rect rect)
 {
+	//avoiding extra cpu load by ignoring the lines (since it's gonna be cleared anyway)
+	if (!preRenderStage)
+		return;
+
 	//first, calculate the amount of newlines
 	vector<string> lines;
 	int size = text.size();
@@ -164,22 +168,30 @@ void Font::Render(const string& text, const SDL_Rect rect)
 void Font::Flush(float deltaTime)
 {
 	//flush all of the vertices to the GPU for drawing
-	timer += deltaTime;
-	if (timer > 1.f / 60.f) //60fps text updating
+	if (!preRenderStage)
 	{
-		m->SetVertices(vertices, GL_STREAM_DRAW, false);
-		m->SetIndices(indices, GL_STREAM_DRAW, false);
-		timer = 0;
+		timer += deltaTime;
+		if (timer > 1.f / 60.f) //60fps text updating
+		{
+			timer = 0;
+			preRenderStage = true;
+
+			//clear out the memory to start rendering new ones
+			vertices = new vector<Vertex>();
+			indices = new vector<int>();
+		}
+	}
+	else
+	{
+		m->SetVertices(vertices, GL_STREAM_DRAW, true);
+		m->SetIndices(indices, GL_STREAM_DRAW, true);
+		preRenderStage = false;
 	}
 
 	glEnable(GL_BLEND);
 	renderer->Ready();
 	renderer->Render(guiCam);
 	glDisable(GL_BLEND);
-
-	//clear out the memory to start rendering new ones
-	vertices->clear();
-	indices->clear();
 }
 
 GLuint Font::ConvertSDLSurfaceToTexture(SDL_Surface *surf)
