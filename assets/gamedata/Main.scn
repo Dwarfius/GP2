@@ -24,6 +24,12 @@
 			scalex="0.3" scaley="0.3" scalez="0.3">
 			<ComponentList>		
 			</ComponentList>
-		</GameObject>			
+		</GameObject>
+		<GameObject name="Tea Pot" hasModel="True" texture="texture.png" model="utah-teapot.fbx" 
+			shader = "Specular" posx="15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+			scalex="0.3" scaley="0.3" scalez="0.3">
+			<ComponentList>		
+			</ComponentList>
+		</GameObject>		
 	</GameObjectList>
 </Scene>
