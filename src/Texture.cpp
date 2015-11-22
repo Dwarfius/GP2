@@ -43,15 +43,15 @@ GLuint Texture::LoadTextureFromFile(const string& fileName)
 	return textId;
 }
 
-GLuint Texture::LoadCubmapFromFiles(const string & posX, const string & negX, const string & posY, const string & negY, const string & posZ, const string & negZ)
+GLuint Texture::LoadCubmapFromFiles(const string& right, const string& left, const string& top, const string& bottom, const string& back, const string& front)
 {
 	string textureFaces[6];
-	textureFaces[0] = posX;
-	textureFaces[1] = negX;
-	textureFaces[2] = posY;
-	textureFaces[3] = negY;
-	textureFaces[4] = posZ;
-	textureFaces[5] = negZ;
+	textureFaces[0] = right;
+	textureFaces[1] = left;
+	textureFaces[2] = top;
+	textureFaces[3] = bottom;
+	textureFaces[4] = back;
+	textureFaces[5] = front;
 
 	GLuint textId = 0;
 	glGenTextures(1, &textId);
