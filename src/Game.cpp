@@ -11,57 +11,56 @@ uint Game::drawCalls;
 
 vector<Vertex> skyBoxverts = {
 	//Front
-	{ vec3(-0.5f, 0.5f, 0.5f),
+	{ vec3(-1, 1, 1),
 	vec4(1.0f, 0.0f, 1.0f, 1.0f), vec2(0.0f, 0.0f) },// Top Left
 
-	{ vec3(-0.5f, -0.5f, 0.5f),
+	{ vec3(-1, -1, 1),
 	vec4(1.0f, 1.0f, 0.0f, 1.0f), vec2(0.0f, 1.0f) },// Bottom Left
 
-	{ vec3(0.5f, -0.5f, 0.5f),
+	{ vec3(1, -1, 1),
 	vec4(0.0f, 1.0f, 1.0f, 1.0f), vec2(1.0f, 1.0f) }, //Bottom Right
 
-	{ vec3(0.5f, 0.5f, 0.5f),
+	{ vec3(1, 1, 1),
 	vec4(1.0f, 0.0f, 1.0f, 1.0f), vec2(1.0f, 0.0f) },// Top Right
 
-
 													 //back
-	{ vec3(-0.5f, 0.5f, -0.5f),
+	{ vec3(-1, 1, -1),
 	vec4(1.0f, 0.0f, 1.0f, 1.0f), vec2(0.0f, 0.0f) },// Top Left
 
-	{ vec3(-0.5f, -0.5f, -0.5f),
+	{ vec3(-1, -1, -1),
 	vec4(1.0f, 1.0f, 0.0f, 1.0f), vec2(0.0f, 1.0f) },// Bottom Left
 
-	{ vec3(0.5f, -0.5f, -0.5f),
+	{ vec3(1, -1, -1),
 	vec4(0.0f, 1.0f, 1.0f, 1.0f), vec2(1.0f, 1.0f) }, //Bottom Right
 
-	{ vec3(0.5f, 0.5f, -0.5f),
+	{ vec3(1, 1, -1),
 	vec4(1.0f, 0.0f, 1.0f, 1.0f), vec2(1.0f, 0.0f) },// Top Right
 };
 
 vector<int> skyBoxIndices = {
 	//front
-	0, 1, 2,
-	0, 3, 2,
+	3, 2, 1,
+	3, 1, 0,
 
 	//left
-	4, 5, 1,
-	4, 1, 0,
+	0, 1, 5,
+	0, 5, 4,
 
 	//right
-	3, 7, 2,
 	7, 6, 2,
+	7, 2, 3,
 
 	//bottom
-	1, 5, 2,
-	6, 2, 5,
+	5, 1, 2,
+	5, 2, 6,
 
 	//top
-	4, 0, 7,
+	0, 4, 7,
 	0, 7, 3,
 
 	//back
 	4, 5, 6,
-	4, 7, 6
+	4, 6, 7
 };
 
 Game::Game()
@@ -98,9 +97,12 @@ void Game::LoadResources()
 	resourceManager->AddModel("Terrain", terrainModel);
 
 	Model *skyModel = new Model();
-	skyModel->SetVertices(&skyBoxverts, GL_STATIC_DRAW, true);
-	skyModel->SetIndices(&skyBoxIndices, GL_STATIC_DRAW, true);
-	resourceManager->AddModel("skyModel",skyModel);
+	vector<Vertex> *verts = new vector<Vertex>(skyBoxverts);
+	vector<int> *indcs = new vector<int>(skyBoxIndices);
+	skyModel->SetVertices(verts, GL_STATIC_DRAW, true);
+	skyModel->SetIndices(indcs, GL_STATIC_DRAW, true);
+	skyModel->SetUpAttrib(0, 3, GL_FLOAT, 0);
+	resourceManager->AddModel("skyModel", skyModel);
 
 	//========================  SHADERS ========================
 	ShaderProgram *s = new ShaderProgram(SHADER_PATH + "specularVS.glsl", SHADER_PATH + "specularFS.glsl");
@@ -134,17 +136,6 @@ void Game::LoadResources()
 	//======================== SCENEMANAGEMENT  ====================
 	sceneManager->LoadSceneDirectories();
 	sceneManager->LoadScene("Main", currentScene);
-
-	//======================== GAMEOBJECTS  ========================
-	GameObject *skyGameObject = new GameObject();
-	skyGameObject->SetName("SkyBox");
-	Renderer* skyRenderer = new Renderer();
-	skyRenderer->isCubeMap = true;
-	skyRenderer->AddTexture(resourceManager->GetTexture("skyTexture"));
-	skyRenderer->SetModel(resourceManager->GetModel("skyModel"), GL_TRIANGLES);
-	skyRenderer->SetShaderProgram(resourceManager->GetShader("SkyBox"));
-	skyGameObject->AttachComponent(skyRenderer);
-	currentScene->AddGameObject(skyGameObject);
 }
 
 void Game::ReleaseResources()

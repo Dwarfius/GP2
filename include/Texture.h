@@ -17,7 +17,7 @@ private:
 		const string& posZ, 
 		const string& negZ);
 	GLuint ConvertSDLSurfaceToTexture(SDL_Surface *surf);
-	GLuint ConvertSDLSurfaceToCubeMap(SDL_Surface *surf, int i, GLuint textId);
+	void ConvertSDLSurfaceToCubeMap(SDL_Surface *surf, int i, GLuint textId);
 
 public:
 	Texture(GLuint text) { textureId = text; }

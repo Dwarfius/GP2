@@ -59,6 +59,9 @@ void GameObject::Render(Camera *camera)
 	vec4 specLightColor(1, 1, 1, 1);
 	program->SetUniform("specularLightColor", &specLightColor);
 
+	for (auto it = components.begin(); it != components.end(); it++)
+		(*(it->second)).OnRender(camera);
+
 	renderer->Render(camera);
 }
 

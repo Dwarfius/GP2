@@ -4,9 +4,9 @@
 GLuint Renderer::activeProg = 0, Renderer::activeVao = 0;
 GLuint Renderer::activeTexts[TEXTURE_COUNT] = { 0, 0, 0, 0, 0 };
 
-Renderer::Renderer(Texture *t, ShaderProgram *s, Model *m, int mode)
+Renderer::Renderer(Texture *t, bool cubeMap, ShaderProgram *s, Model *m, int mode)
 {
-	AddTexture(t);
+	AddTexture(t, cubeMap);
 	shaderProg = s;
 	model = m;
 	renderMode = mode;
@@ -79,7 +79,7 @@ void Renderer::Render(Camera *cam)
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, model->GetVertCount());
 		break;
 	default:
-		printf("Render mode unsupported!");
+		printf("Render mode unsupported!\n");
 		break;
 	}
 	CHECK_GL_ERROR();

@@ -6,13 +6,16 @@
 		<Texture>texture.png</Texture>
 	</TextureList>
 	<GameObjectList>		
-		<GameObject name="CameraBehaviourObject" hasModel="false" texture="" model="" shader = "" 
+		<GameObject name="CameraBehaviourObject" hasModel="True" texture="" model="" shader = "" 
 			posx="0" posy="0" posz="0" 
 			rotx="0" roty="0" rotz="0" 
 			scalex="1" scaley="1" scalez="1">
 			<ComponentList>
 				<Component ID="CameraBehaviour">
 					<Attributes speed="20"/>
+				</Component>
+				<Component ID="Skybox">
+					<Attributes texture="skyTexture"/>
 				</Component>
 			</ComponentList>
 		</GameObject>

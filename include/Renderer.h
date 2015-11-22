@@ -21,13 +21,12 @@ private:
 
 	static GLuint activeProg, activeVao;
 	static GLuint activeTexts[TEXTURE_COUNT];
+	bool isCubeMap = false;
 
 public:
 	Renderer() { }
-	Renderer(Texture *t, ShaderProgram *s, Model *m, int mode);
+	Renderer(Texture *t, bool cubeMap, ShaderProgram *s, Model *m, int mode);
 	~Renderer() {}
-
-	bool isCubeMap = false;
 
 	//mode supports either GL_TRIANGLE_FAN or GL_TRIANGLES
 	void SetModel(Model *pModel, int mode) { model = pModel; renderMode = mode; }
@@ -36,8 +35,8 @@ public:
 	void SetShaderProgram(ShaderProgram *sP) { shaderProg = sP; }
 	ShaderProgram* GetProgram() { return shaderProg; }
 
-	void AddTexture(Texture *t) { textures[textCount++] = t; }
-	void SetTexture(int i, Texture *t) { textures[i] = t; }
+	void AddTexture(Texture *t, bool cubeMap = false) { textures[textCount++] = t; isCubeMap = cubeMap; }
+	void SetTexture(int i, Texture *t, bool cubeMap = false) { textures[i] = t; isCubeMap = cubeMap; }
 	Texture* GetTexture(int i) { return textures[i]; }
 
 	//binds the shader so that uniforms can be sent

@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "Skybox.h"
 
 Scene::Scene(ResourceManager* rM)
 {
@@ -7,6 +8,7 @@ Scene::Scene(ResourceManager* rM)
 	componentIDValues[""] = COMPONENT_NOTFOUND;
 	componentIDValues["CameraBehaviour"] = CAMERA_BEHAVIOUR;
 	componentIDValues["Terrain"] = TERRAIN;
+	componentIDValues["Skybox"] = SKYBOX;
 	camera = new Camera();
 }
 
@@ -48,6 +50,13 @@ void Scene::AttachComponent(string & compID, GameObject * go, XMLElement* attrib
 		break;
 	case TERRAIN:
 		//go->AttachComponent(new TerrainComp());
+		break;
+	case SKYBOX:
+	{
+		string name = attributesElement->Attribute("texture");
+		ResourceManager *rm = resourceManager;
+		go->AttachComponent(new Skybox(rm->GetTexture(name), rm->GetModel("skyModel"), rm->GetShader("SkyBox")));
+	}
 		break;
 	}
 }
