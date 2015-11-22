@@ -12,7 +12,8 @@ static enum componentID {
 	COMPONENT_NOTFOUND,
 	CAMERA_BEHAVIOUR,
 	TERRAIN,
-	SKYBOX
+	SKYBOX,
+	TIMEDAY
 };
 
 using namespace tinyxml2;
@@ -33,6 +34,7 @@ public:
 
 	//adds a new gameobject to the vector
 	GameObject* AddGameObject(const string& name, const vec3& position, const vec3& rotation, const vec3& scale, Renderer *r);
+	GameObject* AddGameObject(const string& name, const vec3& position, const vec3& rotation, const vec3& scale);
 	void AttachComponent(string& compID, GameObject* go, XMLElement* attributesElement);
 	//adds a creted gameobject from outside the scene to the scene
 	void AddGameObject(GameObject* go);
