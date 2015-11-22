@@ -26,18 +26,28 @@ void Renderer::Render(Camera *cam)
 {
 	//and sending settings
 	GLint loc;
-	for (int i = 0; i < textCount; i++)
+	if (isCubeMap)
 	{
-		GLuint text = textures[i]->Get();
-		if (text != activeTexts[i])
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, textures[0]->Get());
+
+		int id = 0;
+		shaderProg->SetUniform("skybox", &id);
+	}
+	else
+	{
+		for (int i = 0; i < textCount; i++)
 		{
-			glActiveTexture(GL_TEXTURE0 + i);
-			glBindTexture(GL_TEXTURE_2D, text);
+			GLuint text = textures[i]->Get();
+			if (text != activeTexts[i])
+			{
+				glActiveTexture(GL_TEXTURE0 + i);
+				glBindTexture(GL_TEXTURE_2D, text);
 
-			string name = string("texture") + (char)(48 + i);
-			shaderProg->SetUniform(name, &i);
-
-			activeTexts[i] = text;
+				string name = string("texture") + (char)(48 + i);
+				shaderProg->SetUniform(name, &i);
+				activeTexts[i] = text;
+			}
 		}
 	}
 

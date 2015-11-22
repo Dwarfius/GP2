@@ -24,17 +24,17 @@ void ResourceManager::AddTexture(const string & filename)
 	textures[filename] = new Texture(TEXTURE_PATH + filename);
 }
 
-ShaderProgram* ResourceManager::GetShader(string name)
+ShaderProgram* ResourceManager::GetShader(const string& name)
 {
 	return shaderPrograms[name];
 }
 
-Texture* ResourceManager::GetTexture(string & name)
+Texture* ResourceManager::GetTexture(const string& name)
 {
 	return textures[name];
 }
 
-Model* ResourceManager::GetModel(string & name)
+Model* ResourceManager::GetModel(const string& name)
 {
 	return models[name];
 }

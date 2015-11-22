@@ -22,11 +22,11 @@ public:
 	//loads and xml file
 	void loadXML(string filename, XMLDocument* xml);
 	//loads the scene directories for all the scenes in the deliverable
-	void LoadSceneDirectories();
+	XMLError LoadSceneDirectories();
 	//loads the scene, takes in the scene order int as a parameter
 	//scenes loaded can only contain basic gameobjects with no components just now
-	void LoadScene(int lvlOrder, Scene* currentScene);
+	XMLError LoadScene(int lvlOrder, Scene* currentScene);
 	//loads the scene, takes in the scene name(without the ".scn") as a parameter
-	void LoadScene(string lvlName, Scene* currentScene);
+	XMLError LoadScene(string lvlName, Scene* currentScene);
 };
 #endif 

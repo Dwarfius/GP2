@@ -26,10 +26,11 @@ void AddModel(const string& filename);
 void AddModel(const string& name, Model *m) { models[name] = m; }
 //adds texture to the map
 void AddTexture(const string& filename);
+void AddTexture(const string& name, Texture* t) { textures[name] = t; }
 
-ShaderProgram* GetShader(string name);
-Texture* GetTexture(string& name);
-Model* GetModel(string& name);
+ShaderProgram* GetShader(const string& name);
+Texture* GetTexture(const string& name);
+Model* GetModel(const string& name);
 //Deletes all the things!
 void ReleaseResources();
 };

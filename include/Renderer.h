@@ -27,6 +27,8 @@ public:
 	Renderer(Texture *t, ShaderProgram *s, Model *m, int mode);
 	~Renderer() {}
 
+	bool isCubeMap = false;
+
 	//mode supports either GL_TRIANGLE_FAN or GL_TRIANGLES
 	void SetModel(Model *pModel, int mode) { model = pModel; renderMode = mode; }
 	Model* GetModel() { return model; }
