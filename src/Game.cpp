@@ -227,7 +227,7 @@ void Game::Render(float deltaTime)
 	sprintf(msg, "verts:%u", verticesRendered);
 	Font* tF = resourceManager->GetFont("OratorStd.otf");
 	tF->Render(string(msg), { 0, 25, 100, 25 });
-	sprintf(msg, "objts:%u", objectsRendered);
+	sprintf(msg, "objts:%u(%u)", objectsRendered - 1, currentScene->gameObjects.size());
 	tF->Render(string(msg), { 0, 50, 100, 25 });
 	free(msg);
 

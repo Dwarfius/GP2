@@ -58,6 +58,9 @@ Model::Model(const string& fileName)
 
 	//normals
 	SetUpAttrib(3, 3, GL_FLOAT, sizeof(vec3) + sizeof(vec4) + sizeof(vec2));
+
+	//generating a bound sphere if asked
+	GenerateBoundSphere();
 }
 
 void Model::SetVertices(vector<Vertex> *verts, GLuint flag, bool deletePrev)
@@ -305,4 +308,27 @@ void Model::processMeshNormals(FbxMesh *mesh, Vertex *verts, int count)
 			verts[cornerIndex].normal.z = normal[2];
 		}
 	}
+}
+
+void Model::GenerateBoundSphere()
+{
+	usesBoundSphere = true;
+	vec3 maxPos(0);
+	float maxPosDist = length(maxPos);
+	vec3 sumPos(0);
+	for (auto iter = vertices->begin(); iter != vertices->end(); iter++)
+	{
+		sumPos += (*iter).pos;
+		float len = length((*iter).pos);
+		if (len > maxPosDist)
+		{
+			maxPosDist = len;
+			maxPos = (*iter).pos;
+		}
+	}
+	vec3 center = sumPos / (float)vertices->size();
+	float radius = length(maxPos - center);
+	boundSphere = { center, radius };
+
+	printf("Center: %f,%f,%f Radius:%f\n", center.x, center.y, center.z, radius);
 }

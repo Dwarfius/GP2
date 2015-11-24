@@ -5,12 +5,31 @@
 #include "Vertex.h"
 #include <fbxsdk.h>
 
+struct Sphere
+{
+	vec3 pos;
+	float rad;
+
+	Sphere Transform(const mat4& matrix)
+	{
+		Sphere ret;
+		ret.pos = vec3(matrix * vec4(pos, 1));
+		ret.rad = rad * glm::max(matrix[0][0], glm::max(matrix[1][1], matrix[2][2]));
+		return ret;
+	}
+};
+
 class Model
 {
 private:
 	GLuint vao, vbo, ebo;
 	vector<Vertex> *vertices;
 	vector<int> *indices;
+
+	bool usesBoundSphere = false;
+	Sphere boundSphere;
+
+	void GenerateBoundSphere();
 
 	bool loadFBXFromFile(const string& fileName);
 	void processNode(FbxNode *node, int level);
@@ -28,6 +47,9 @@ public:
 	GLuint Get() { return vao; }
 	int GetVertCount() { return vertices->size(); }
 	int GetIndCount() { return indices->size(); }
+
+	bool UsesBoundSphereTest() { return usesBoundSphere; }
+	Sphere GetBoundingSphere(const mat4& transform) { return boundSphere.Transform(transform); }
 
 	//takes ownership of verts! releases memory on it's own!
 	void SetVertices(vector<Vertex> *verts, GLuint flag, bool deletePrev);

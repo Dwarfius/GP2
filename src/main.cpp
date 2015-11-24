@@ -3,9 +3,6 @@
 #include "Input.h"
 #include "Game.h"
 
-#define SCREEN_W 1280
-#define SCREEN_H 768
-
 vector<string> split(const string& s, const char delim) 
 {
 	std::vector<std::string> elems;

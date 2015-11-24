@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "Game.h"
 
 GameObject::GameObject()
 {
@@ -31,9 +32,24 @@ void GameObject::Render(Camera *camera)
 	modelMatrix = rotate(modelMatrix, radians(rotation.z), vec3(0, 0, 1));
 	modelMatrix = scale(modelMatrix, size);
 
-	renderer->Ready();
+	//view frustrum culling
+	Model *m = renderer->GetModel();
+	if (m->UsesBoundSphereTest())
+	{
+		Sphere sphere = m->GetBoundingSphere(modelMatrix);
 
+		if (!camera->CheckSphere(sphere.pos, sphere.rad))
+			return;
+	}
+
+	renderer->Ready();
 	ShaderProgram *program = renderer->GetProgram();
+	mat4 MVP = camera->Get() * modelMatrix;
+	program->SetUniform("MVP", value_ptr(MVP));
+
+	vec3 camPos = camera->GetPos();
+	program->SetUniform("cameraPosition", &camPos);
+
 	program->SetUniform("Model", value_ptr(modelMatrix));
 	vec3 lightDir(0, 0, 1);
 	program->SetUniform("lightDirection", &lightDir);
@@ -62,7 +78,8 @@ void GameObject::Render(Camera *camera)
 	for (auto it = components.begin(); it != components.end(); it++)
 		(*(it->second)).OnRender(camera);
 
-	renderer->Render(camera);
+	renderer->Render();
+	Game::objectsRendered++;
 }
 
 void GameObject::AttachComponent(BaseComponent * com)
