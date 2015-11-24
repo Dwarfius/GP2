@@ -71,9 +71,15 @@ void Scene::AttachComponent(string & compID, GameObject * go, XMLElement* attrib
 		break;
 	case SKYBOX:
 	{
-		string name = attributesElement->Attribute("texture");
+		string name = attributesElement->Attribute("texture1");
+		string name2 = attributesElement->Attribute("texture2");
+		bool iTD = false;
+		attributesElement->QueryBoolAttribute("isTimeDay", &iTD);
 		ResourceManager *rm = resourceManager;
-		go->AttachComponent(new Skybox(rm->GetTexture(name), rm->GetModel("skyModel"), rm->GetShader("SkyBox")));
+		if(iTD)
+			go->AttachComponent(new Skybox(rm->GetTexture(name), rm->GetModel("skyModel"), rm->GetShader("SkyBox"), rm->GetTexture(name2), iTD));
+		if(!iTD)
+			go->AttachComponent(new Skybox(rm->GetTexture(name), rm->GetModel("skyModel"), rm->GetShader("SkyBox"), rm->GetTexture(name), iTD));
 	}
 		break;
 	case TIMEDAY:

@@ -30,9 +30,11 @@ void Renderer::Render(Camera *cam)
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, textures[0]->Get());
+		glBindTexture(GL_TEXTURE_CUBE_MAP, textures[1]->Get());
 
 		int id = 0;
 		shaderProg->SetUniform("skybox", &id);
+		shaderProg->SetUniform("skyboxNight", &id);
 	}
 	else
 	{

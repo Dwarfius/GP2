@@ -1,6 +1,7 @@
 <Scene name="Main">
     <ModelList>
 		<Model>utah-teapot.fbx</Model>
+		<Model>3d-model.fbx</Model>
     </ModelList>
 	<TextureList>
 		<Texture>texture.png</Texture>
@@ -21,7 +22,7 @@
 					<Attributes font="OratorStd.otf"/>
 				</Component>
 				<Component ID="Skybox">
-					<Attributes texture="skyTexture"/>
+					<Attributes texture1="skyTexture" texture2="skyNightTexture" isTimeDay="true"/>
 				</Component>
 			</ComponentList>
 		</GameObject>
@@ -41,7 +42,7 @@
 			<ComponentList>		
 			</ComponentList>
 		</GameObject>
-		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" 
+		<GameObject name="Man" hasRenderer="true" texture="texture.png" model="3d-model.fbx" 
 			shader = "Specular" posx="15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
 			scalex="0.3" scaley="0.3" scalez="0.3">
 			<ComponentList>		

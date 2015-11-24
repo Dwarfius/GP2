@@ -6,7 +6,7 @@ TimeDay::TimeDay(Font* f)
 {
 	timeHour = 0;
 	timeMinute = 0;
-	timeScale = 2;
+	timeScale = 1;
 	font = f;
 }
 
