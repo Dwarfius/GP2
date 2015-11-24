@@ -78,7 +78,8 @@ void Scene::AttachComponent(string & compID, GameObject * go, XMLElement* attrib
 		break;
 	case TIMEDAY:
 	{
-		go->AttachComponent(new TimeDay());
+		string tF = attributesElement->Attribute("font");
+		go->AttachComponent(new TimeDay(resourceManager->GetFont(tF)));
 	}
 	break;
 	}

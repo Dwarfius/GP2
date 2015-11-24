@@ -12,24 +12,26 @@
 		<Font>OratorStd.otf</Font>
 	</FontList>
 	<GameObjectList>		
-		<GameObject name="SceneManagementObject" hasRenderer="false" texture="" model="" shader = "" 
+		<GameObject name="SceneManagementObject" hasRenderer="true" texture="" model="" shader = "" 
 			posx="0" posy="0" posz="0" 
 			rotx="0" roty="0" rotz="0" 
 			scalex="1" scaley="1" scalez="1">
 			<ComponentList>
-				<Component ID="TimeDay"/>
+				<Component ID="TimeDay">
+					<Attributes font="OratorStd.otf"/>
+				</Component>
+				<Component ID="Skybox">
+					<Attributes texture="skyTexture"/>
+				</Component>
 			</ComponentList>
 		</GameObject>
-		<GameObject name="CameraBehaviourObject" hasRenderer="true" texture="" model="" shader = "" 
+		<GameObject name="CameraBehaviourObject" hasRenderer="false" texture="" model="" shader = "" 
 			posx="0" posy="0" posz="0" 
 			rotx="0" roty="0" rotz="0" 
 			scalex="1" scaley="1" scalez="1">
 			<ComponentList>
 				<Component ID="CameraBehaviour">
 					<Attributes speed="5"/>
-				</Component>
-				<Component ID="Skybox">
-					<Attributes texture="skyTexture"/>
 				</Component>
 			</ComponentList>
 		</GameObject>
