@@ -20,7 +20,6 @@ private:
 public:
 	Skybox(Texture *skybox, Model *model, ShaderProgram *shader, Texture *skyNight, bool iTD);
 	~Skybox();
-	void SetSkyNight(Texture * t);
 	void SetParentGO(GameObject *pGO);
 
 	void Update(float deltaTime);

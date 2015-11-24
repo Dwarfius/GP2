@@ -58,6 +58,7 @@ void ShaderProgram::SetUniform(const string& name, void *value)
 {
 	switch (types[name])
 	{
+	case GL_SAMPLER_CUBE:
 	case GL_SAMPLER_2D:
 	case GL_INT:
 		glUniform1i(locations[name], *(GLint*)value);

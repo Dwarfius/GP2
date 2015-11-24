@@ -17,11 +17,6 @@ Skybox::~Skybox()
 {
 }
 
-void Skybox::SetSkyNight(Texture * t)
-{
-	skyNight = t;
-}
-
 void Skybox::SetParentGO(GameObject *pGO)
 {
 	pGameObject = pGO;
@@ -29,7 +24,7 @@ void Skybox::SetParentGO(GameObject *pGO)
 	renderer = pGameObject->GetRenderer();
 	renderer->SetTexture(0, skybox, true);
 	if (isTimeDay) {
-		renderer->SetTexture(1, skybox, true);
+		renderer->SetTexture(1, skyNight, true);
 	}
 	renderer->SetModel(model, GL_TRIANGLES);
 	renderer->SetShaderProgram(shader);
@@ -37,7 +32,18 @@ void Skybox::SetParentGO(GameObject *pGO)
 
 void Skybox::Update(float deltaTime)
 {
-	if (isTimeDay) blendFactor = 10000000;
+	if (isTimeDay)
+	{
+		if (tD->GetHour() < 12) 
+		{
+			blendFactor = 1 - (((tD->GetHour() + ((tD->GetMinute() + 0.00000001) / 60) + 0.00000001) / 24) * 2);
+		}
+		if (tD->GetHour() >= 12 && tD->GetHour() <= 23)
+		{
+			blendFactor = (((tD->GetHour() + ((tD->GetMinute() + 0.00000001) / 60) - 12.00000001) / 24) * 2);
+		}
+	}
+	cout << blendFactor << endl;
 }
 
 void Skybox::OnRender(Camera *camera)

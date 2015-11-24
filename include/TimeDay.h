@@ -8,17 +8,20 @@
 class TimeDay : public BaseComponent
 {
 private:
-	float timeScale;
 	float timeMinute;
 	int timeHour;
 	Font* font;
-	
+	float timeScale;
+
 public:
 	TimeDay(Font* f);
 	~TimeDay();
 
 	void Update(float deltaTime);
 	void OnRender(Camera *camera);
+
+	int GetHour() { return timeHour; }
+	float GetMinute() { return timeMinute; }
 
 	void SetTime(int hour, float minute);
 	string GetTimeString();
