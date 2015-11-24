@@ -15,5 +15,5 @@ void main()
 	FragColor = texture(texture0, uvsOut) * ranges.x + 
 			texture(texture1, uvsOut) * ranges.y + 
 			texture(texture2, uvsOut) * ranges.z;
-	Normal = vec3(0, 0, 0);
+	Normal = vec3(0.5, 0.5, 0.5);
 }
