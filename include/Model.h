@@ -27,7 +27,7 @@ private:
 	vector<int> *indices;
 
 	bool usesBoundSphere = false;
-	Sphere boundSphere;
+	Sphere boundSphere = { vec3(0, 0, 0), 0 };
 
 	void GenerateBoundSphere();
 
@@ -50,6 +50,7 @@ public:
 
 	bool UsesBoundSphereTest() { return usesBoundSphere; }
 	Sphere GetBoundingSphere(const mat4& transform) { return boundSphere.Transform(transform); }
+	vec3 GetCenter() { return boundSphere.pos; }
 
 	//takes ownership of verts! releases memory on it's own!
 	void SetVertices(vector<Vertex> *verts, GLuint flag, bool deletePrev);

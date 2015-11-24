@@ -26,14 +26,16 @@ void GameObject::Render(Camera *camera)
 	if (!renderer)
 		return;
 
+	Model *m = renderer->GetModel();
+
 	modelMatrix = translate(mat4(1), pos);
 	modelMatrix = rotate(modelMatrix, radians(rotation.x), vec3(1, 0, 0));
 	modelMatrix = rotate(modelMatrix, radians(rotation.y), vec3(0, 1, 0));
 	modelMatrix = rotate(modelMatrix, radians(rotation.z), vec3(0, 0, 1));
 	modelMatrix = scale(modelMatrix, size);
+	modelMatrix = translate(modelMatrix, -m->GetCenter());
 
 	//view frustrum culling
-	Model *m = renderer->GetModel();
 	if (m->UsesBoundSphereTest())
 	{
 		Sphere sphere = m->GetBoundingSphere(modelMatrix);

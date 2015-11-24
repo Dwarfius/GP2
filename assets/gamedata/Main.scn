@@ -34,6 +34,12 @@
 			</ComponentList>
 		</GameObject>
 		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" 
+			shader = "Specular" posx="-15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+			scalex="0.1" scaley="0.1" scalez="0.1">
+			<ComponentList>		
+			</ComponentList>
+		</GameObject>
+		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" 
 			shader = "Specular" posx="-5" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
 			scalex="0.3" scaley="0.3" scalez="0.3">
 			<ComponentList>		
@@ -41,7 +47,7 @@
 		</GameObject>
 		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" 
 			shader = "Specular" posx="15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
-			scalex="0.3" scaley="0.3" scalez="0.3">
+			scalex="0.6" scaley="0.6" scalez="0.6">
 			<ComponentList>		
 			</ComponentList>
 		</GameObject>
