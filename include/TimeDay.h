@@ -23,6 +23,7 @@ public:
 	int GetHour() { return timeHour; }
 	float GetMinute() { return timeMinute; }
 
+	void SetTimeScale(float tScale);
 	void SetTime(int hour, float minute);
 	string GetTimeString();
 };

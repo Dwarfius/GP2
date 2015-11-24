@@ -43,7 +43,6 @@ void Skybox::Update(float deltaTime)
 			blendFactor = (((tD->GetHour() + ((tD->GetMinute() + 0.00000001) / 60) - 12.00000001) / 24) * 2);
 		}
 	}
-	cout << blendFactor << endl;
 }
 
 void Skybox::OnRender(Camera *camera)

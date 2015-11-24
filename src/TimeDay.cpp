@@ -32,6 +32,11 @@ void TimeDay::OnRender(Camera * camera)
 {
 }
 
+void TimeDay::SetTimeScale(float tScale)
+{
+	timeScale = tScale;
+}
+
 void TimeDay::SetTime(int hour, float minute = 0)
 {
 	timeHour = hour;
