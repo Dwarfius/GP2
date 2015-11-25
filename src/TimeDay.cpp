@@ -2,11 +2,12 @@
 
 
 
-TimeDay::TimeDay()
+TimeDay::TimeDay(Font* f)
 {
 	timeHour = 0;
 	timeMinute = 0;
-	timeScale = 1;
+	timeScale = 30;
+	font = f;
 }
 
 
@@ -24,6 +25,16 @@ void TimeDay::Update(float deltaTime)
 		timeHour++;
 		if (timeHour > 23) timeHour = 0;
 	}
+	font->Render(GetTimeString(), { 0, 75, 50, 50});
+}
+
+void TimeDay::OnRender(Camera * camera)
+{
+}
+
+void TimeDay::SetTimeScale(float tScale)
+{
+	timeScale = tScale;
 }
 
 void TimeDay::SetTime(int hour, float minute = 0)
@@ -38,14 +49,8 @@ void TimeDay::SetTime(int hour, float minute = 0)
 
 string TimeDay::GetTimeString()
 {
-	/*stringstream ss;
-	ss.width = 2;
-	ss << timeHour;
-	ss.fill('0');
-	ss << ":";
-	ss << timeMinute;
-	ss.fill('0');
-	return ss.str();*/
-	return string();
+	stringstream ss;
+	ss << setw(2) << timeHour << " :" << ss.fill('0') << setw(2) << int(timeMinute);
+	return ss.str();
 }
 

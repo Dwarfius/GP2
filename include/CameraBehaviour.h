@@ -9,6 +9,7 @@ private:
 	Camera *camera;
 	bool wireframeMode = false;
 public:
+	float mouseSensitivity;
 	float speed;
 	CameraBehaviour(Camera * c, float tS);
 	~CameraBehaviour();

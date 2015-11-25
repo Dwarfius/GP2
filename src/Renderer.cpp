@@ -33,6 +33,12 @@ void Renderer::Render()
 
 		int id = 0;
 		shaderProg->SetUniform("skybox", &id);
+
+		glActiveTexture(GL_TEXTURE0 + 1);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, textures[1]->Get());
+
+		int id2 = 1;
+		shaderProg->SetUniform("skyboxNight", &id2);
 	}
 	else
 	{
