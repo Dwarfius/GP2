@@ -1,11 +1,15 @@
 #include "CameraBehaviour.h"
 #include "Input.h"
 #include "GameObject.h"
-
+float baseSpeed;
+float boostSpeed;
 CameraBehaviour::CameraBehaviour(Camera *c, float tS)
 {
 	camera = c;
 	speed = tS;
+	baseSpeed = speed;
+	boostSpeed = baseSpeed * 4;
+	mouseSensitivity = 0.2f;
 }
 
 CameraBehaviour::~CameraBehaviour()
@@ -31,13 +35,9 @@ void CameraBehaviour::Update(float deltaTime)
 		camera->Translate(up * deltaTime * speed);
 
 	ivec2 deltaPos = Input::GetMouseDelta();
-	camera->Rotate((float)deltaPos.x, (float)-deltaPos.y);
-
-	//testing getcomponent method, feel free to remove it
-	if (Input::GetKeyDown(SDLK_g)) {
-		dynamic_cast<CameraBehaviour*>(pGameObject->GetComponent("CameraBehaviour"))->speed++;
-	}
-	if (Input::GetKeyDown(SDLK_f)) {
-		dynamic_cast<CameraBehaviour*>(pGameObject->GetComponent("CameraBehaviour"))->speed--;
-	}
+	camera->Rotate((float)deltaPos.x * mouseSensitivity, (float)-deltaPos.y * mouseSensitivity);
+	
+	if (Input::GetKey(SDLK_LSHIFT))
+		speed = boostSpeed;
+	else speed = baseSpeed;
 }
