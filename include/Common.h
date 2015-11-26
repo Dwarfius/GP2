@@ -50,4 +50,7 @@ struct RECTF
 	float w, h;
 };
 
+#define SCREEN_W 1280.f
+#define SCREEN_H 768.f
+
 #endif

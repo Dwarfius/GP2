@@ -22,7 +22,7 @@ void Renderer::Ready()
 	}
 }
 
-void Renderer::Render(Camera *cam)
+void Renderer::Render()
 {
 	//and sending settings
 	GLint loc;
@@ -57,16 +57,6 @@ void Renderer::Render(Camera *cam)
 		}
 	}
 
-	if (cam)
-	{
-		mat4 modelMat = pGameObject ? pGameObject->GetModelMatrix() : mat4(1);
-		mat4 MVP = cam->Get() * modelMat;
-		shaderProg->SetUniform("MVP", value_ptr(MVP));
-
-		vec3 camPos = cam->GetPos();
-		shaderProg->SetUniform("cameraPosition", &camPos);
-	}
-
 	//binding the vao
 	GLuint vao = model->Get();
 	if (vao != activeVao)
@@ -91,7 +81,6 @@ void Renderer::Render(Camera *cam)
 	CHECK_GL_ERROR();
 
 	Game::verticesRendered += model->GetVertCount();
-	Game::objectsRendered++;
 	Game::drawCalls++;
 }
 
@@ -153,6 +142,5 @@ void Renderer::RenderInstanced(Camera *cam, int count)
 	CHECK_GL_ERROR();
 
 	Game::verticesRendered += model->GetVertCount() * count;
-	Game::objectsRendered += count;
 	Game::drawCalls++;
 }

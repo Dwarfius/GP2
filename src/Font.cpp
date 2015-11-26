@@ -2,7 +2,7 @@
 
 Font::Font(const string& fileName)
 {
-	guiCam = new Camera();
+	guiCam = new Camera(true);
 	vertices = new vector<Vertex>();
 	indices = new vector<int>();
 
@@ -190,7 +190,9 @@ void Font::Flush(float deltaTime)
 
 	glEnable(GL_BLEND);
 	renderer->Ready();
-	renderer->Render(guiCam);
+	ShaderProgram *prog = renderer->GetProgram();
+	prog->SetUniform("MVP", (void*)value_ptr(guiCam->Get()));
+	renderer->Render();
 	glDisable(GL_BLEND);
 }
 

@@ -49,8 +49,7 @@ void Skybox::OnRender(Camera *camera)
 {
 	ShaderProgram *program = renderer->GetProgram();
 
-	mat4 view = mat4(mat3(camera->GetView()));
-	mat4 vp = camera->GetProj() * view;
-	program->SetUniform("VP", value_ptr(vp));
+	mat4 mvp = camera->GetProj() * mat4(mat3(camera->GetView()));
+	program->SetUniform("VP", value_ptr(mvp));
 	program->SetUniform("blendFactor", &blendFactor);
 }

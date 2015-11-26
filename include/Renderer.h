@@ -43,8 +43,8 @@ public:
 	//binds the shader so that uniforms can be sent
 	void Ready();
 	//call Ready() before this!
-	void Render(Camera *cam);
-	//call Ready() before this!
+	void Render();
+	//NYI! Call Ready() before this!
 	void RenderInstanced(Camera *cam, int count);
 };
 

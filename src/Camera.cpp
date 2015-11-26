@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-Camera::Camera()
+Camera::Camera(bool orthoMode)
 {
 	yaw = -90; 
 	pitch = 0;
@@ -9,8 +9,11 @@ Camera::Camera()
 
 	//setting up the matrix for UI rendering
 	//call Recalculate to get proper perspective matrix
-	projMatrix = ortho(0.f, 480.f, 0.f, 640.f);
-	VP = projMatrix;
+	this->orthoMode = orthoMode;
+	if (orthoMode)
+		SetProjOrtho(0, SCREEN_W, 0, SCREEN_H);
+	else
+		SetProjPersp(45, SCREEN_W / SCREEN_H, 0.1f, 1000.f);
 }
 
 Camera::~Camera()
@@ -35,8 +38,24 @@ void Camera::Recalculate()
 	right = normalize(cross(vec3(0, 1, 0), -forward));
 	up = cross(-forward, right);
 
-	projMatrix = perspective(45.f, 640.f / 480.f, 0.1f, 200.f);
+	frustrum.UpdateFrustrum(pos, right, up, forward);
 	viewMatrix = lookAt(pos, pos + forward, up);
 
 	VP = projMatrix * viewMatrix;
+}
+
+void Camera::SetProjPersp(float fov, float ratio, float nearPlane, float farPlane)
+{
+	orthoMode = false;
+	
+	projMatrix = perspective(fov, ratio, nearPlane, farPlane);
+	frustrum.SetFrustrumDef(fov, ratio, nearPlane, farPlane);
+}
+
+void Camera::SetProjOrtho(float left, float right, float bottom, float top)
+{
+	orthoMode = true;
+
+	projMatrix = ortho(left, right, bottom, top);
+	VP = projMatrix;
 }

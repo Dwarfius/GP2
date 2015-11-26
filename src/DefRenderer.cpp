@@ -93,5 +93,5 @@ void DefRenderer::RenderGather()
 	vec4 sunColor(1, 1, 0, 0.5f);
 	program->SetUniform("sunColor", &sunColor);
 
-	renderer->Render(NULL);
+	renderer->Render();
 }
