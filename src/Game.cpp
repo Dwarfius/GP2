@@ -114,6 +114,7 @@ void Game::LoadResources()
 
 	s = new ShaderProgram(SHADER_PATH + "normalMappingVS.glsl", SHADER_PATH + "normalMappingFS.glsl");
 	s->BindAttribLoc(0, "vertexPosition");
+	s->BindAttribLoc(2, "vertexTexCoords");
 	s->BindAttribLoc(3, "vertexNormal");
 	s->BindAttribLoc(4, "vertexTangent");
 	s->BindAttribLoc(5, "vertexBinormal");
