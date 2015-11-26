@@ -9,6 +9,8 @@ struct Vertex
 	vec4 color = vec4(1, 1, 1, 1);
 	vec2 texture = vec2(0, 0);
 	vec3 normal = vec3(0, 0, 0);
+	vec3 tangent = vec3(0, 0, 0);
+	vec3 binormal = vec3(0, 0, 0);
 
 	Vertex() {}
 

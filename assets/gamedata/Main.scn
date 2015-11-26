@@ -2,12 +2,16 @@
     <ModelList>
 		<Model>utah-teapot.fbx</Model>
 		<Model>3d-model.fbx</Model>
+		<Model>NormalMapTest.FBX</Model>
+		<Model>NormalMapTest2.FBX</Model>
     </ModelList>
 	<TextureList>
 		<Texture>texture.png</Texture>
 		<Texture>grass.png</Texture>
 		<Texture>ground.png</Texture>
 		<Texture>rock.jpg</Texture>	
+		<Texture>BrickOldRounded.jpg</Texture>	
+		<Texture>BrickOldRounded_normal.jpg</Texture>	
 	</TextureList>
 	<FontList>
 		<Font>OratorStd.otf</Font>
@@ -48,6 +52,18 @@
 			<ComponentList>		
 			</ComponentList>
 		</GameObject>
+		<GameObject name="TestCylinder" hasRenderer="true" texture="BrickOldRounded.jpg,BrickOldRounded_normal.jpg" model="NormalMapTest.FBX" 
+			shader = "NormalMapping" posx="30" posy="30" posz="5" rotx="-90" roty="0" rotz="0" 
+			scalex="0.3" scaley="0.3" scalez="0.3">
+			<ComponentList>		
+			</ComponentList>
+		</GameObject>	
+		<GameObject name="TestBox2" hasRenderer="true" texture="BrickOldRounded.jpg,BrickOldRounded_normal.jpg" model="NormalMapTest2.FBX" 
+			shader = "NormalMapping" posx="10" posy="30" posz="5" rotx="0" roty="0" rotz="0" 
+			scalex="0.3" scaley="0.3" scalez="0.3">
+			<ComponentList>		
+			</ComponentList>
+		</GameObject>		
 		<GameObject name="Terrain" hasRenderer="true" texture="grass.png,ground.png,rock.jpg" model="Terrain" shader="Terrain"
 			posx="0" posy="0" posz="0" rotx="0" roty="0" rotz="0" scalex="1" scaley="1" scalez="1">
 			<ComponentList>

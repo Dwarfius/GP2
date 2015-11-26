@@ -58,6 +58,12 @@ Model::Model(const string& fileName)
 
 	//normals
 	SetUpAttrib(3, 3, GL_FLOAT, sizeof(vec3) + sizeof(vec4) + sizeof(vec2));
+
+	//tangent
+	SetUpAttrib(4, 3, GL_FLOAT, sizeof(vec3) + sizeof(vec4) + sizeof(vec2) + sizeof(vec3));
+
+	//binormal
+	SetUpAttrib(5, 3, GL_FLOAT, sizeof(vec3) + sizeof(vec4) + sizeof(vec2) + sizeof(vec3) + sizeof(vec3));
 }
 
 void Model::SetVertices(vector<Vertex> *verts, GLuint flag, bool deletePrev)
@@ -237,6 +243,8 @@ void Model::processMesh(FbxMesh *mesh, int level)
 		pVerts[i].pos = vec3(vert[0], vert[1], vert[2]);
 		pVerts[i].color = vec4(1, 1, 1, 1);
 		pVerts[i].texture = vec2(0, 0);
+		pVerts[i].tangent = processMeshTangent(mesh, i);
+		pVerts[i].binormal = processMeshBinormal(mesh, i);
 	}
 
 	processMeshTextCoords(mesh, pVerts, numVerts);
@@ -305,4 +313,35 @@ void Model::processMeshNormals(FbxMesh *mesh, Vertex *verts, int count)
 			verts[cornerIndex].normal.z = normal[2];
 		}
 	}
+}
+
+vec3 Model::processMeshTangent(FbxMesh * mesh, int vertsIndex)
+{
+	if (mesh->GetElementTangentCount() < 1)
+	{
+		return vec3();
+	}
+
+	vec3 outTangent;
+	FbxGeometryElementTangent* vertexTangent = mesh->GetElementTangent(0);
+
+	outTangent.x = vertexTangent->GetDirectArray().GetAt(vertsIndex).mData[0];
+	outTangent.y = vertexTangent->GetDirectArray().GetAt(vertsIndex).mData[1];
+	outTangent.z = vertexTangent->GetDirectArray().GetAt(vertsIndex).mData[2];
+	return outTangent;
+}
+
+vec3 Model::processMeshBinormal(FbxMesh * mesh, int vertsIndex)
+{
+	if (mesh->GetElementBinormalCount() < 1)
+	{
+		return vec3();
+	}
+	vec3 outBinormal;
+	FbxGeometryElementBinormal* vertexBinormal = mesh->GetElementBinormal(0);
+
+	outBinormal.x = vertexBinormal->GetDirectArray().GetAt(vertsIndex).mData[0];
+	outBinormal.y = vertexBinormal->GetDirectArray().GetAt(vertsIndex).mData[1];
+	outBinormal.z = vertexBinormal->GetDirectArray().GetAt(vertsIndex).mData[2];
+	return outBinormal;
 }
