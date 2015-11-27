@@ -25,7 +25,7 @@ void TimeDay::Update(float deltaTime)
 		timeHour++;
 		if (timeHour > 23) timeHour = 0;
 	}
-	font->Render(GetTimeString(), { 0, 75, 50, 50});
+	font->Render(GetTimeString(), { 0, 75, 50, 50 });
 }
 
 void TimeDay::OnRender(Camera * camera)
@@ -41,7 +41,8 @@ void TimeDay::SetTime(int hour, float minute = 0)
 {
 	timeHour = hour;
 	timeMinute = minute;
-	if (timeHour < 0 || timeMinute < 0) {
+	if (timeHour < 0 || timeMinute < 0) 
+	{
 		timeHour = 0;
 		timeMinute = 0;
 	}

@@ -6,6 +6,8 @@ Texture* DefRenderer::textures[3];
 Model* DefRenderer::model;
 ShaderProgram* DefRenderer::program;
 Renderer* DefRenderer::renderer;
+vec3 DefRenderer::sunDir = vec3(0, -1, 0);
+vec4 DefRenderer::sunColor = vec4(0.5f, 0.5f, 0.5f, 1);
 
 void DefRenderer::Init()
 {
@@ -21,11 +23,9 @@ void DefRenderer::Init()
 	for (int i = 0; i < 3; i++)
 	{
 		glBindTexture(GL_TEXTURE_2D, FBOtexture[i]);
-		if(i == 2)
+		if(i == 2) //depth texture requires a special format
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, screen.x, screen.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		else if (i == 1)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen.x, screen.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-		else
+		else //everything else is standard
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen.x, screen.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -43,6 +43,7 @@ void DefRenderer::Init()
 	CHECK_GL_ERROR();
 
 	//marking that frag shader will render to the 2 bound textures
+	//depth is handled in a different pipeline stage - no need to bother about it
 	GLenum bufferToDraw[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
 	glDrawBuffers(2, bufferToDraw);
 	CHECK_GL_ERROR();
@@ -60,6 +61,7 @@ void DefRenderer::Init()
 
 	model = new Model();
 	model->SetVertices(verts, GL_STATIC_DRAW, true);
+	model->FlushBuffers();
 	model->SetUpAttrib(0, 2, GL_FLOAT, 0); //vec2 position
 
 	program = new ShaderProgram(SHADER_PATH + "postProcVS.glsl", SHADER_PATH + "defRendFS.glsl");
@@ -88,9 +90,7 @@ void DefRenderer::RenderGather()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	renderer->Ready();
 	
-	vec3 sunDir(0, -1, -1);
 	program->SetUniform("sunDir", &sunDir);
-	vec4 sunColor(0.4f, 0.4f, 0.4f, 0.5f);
 	program->SetUniform("sunColor", &sunColor);
 
 	renderer->Render();

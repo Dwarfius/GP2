@@ -22,6 +22,8 @@ public:
 
 	int GetHour() { return timeHour; }
 	float GetMinute() { return timeMinute; }
+	//get's the total time in minutes
+	float GetTime() { return timeHour * 24 + timeMinute; }
 
 	void SetTimeScale(float tScale);
 	void SetTime(int hour, float minute);
