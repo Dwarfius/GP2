@@ -26,5 +26,5 @@ void main()
 
 	FragColor = texture(texture0, vertexTexCoordsOut) + (texture(texture2, vertexTexCoordsOut) * specularLightColor * specularTerm);
 	//FragColor = vec4(worldNormal, 0.0);
-	Normal = worldNormal;
+	Normal = worldNormal * 0.5 + 0.5;
 }
