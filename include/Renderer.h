@@ -14,6 +14,7 @@ class Renderer: public BaseComponent
 {
 private:
 	Texture* textures[TEXTURE_COUNT];
+	Texture* normalMaps[TEXTURE_COUNT];
 	ShaderProgram *shaderProg = NULL;
 	Model *model = NULL;
 	int renderMode = 0;

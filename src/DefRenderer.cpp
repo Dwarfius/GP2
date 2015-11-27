@@ -91,7 +91,7 @@ void DefRenderer::RenderGather()
 	renderer->Ready();
 	
 	program->SetUniform("sunDir", &sunDir);
-	program->SetUniform("sunColor", &sunColor);
+	program->SetUniform("sunDir", &sunDir);
 
 	renderer->Render();
 }

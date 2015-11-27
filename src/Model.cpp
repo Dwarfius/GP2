@@ -59,8 +59,11 @@ Model::Model(const string& fileName)
 	//normals
 	SetUpAttrib(3, 3, GL_FLOAT, sizeof(vec3) + sizeof(vec4) + sizeof(vec2));
 
-	//generating a bound sphere if asked
-	GenerateBoundSphere();
+	//tangent
+	SetUpAttrib(4, 3, GL_FLOAT, sizeof(vec3) + sizeof(vec4) + sizeof(vec2) + sizeof(vec3));
+
+	//binormal
+	SetUpAttrib(5, 3, GL_FLOAT, sizeof(vec3) + sizeof(vec4) + sizeof(vec2) + sizeof(vec3) + sizeof(vec3));
 }
 
 void Model::SetVertices(vector<Vertex> *verts, GLuint flag, bool deletePrev)
@@ -240,6 +243,8 @@ void Model::processMesh(FbxMesh *mesh, int level)
 		pVerts[i].pos = vec3(vert[0], vert[1], vert[2]);
 		pVerts[i].color = vec4(1, 1, 1, 1);
 		pVerts[i].texture = vec2(0, 0);
+		//pVerts[i].tangent = processMeshTangent(mesh, i);
+		//pVerts[i].binormal = processMeshBinormal(mesh, i);
 	}
 
 	processMeshTextCoords(mesh, pVerts, numVerts);
@@ -306,29 +311,66 @@ void Model::processMeshNormals(FbxMesh *mesh, Vertex *verts, int count)
 			verts[cornerIndex].normal.x = normal[0];
 			verts[cornerIndex].normal.y = normal[1];
 			verts[cornerIndex].normal.z = normal[2];
+			verts[cornerIndex].tangent = getTangent(verts[cornerIndex].normal);
+			verts[cornerIndex].binormal = getBinormal(verts[cornerIndex].normal, verts[cornerIndex].tangent);
 		}
 	}
 }
 
-void Model::GenerateBoundSphere()
+vec3 Model::getTangent(vec3 normal)
 {
-	usesBoundSphere = true;
-	vec3 maxPos(0);
-	float maxPosDist = length(maxPos);
-	vec3 sumPos(0);
-	for (auto iter = vertices->begin(); iter != vertices->end(); iter++)
-	{
-		sumPos += (*iter).pos;
-		float len = length((*iter).pos);
-		if (len > maxPosDist)
-		{
-			maxPosDist = len;
-			maxPos = (*iter).pos;
-		}
-	}
-	vec3 center = sumPos / (float)vertices->size();
-	float radius = length(maxPos - center);
-	boundSphere = { center, radius };
+	vec3 tangent;
+	vec3 c1 = cross(normal, vec3(0.0, 0.0, 1.0));
+	vec3 c2 = cross(normal, vec3(0.0, 1.0, 0.0));
 
-	printf("Center: %f,%f,%f Radius:%f\n", center.x, center.y, center.z, radius);
+	if (length(c1)>length(c2))
+	{
+		tangent = c1;
+	}
+	else
+	{
+		tangent = c2;
+	}
+
+	tangent = normalize(tangent);
+	return tangent;
 }
+
+vec3 Model::getBinormal(vec3 normal, vec3 tangent)
+{
+	vec3 binormal = cross(tangent, normal);
+	binormal = normalize(binormal);
+	return binormal;
+}
+
+
+/*vec3 Model::processMeshTangent(FbxMesh * mesh, int vertsIndex)
+{
+	if (mesh->GetElementTangentCount() < 1)
+	{
+		return vec3();
+	}
+
+	vec3 outTangent;
+	FbxGeometryElementTangent* vertexTangent = mesh->GetElementTangent(0);
+
+	outTangent.x = vertexTangent->GetDirectArray().GetAt(vertsIndex).mData[0];
+	outTangent.y = vertexTangent->GetDirectArray().GetAt(vertsIndex).mData[1];
+	outTangent.z = vertexTangent->GetDirectArray().GetAt(vertsIndex).mData[2];
+	return outTangent;
+}
+
+vec3 Model::processMeshBinormal(FbxMesh * mesh, int vertsIndex)
+{
+	if (mesh->GetElementBinormalCount() < 1)
+	{
+		return vec3();
+	}
+	vec3 outBinormal;
+	FbxGeometryElementBinormal* vertexBinormal = mesh->GetElementBinormal(0);
+
+	outBinormal.x = vertexBinormal->GetDirectArray().GetAt(vertsIndex).mData[0];
+	outBinormal.y = vertexBinormal->GetDirectArray().GetAt(vertsIndex).mData[1];
+	outBinormal.z = vertexBinormal->GetDirectArray().GetAt(vertsIndex).mData[2];
+	return outBinormal;
+}*/

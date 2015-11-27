@@ -112,6 +112,15 @@ void Game::LoadResources()
 	s->Link();
 	resourceManager->AddShader(s, "Specular");
 
+	s = new ShaderProgram(SHADER_PATH + "normalMappingVS.glsl", SHADER_PATH + "normalMappingFS.glsl");
+	s->BindAttribLoc(0, "vertexPosition");
+	s->BindAttribLoc(2, "vertexTexCoords");
+	s->BindAttribLoc(3, "vertexNormal");
+	s->BindAttribLoc(4, "vertexTangent");
+	s->BindAttribLoc(5, "vertexBinormal");
+	s->Link();
+	resourceManager->AddShader(s, "NormalMapping");
+
 	s = new ShaderProgram(SHADER_PATH + "postProcVS.glsl", SHADER_PATH + "colorCorr1.glsl");
 	s->BindAttribLoc(0, "vertexPosition");
 	s->Link();

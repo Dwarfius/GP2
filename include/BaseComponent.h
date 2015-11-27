@@ -15,7 +15,7 @@ public:
 	~BaseComponent();
 
 	virtual void SetParentGO(GameObject *pGO);
-	GameObject* GetParentGO();
+	GameObject* GetParentGO() { return pGameObject; };
 
 	virtual void Update(float deltaTime) {}
 	virtual void OnRender(Camera *camera) {}
