@@ -67,6 +67,7 @@ void PostProcessing::Init()
 
 	model = new Model();
 	model->SetVertices(verts, GL_STATIC_DRAW, true);
+	model->FlushBuffers();
 	model->SetUpAttrib(0, 2, GL_FLOAT, 0); //vec2 position
 
 	program = new ShaderProgram(SHADER_PATH + "postProcVS.glsl", SHADER_PATH + "postProcFS.glsl");

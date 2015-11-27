@@ -31,6 +31,8 @@ private:
 
 	void GenerateBoundSphere();
 
+	GLuint vertUsageFlag, indUsageFlag;
+
 	bool loadFBXFromFile(const string& fileName);
 	void processNode(FbxNode *node, int level);
 	void processAttrib(FbxNodeAttribute *attrib, int level);
@@ -48,6 +50,9 @@ public:
 	Model(const string& fileName);
 	~Model();
 
+	//calculate the per-vertex normals
+	void Normalize();
+
 	GLuint Get() { return vao; }
 	int GetVertCount() { return vertices->size(); }
 	int GetIndCount() { return indices->size(); }
@@ -56,10 +61,12 @@ public:
 	Sphere GetBoundingSphere(const mat4& transform) { return boundSphere.Transform(transform); }
 	vec3 GetCenter() { return boundSphere.pos; }
 
-	//takes ownership of verts! releases memory on it's own!
+	//takes ownership of verts! releases memory on it's own! call FlushBuffers afterwards!
 	void SetVertices(vector<Vertex> *verts, GLuint flag, bool deletePrev);
-	//takes ownership of ints! releases memory on it's own!
+	//takes ownership of ints! releases memory on it's own! call FlushBuffers afterwards!
 	void SetIndices(vector<int> *indcs, GLuint flag, bool deletePrev);
+	//call after vertices and indices are set
+	void FlushBuffers();
 
 	void SetUpAttrib(int index, int count, int type, size_t offset);
 	//instancing related - divisor = 0 means grab new data after each vertex,

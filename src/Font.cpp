@@ -185,6 +185,7 @@ void Font::Flush(float deltaTime)
 	{
 		m->SetVertices(vertices, GL_STREAM_DRAW, true);
 		m->SetIndices(indices, GL_STREAM_DRAW, true);
+		m->FlushBuffers();
 		preRenderStage = false;
 	}
 

@@ -68,28 +68,67 @@ Model::Model(const string& fileName)
 	GenerateBoundSphere();
 }
 
+void Model::Normalize()
+{
+	//holds the sum of all surface normals per vertex
+	vector<vec3> surfNormals(indices->size(), vec3(0, 0, 0));
+	//gotta update the faces
+	for (int i = 0; i < indices->size(); i += 3)
+	{
+		int i1 = indices->at(i);
+		vec3 v1 = vertices->at(i1).pos;
+		int i2 = indices->at(i + 1);
+		vec3 v2 = vertices->at(i2).pos;
+		int i3 = indices->at(i + 2);
+		vec3 v3 = vertices->at(i3).pos;
+
+		//calculating the surf normal
+		vec3 u = v2 - v1;
+		vec3 v = v3 - v1;
+
+		vec3 normal;
+		normal.x = u.y * v.z - u.z * v.y;
+		normal.y = u.z * v.x - u.x * v.z;
+		normal.z = u.x * v.y - u.y * v.x;
+
+		surfNormals[i1] += normal;
+		surfNormals[i2] += normal;
+		surfNormals[i3] += normal;
+	}
+
+	for (int vertInd = 0; vertInd < vertices->size(); vertInd++)
+		vertices->at(vertInd).normal = normalize(surfNormals[vertInd]);
+}
+
 void Model::SetVertices(vector<Vertex> *verts, GLuint flag, bool deletePrev)
 {
-	GLint activeBuffer;
-	glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &activeBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	vertUsageFlag = flag;
 	if(deletePrev)
 		delete vertices;
 	vertices = verts;
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * GetVertCount(), vertices->data(), flag);
-	glBindBuffer(GL_ARRAY_BUFFER, activeBuffer);
-	CHECK_GL_ERROR();
 }
 
 void Model::SetIndices(vector<int> *indcs, GLuint flag, bool deletePrev)
 {
-	GLint activeBuffer; 
-	glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &activeBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	indUsageFlag = flag;
 	if(deletePrev)
 		delete indices;
 	indices = indcs;
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * GetIndCount(), indices->data(), flag);
+}
+
+void Model::FlushBuffers()
+{
+	GLint activeBuffer;
+	//vertBuffer
+	glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &activeBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * GetVertCount(), vertices->data(), vertUsageFlag);
+	glBindBuffer(GL_ARRAY_BUFFER, activeBuffer);
+
+	//indexBuffer
+	glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &activeBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * GetIndCount(), indices->data(), indUsageFlag);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, activeBuffer);
 	CHECK_GL_ERROR();
 }

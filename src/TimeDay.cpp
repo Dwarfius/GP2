@@ -41,7 +41,8 @@ void TimeDay::SetTime(int hour, float minute = 0)
 {
 	timeHour = hour;
 	timeMinute = minute;
-	if (timeHour < 0 || timeMinute < 0) {
+	if (timeHour < 0 || timeMinute < 0) 
+	{
 		timeHour = 0;
 		timeMinute = 0;
 	}

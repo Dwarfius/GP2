@@ -92,9 +92,10 @@ void Game::LoadResources()
 	resourceManager->AddTexture("skyNightTexture", skyNightTexture);
 	//========================  MODELS  ========================
 	Model *terrainModel = new Model();
-	terrainModel->SetUpAttrib(0, 3, GL_FLOAT, 0);
-	terrainModel->SetUpAttrib(1, 4, GL_FLOAT, sizeof(vec3));
-	terrainModel->SetUpAttrib(2, 2, GL_FLOAT, sizeof(vec3) + sizeof(vec4));
+	terrainModel->SetUpAttrib(0, 3, GL_FLOAT, 0); //pos
+	terrainModel->SetUpAttrib(1, 4, GL_FLOAT, sizeof(vec3)); //coeffs
+	terrainModel->SetUpAttrib(2, 2, GL_FLOAT, sizeof(vec3) + sizeof(vec4)); //uv
+	terrainModel->SetUpAttrib(3, 3, GL_FLOAT, sizeof(vec3) + sizeof(vec4) + sizeof(vec2)); //normals
 	resourceManager->AddModel("Terrain", terrainModel);
 
 	Model *skyModel = new Model();
@@ -102,6 +103,7 @@ void Game::LoadResources()
 	vector<int> *indcs = new vector<int>(skyBoxIndices);
 	skyModel->SetVertices(verts, GL_STATIC_DRAW, true);
 	skyModel->SetIndices(indcs, GL_STATIC_DRAW, true);
+	skyModel->FlushBuffers();
 	skyModel->SetUpAttrib(0, 3, GL_FLOAT, 0);
 	resourceManager->AddModel("skyModel", skyModel);
 
@@ -135,6 +137,7 @@ void Game::LoadResources()
 	s->BindAttribLoc(0, "vertexPosition");
 	s->BindAttribLoc(1, "colors");
 	s->BindAttribLoc(2, "uvs");
+	s->BindAttribLoc(3, "normals");
 	s->Link();
 	resourceManager->AddShader(s, "Terrain");
 
@@ -207,7 +210,7 @@ bool Comparer(GameObject *a, GameObject *b)
 
 void Game::Render(float deltaTime)
 {
-	drawCalls = verticesRendered = objectsRendered = 0;
+ 	drawCalls = verticesRendered = objectsRendered = 0;
 
 	//premature optimization, but should help with large amounts of objects
 	//sort the gameobjects for rendering to avoid extra calls to glBind of VAO/Texture/Shader

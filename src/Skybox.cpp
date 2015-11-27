@@ -55,8 +55,8 @@ void Skybox::Update(float deltaTime)
 		DefRenderer::SetSunDir(dir);
 
 		//now, the color
-		vec3 dayColor(1, 1, 1);
-		vec3 nightColor = -dayColor;
+		vec3 dayColor(0.25f, 0.25f, 0.25f); //slight white
+		vec3 nightColor(-0.5f, -0.5f, -0.25f); //slight blue
 		vec3 color;
 		if (nightTime)
 			color = mix(nightColor, dayColor, k);

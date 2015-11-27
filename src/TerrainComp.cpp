@@ -65,6 +65,8 @@ void TerrainComp::SetParentGO(GameObject *pGO)
 	Model *model = renderer->GetModel();
 	model->SetVertices(vertices, GL_STATIC_DRAW, true);
 	model->SetIndices(indices, GL_STATIC_DRAW, true);
+	model->Normalize();
+	model->FlushBuffers();
 }
 
 //http://stackoverflow.com/questions/17270538/how-to-change-rgb-values-in-sdl-surface
