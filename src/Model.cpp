@@ -64,6 +64,8 @@ Model::Model(const string& fileName)
 
 	//binormal
 	SetUpAttrib(5, 3, GL_FLOAT, sizeof(vec3) + sizeof(vec4) + sizeof(vec2) + sizeof(vec3) + sizeof(vec3));
+
+	GenerateBoundSphere();
 }
 
 void Model::SetVertices(vector<Vertex> *verts, GLuint flag, bool deletePrev)
@@ -343,6 +345,28 @@ vec3 Model::getBinormal(vec3 normal, vec3 tangent)
 	return binormal;
 }
 
+void Model::GenerateBoundSphere()
+{
+	usesBoundSphere = true;
+	vec3 maxPos(0);
+	float maxPosDist = length(maxPos);
+	vec3 sumPos(0);
+	for (auto iter = vertices->begin(); iter != vertices->end(); iter++)
+	{
+		sumPos += (*iter).pos;
+		float len = length((*iter).pos);
+		if (len > maxPosDist)
+		{
+			maxPosDist = len;
+			maxPos = (*iter).pos;
+		}
+	}
+	vec3 center = sumPos / (float)vertices->size();
+	float radius = length(maxPos - center);
+	boundSphere = { center, radius };
+
+	printf("Center: %f,%f,%f Radius:%f\n", center.x, center.y, center.z, radius);
+}
 
 /*vec3 Model::processMeshTangent(FbxMesh * mesh, int vertsIndex)
 {
