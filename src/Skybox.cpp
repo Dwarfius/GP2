@@ -1,5 +1,6 @@
 #include "Skybox.h"
 #include "GameObject.h"
+#include "DefRenderer.h"
 
 Skybox::Skybox(Texture *skybox, Model *model, ShaderProgram *shader, Texture *skyN, bool iTD)
 {
@@ -34,14 +35,34 @@ void Skybox::Update(float deltaTime)
 {
 	if (isTimeDay)
 	{
-		if (tD->GetHour() < 12) 
+		bool nightTime = tD->GetHour() < 12;
+		float k;
+		if (nightTime)
 		{
-			blendFactor = 1 - (((tD->GetHour() + ((tD->GetMinute() + 0.00000001) / 60) + 0.00000001) / 24) * 2);
+			k = ((tD->GetHour() + tD->GetMinute() / 60.f) / 12.f);
+			blendFactor = 1 - k;
 		}
-		if (tD->GetHour() >= 12 && tD->GetHour() <= 23)
+		else
 		{
-			blendFactor = (((tD->GetHour() + ((tD->GetMinute() + 0.00000001) / 60) - 12.00000001) / 24) * 2);
+			k = ((tD->GetHour() - 12 + tD->GetMinute() / 60.f) / 12.f);
+			blendFactor = k;
 		}
+		
+		//first, the sun direction
+		//lerping - lerp(0, Pi, 1-k); - using 1-k cause blendFactor already inverted
+		float angle = pi<float>() * blendFactor;
+		vec3 dir(cos(angle), -sin(angle), 0);
+		DefRenderer::SetSunDir(dir);
+
+		//now, the color
+		vec3 dayColor(1, 1, 1);
+		vec3 nightColor = -dayColor;
+		vec3 color;
+		if (nightTime)
+			color = mix(nightColor, dayColor, k);
+		else
+			color = mix(dayColor, nightColor, k);
+		DefRenderer::SetSunColor(vec4(color, 1));
 	}
 }
 

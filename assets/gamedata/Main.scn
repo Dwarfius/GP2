@@ -55,7 +55,7 @@
 			</ComponentList>
 		</GameObject>
 		<GameObject name="Man" hasRenderer="true" texture="texture.png" model="3d-model.fbx" 
-			shader = "Specular" posx="15" posy="-5" posz="5" rotx="-90" roty="0" rotz="0" 
+			shader = "Specular" posx="25" posy="-5" posz="5" rotx="-90" roty="0" rotz="0" 
 			scalex="0.3" scaley="0.3" scalez="0.3">
 			<ComponentList>		
 			</ComponentList>

@@ -6,6 +6,8 @@ Texture* DefRenderer::textures[3];
 Model* DefRenderer::model;
 ShaderProgram* DefRenderer::program;
 Renderer* DefRenderer::renderer;
+vec3 DefRenderer::sunDir = vec3(0, -1, 0);
+vec4 DefRenderer::sunColor = vec4(0.5f, 0.5f, 0.5f, 1);
 
 void DefRenderer::Init()
 {
@@ -88,9 +90,7 @@ void DefRenderer::RenderGather()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	renderer->Ready();
 	
-	vec3 sunDir(0, -1, 0);
 	program->SetUniform("sunDir", &sunDir);
-	vec4 sunColor(1, 1, 0, 0.5f);
 	program->SetUniform("sunColor", &sunColor);
 
 	renderer->Render();
