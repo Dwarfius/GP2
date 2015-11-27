@@ -121,6 +121,15 @@ void Game::LoadResources()
 	s->Link();
 	resourceManager->AddShader(s, "NormalMapping");
 
+	s = new ShaderProgram(SHADER_PATH + "diffuseNormalSpecMapVS.glsl", SHADER_PATH + "diffuseNormalSpecMapFS.glsl");
+	s->BindAttribLoc(0, "vertexPosition");
+	s->BindAttribLoc(2, "vertexTexCoords");
+	s->BindAttribLoc(3, "vertexNormal");
+	s->BindAttribLoc(4, "vertexTangent");
+	s->BindAttribLoc(5, "vertexBinormal");
+	s->Link();
+	resourceManager->AddShader(s, "diffuseNormalSpecMap");
+
 	s = new ShaderProgram(SHADER_PATH + "postProcVS.glsl", SHADER_PATH + "colorCorr1.glsl");
 	s->BindAttribLoc(0, "vertexPosition");
 	s->Link();
