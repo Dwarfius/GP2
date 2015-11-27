@@ -14,7 +14,8 @@ void BaseComponent::SetParentGO(GameObject *pGO)
 	pGameObject = pGO;
 }
 
-inline GameObject* BaseComponent::GetParentGO()
+//this caused me link errors when calling function
+/*inline GameObject* BaseComponent::GetParentGO()
 {
 	return pGameObject;
-}
+}*/

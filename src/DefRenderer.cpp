@@ -88,9 +88,9 @@ void DefRenderer::RenderGather()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	renderer->Ready();
 	
-	vec3 sunDir(0, -1, 0);
+	vec3 sunDir(0, -1, -1);
 	program->SetUniform("sunDir", &sunDir);
-	vec4 sunColor(1, 1, 0, 0.5f);
+	vec4 sunColor(0.4f, 0.4f, 0.4f, 0.5f);
 	program->SetUniform("sunColor", &sunColor);
 
 	renderer->Render();

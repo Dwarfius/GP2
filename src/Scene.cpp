@@ -2,6 +2,7 @@
 #include "Skybox.h"
 #include "TerrainComp.h"
 #include "TimeDay.h"
+#include "MoveGameObjectBehaviour.h"
 
 Scene::Scene(ResourceManager* rM)
 {
@@ -12,6 +13,7 @@ Scene::Scene(ResourceManager* rM)
 	componentIDValues["Terrain"] = TERRAIN;
 	componentIDValues["Skybox"] = SKYBOX;
 	componentIDValues["TimeDay"] = TIMEDAY;
+	componentIDValues["MoveGOBehaviour"] = MOVEGOBEHAVIOUR;
 	camera = new Camera();
 }
 
@@ -86,6 +88,11 @@ void Scene::AttachComponent(string & compID, GameObject * go, XMLElement* attrib
 	{
 		string tF = attributesElement->Attribute("font");
 		go->AttachComponent(new TimeDay(resourceManager->GetFont(tF)));
+	}
+	break;
+	case MOVEGOBEHAVIOUR:
+	{
+		go->AttachComponent(new MoveGameObjectBehaviour());
 	}
 	break;
 	}

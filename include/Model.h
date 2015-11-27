@@ -37,8 +37,10 @@ private:
 	void processMesh(FbxMesh *mesh, int level);
 	void processMeshTextCoords(FbxMesh *mesh, Vertex *verts, int numVerts);
 	void processMeshNormals(FbxMesh *mesh, Vertex *verts, int count);
-	vec3 processMeshTangent(FbxMesh *mesh, int vertsIndex);
-	vec3 processMeshBinormal(FbxMesh *mesh, int vertsIndex);
+	//vec3 processMeshTangent(FbxMesh *mesh, int vertsIndex);
+	//vec3 processMeshBinormal(FbxMesh *mesh, int vertsIndex);
+	vec3 getTangent(vec3 normal);
+	vec3 getBinormal(vec3 normal, vec3 tangent);
 public:
 	//creates a generic model - requires attrib bindinding!
 	Model();

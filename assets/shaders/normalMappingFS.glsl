@@ -16,6 +16,7 @@ void main()
 	worldNormal = normalize(worldNormal * 2.0 - 1.0);   
 	worldNormal = normalize(TBN * worldNormal); 
 
-	FragColor = texture(texture0, vertexTexCoordsOut);
-	Normal = worldNormal * 0.5 + 0.5;
+	//FragColor = texture(texture0, vertexTexCoordsOut);
+	FragColor = vec4(worldNormal, 0.0);
+	Normal = worldNormal;
 }

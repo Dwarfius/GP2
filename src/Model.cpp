@@ -243,8 +243,8 @@ void Model::processMesh(FbxMesh *mesh, int level)
 		pVerts[i].pos = vec3(vert[0], vert[1], vert[2]);
 		pVerts[i].color = vec4(1, 1, 1, 1);
 		pVerts[i].texture = vec2(0, 0);
-		pVerts[i].tangent = processMeshTangent(mesh, i);
-		pVerts[i].binormal = processMeshBinormal(mesh, i);
+		//pVerts[i].tangent = processMeshTangent(mesh, i);
+		//pVerts[i].binormal = processMeshBinormal(mesh, i);
 	}
 
 	processMeshTextCoords(mesh, pVerts, numVerts);
@@ -311,11 +311,40 @@ void Model::processMeshNormals(FbxMesh *mesh, Vertex *verts, int count)
 			verts[cornerIndex].normal.x = normal[0];
 			verts[cornerIndex].normal.y = normal[1];
 			verts[cornerIndex].normal.z = normal[2];
+			verts[cornerIndex].tangent = getTangent(verts[cornerIndex].normal);
+			verts[cornerIndex].binormal = getBinormal(verts[cornerIndex].normal, verts[cornerIndex].tangent);
 		}
 	}
 }
 
-vec3 Model::processMeshTangent(FbxMesh * mesh, int vertsIndex)
+vec3 Model::getTangent(vec3 normal)
+{
+	vec3 tangent;
+	vec3 c1 = cross(normal, vec3(0.0, 0.0, 1.0));
+	vec3 c2 = cross(normal, vec3(0.0, 1.0, 0.0));
+
+	if (length(c1)>length(c2))
+	{
+		tangent = c1;
+	}
+	else
+	{
+		tangent = c2;
+	}
+
+	tangent = normalize(tangent);
+	return tangent;
+}
+
+vec3 Model::getBinormal(vec3 normal, vec3 tangent)
+{
+	vec3 binormal = cross(tangent, normal);
+	binormal = normalize(binormal);
+	return binormal;
+}
+
+
+/*vec3 Model::processMeshTangent(FbxMesh * mesh, int vertsIndex)
 {
 	if (mesh->GetElementTangentCount() < 1)
 	{
@@ -344,4 +373,4 @@ vec3 Model::processMeshBinormal(FbxMesh * mesh, int vertsIndex)
 	outBinormal.y = vertexBinormal->GetDirectArray().GetAt(vertsIndex).mData[1];
 	outBinormal.z = vertexBinormal->GetDirectArray().GetAt(vertsIndex).mData[2];
 	return outBinormal;
-}
+}*/
