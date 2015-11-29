@@ -9,6 +9,7 @@ class DefRenderer
 {
 private:
 	static GLuint fbo;
+	static GLuint rbo; //holds the depth and stencil
 
 	//keeping track of model and shader
 	static Texture *textures[3];

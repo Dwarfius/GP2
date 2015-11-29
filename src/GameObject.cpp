@@ -76,10 +76,8 @@ void GameObject::Render(Camera *camera)
 
 void GameObject::AttachComponent(BaseComponent * com)
 {
-	if (components.count(typeid(*com).name()) >= 1) {
-		cout << "Component " << typeid(*com).name() << " is already attached to GO: " << name << endl;
+	if (components.count(typeid(*com).name()) >= 1) 
 		return;
-	}
 	
 	//caching
 	Renderer *r = dynamic_cast<Renderer*>(com);
@@ -91,20 +89,14 @@ void GameObject::AttachComponent(BaseComponent * com)
 		light = l;
 
 	components[typeid(*com).name()] = com;
-	cout << typeid(*com).name() << endl;
 	com->SetParentGO(this);
-	cout << "Component " << typeid(*com).name() << " is attached to GO: " << name << endl;
 }
 
 BaseComponent * GameObject::GetComponent(string componentType)
 {
-	if(components.count("class " + componentType) == 0){
-		cout << "Component "<< componentType <<" does not exist or is not attached to GO: " << name << endl;
+	if(components.count("class " + componentType) == 0)
 		return NULL;
-	}
-	else {
-		//cout << "Component: " << componentType << " returned." << endl;
+	else 
 		return components.find("class " + componentType)->second;
-	}
 }
 

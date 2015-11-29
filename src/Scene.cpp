@@ -3,6 +3,7 @@
 #include "TerrainComp.h"
 #include "TimeDay.h"
 #include "MoveGameObjectBehaviour.h"
+#include "Light.h"
 
 Scene::Scene(ResourceManager* rM)
 {
@@ -14,6 +15,7 @@ Scene::Scene(ResourceManager* rM)
 	componentIDValues["Skybox"] = SKYBOX;
 	componentIDValues["TimeDay"] = TIMEDAY;
 	componentIDValues["MoveGOBehaviour"] = MOVEGOBEHAVIOUR;
+	componentIDValues["Light"] = LIGHT;
 	camera = new Camera();
 }
 
@@ -48,52 +50,55 @@ void Scene::AttachComponent(string & compID, GameObject * go, XMLElement* attrib
 {
 	string tID = compID;
 	auto iter = componentIDValues.find(tID);
-	if (iter == componentIDValues.end()) {
+	if (iter == componentIDValues.end())
 		tID = "";
-	}
-	switch (componentIDValues[tID]) {
-	case COMPONENT_NOTFOUND:
-		cout << "Component " << compID << " does not exist" << endl;
-		return;
-		break;
-	case CAMERA_BEHAVIOUR: 
+
+	switch (componentIDValues[tID]) 
 	{
-		float fTemp;
-		attributesElement->QueryFloatAttribute("speed", &fTemp);
-		go->AttachComponent(new CameraBehaviour(camera, fTemp));
-	}
-		break;
-	case TERRAIN:
-	{
-		string texture = TEXTURE_PATH + attributesElement->Attribute("texture");
-		float scaleX = attributesElement->FloatAttribute("scalex");
-		float scaleY = attributesElement->FloatAttribute("scaley");
-		float scaleZ = attributesElement->FloatAttribute("scalez");
-		go->AttachComponent(new TerrainComp(texture, vec3(scaleX, scaleY, scaleZ)));
-	}
-		break;
-	case SKYBOX:
-	{
-		string name = attributesElement->Attribute("texture1");
-		string name2 = attributesElement->Attribute("texture2");
-		bool iTD = false;
-		attributesElement->QueryBoolAttribute("isTimeDay", &iTD);
-		ResourceManager *rm = resourceManager;
-		if(iTD)
-			go->AttachComponent(new Skybox(rm->GetTexture(name), rm->GetModel("skyModel"), rm->GetShader("SkyBox"), rm->GetTexture(name2), iTD));
-		if(!iTD)
-			go->AttachComponent(new Skybox(rm->GetTexture(name), rm->GetModel("skyModel"), rm->GetShader("SkyBox"), rm->GetTexture(name), iTD));
-	}
-		break;
-	case TIMEDAY:
-	{
-		string tF = attributesElement->Attribute("font");
-		go->AttachComponent(new TimeDay(resourceManager->GetFont(tF)));
-	}
-		break;
-	case MOVEGOBEHAVIOUR:
-		go->AttachComponent(new MoveGameObjectBehaviour());
-		break;
+		case COMPONENT_NOTFOUND:
+			cout << "Component " << compID << " does not exist" << endl;
+			return;
+		case CAMERA_BEHAVIOUR:
+		{
+			float fTemp;
+			attributesElement->QueryFloatAttribute("speed", &fTemp);
+			go->AttachComponent(new CameraBehaviour(camera, fTemp));
+		}
+			break;
+		case TERRAIN:
+		{
+			string texture = TEXTURE_PATH + attributesElement->Attribute("texture");
+			float scaleX = attributesElement->FloatAttribute("scalex");
+			float scaleY = attributesElement->FloatAttribute("scaley");
+			float scaleZ = attributesElement->FloatAttribute("scalez");
+			go->AttachComponent(new TerrainComp(texture, vec3(scaleX, scaleY, scaleZ)));
+		}
+			break;
+		case SKYBOX:
+		{
+			string name = attributesElement->Attribute("texture1");
+			string name2 = attributesElement->Attribute("texture2");
+			bool iTD = false;
+			attributesElement->QueryBoolAttribute("isTimeDay", &iTD);
+			ResourceManager *rm = resourceManager;
+			if (iTD)
+				go->AttachComponent(new Skybox(rm->GetTexture(name), rm->GetModel("skyModel"), rm->GetShader("SkyBox"), rm->GetTexture(name2), iTD));
+			if (!iTD)
+				go->AttachComponent(new Skybox(rm->GetTexture(name), rm->GetModel("skyModel"), rm->GetShader("SkyBox"), rm->GetTexture(name), iTD));
+		}
+			break;
+		case TIMEDAY:
+		{
+			string tF = attributesElement->Attribute("font");
+			go->AttachComponent(new TimeDay(resourceManager->GetFont(tF)));
+		}
+			break;
+		case MOVEGOBEHAVIOUR:
+			go->AttachComponent(new MoveGameObjectBehaviour());
+			break;
+		case LIGHT:
+			go->AttachComponent(new Light(vec3(1, 1, 1)));
+			break;
 	}
 }
 
@@ -119,7 +124,6 @@ void Scene::Update(float deltaTime)
 {
 	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 	{
-		//(*iter)->AddRotation(vec3(0, deltaTime * 15, 0));
 		(*iter)->Update(deltaTime);
 	}
 }

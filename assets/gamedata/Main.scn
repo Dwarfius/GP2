@@ -87,6 +87,7 @@
 			shader="PointLight" posx="0" posy="0" posz="0" rotx="0" roty="0" rotz="0" 
 			scalex="1" scaley="1" scalez="1">
 			<ComponentList>
+				<Component ID="Light"/>
 			</ComponentList>
 		</GameObject>	
 		<GameObject name="TestModel" hasRenderer="true" texture="creature1Albedo.png,creature1Normal.png,creature1Specular.png" model="creature1.fbx" 

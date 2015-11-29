@@ -14,7 +14,8 @@ static enum componentID {
 	TERRAIN,
 	SKYBOX,
 	TIMEDAY,
-	MOVEGOBEHAVIOUR
+	MOVEGOBEHAVIOUR,
+	LIGHT
 };
 
 using namespace tinyxml2;

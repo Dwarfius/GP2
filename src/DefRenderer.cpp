@@ -3,6 +3,7 @@
 #include "GameObject.h"
 
 GLuint DefRenderer::fbo;
+GLuint DefRenderer::rbo;
 Texture* DefRenderer::textures[3];
 Model* DefRenderer::model;
 ShaderProgram* DefRenderer::program;
@@ -10,6 +11,8 @@ ShaderProgram* DefRenderer::nullProg;
 Renderer* DefRenderer::renderer;
 vec3 DefRenderer::sunDir = vec3(0, -1, 0);
 vec4 DefRenderer::sunColor = vec4(0.5f, 0.5f, 0.5f, 1);
+
+#define TEXTURE_COUNT 2
 
 void DefRenderer::Init()
 {
@@ -19,32 +22,33 @@ void DefRenderer::Init()
 	ivec2 screen = Graphics::GetViewport();
 
 	glGenFramebuffers(1, &fbo);
-	GLuint FBOtexture[3]; //color, normal, depth
-	glGenTextures(3, FBOtexture);
+	GLuint FBOtexture[TEXTURE_COUNT]; //color, normal
+	glGenTextures(TEXTURE_COUNT, FBOtexture);
+	glGenRenderbuffers(1, &rbo); //depth & stencil
 	CHECK_GL_ERROR();
-	
+
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-	for (int i = 0; i < 3; i++)
+	//initialization of the textures and buffers
+	for (int i = 0; i < TEXTURE_COUNT; i++)
 	{
 		glBindTexture(GL_TEXTURE_2D, FBOtexture[i]);
-		if(i == 2) //depth texture requires a special format
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH32F_STENCIL8, screen.x, screen.y, 0, GL_DEPTH_STENCIL, GL_FLOAT_32_UNSIGNED_INT_24_8_REV, NULL);
-		else //everything else is standard
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen.x, screen.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen.x, screen.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 		textures[i] = new Texture(FBOtexture[i]);
 	}
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_STENCIL, screen.x, screen.y);
 	CHECK_GL_ERROR();
 
 	//configuring frame buffer
 	//setting texture attachments
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, FBOtexture[0], 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, FBOtexture[1], 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, FBOtexture[2], 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	CHECK_GL_ERROR();
 
 	//marking that frag shader will render to the 2 bound textures
@@ -74,7 +78,7 @@ void DefRenderer::Init()
 	program->Link();
 
 	renderer = new Renderer();
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < TEXTURE_COUNT; i++)
 		renderer->AddTexture(textures[i]);
 	renderer->SetModel(model, GL_TRIANGLE_FAN);
 	renderer->SetShaderProgram(program);
@@ -83,10 +87,11 @@ void DefRenderer::Init()
 void DefRenderer::CleanUp()
 {
 	glDeleteFramebuffers(1, &fbo);
+	glDeleteRenderbuffers(1, &rbo);
 	delete program;
 	delete nullProg;
 	delete model;
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < TEXTURE_COUNT; i++)
 		delete textures[i];
 	delete renderer;
 }
