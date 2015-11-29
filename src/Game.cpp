@@ -6,7 +6,6 @@
 #include "DefRenderer.h"
 
 uint Game::verticesRendered;
-uint Game::objectsRendered;
 uint Game::drawCalls;
 
 vector<Vertex> skyBoxverts = {
@@ -90,6 +89,7 @@ void Game::LoadResources()
 	resourceManager->AddTexture("skyTexture", skyTexture);
 	Texture* skyNightTexture = new Texture(TEXTURE_PATH + "night_right.jpg", TEXTURE_PATH + "night_left.jpg", TEXTURE_PATH + "night_top.jpg", TEXTURE_PATH + "night_bottom.jpg", TEXTURE_PATH + "night_back.jpg", TEXTURE_PATH + "night_front.jpg");
 	resourceManager->AddTexture("skyNightTexture", skyNightTexture);
+
 	//========================  MODELS  ========================
 	Model *terrainModel = new Model();
 	terrainModel->SetUpAttrib(0, 3, GL_FLOAT, 0); //pos
@@ -149,6 +149,11 @@ void Game::LoadResources()
 	s->BindAttribLoc(3, "normals");
 	s->Link();
 	resourceManager->AddShader(s, "Terrain");
+
+	s = new ShaderProgram(SHADER_PATH + "pointLightVS.glsl", SHADER_PATH + "pointLightFS.glsl");
+	s->BindAttribLoc(0, "Position");
+	s->Link();
+	resourceManager->AddShader(s, "PointLight");
 
 	s = new ShaderProgram(SHADER_PATH + "skyboxVS.glsl", SHADER_PATH + "skyboxFS.glsl");
 	s->BindAttribLoc(0, "vertexPosition");
@@ -219,18 +224,26 @@ bool Comparer(GameObject *a, GameObject *b)
 
 void Game::Render(float deltaTime)
 {
- 	drawCalls = verticesRendered = objectsRendered = 0;
+ 	drawCalls = verticesRendered = 0;
 
-	//premature optimization, but should help with large amounts of objects
-	//sort the gameobjects for rendering to avoid extra calls to glBind of VAO/Texture/Shader
-	sort(currentScene->gameObjects.begin(), currentScene->gameObjects.end(), Comparer);
+	Camera *camera = currentScene->GetSceneCamera();
+	camera->Recalculate();
+	currentScene->VisibilityCheck();
+	currentScene->Sort(Comparer);
 
-	currentScene->GetSceneCamera()->Recalculate();
+	DefRenderer::BeginGeomGather();
+	currentScene->Render(camera);
+	DefRenderer::EndGeomGather();
 
-	glBindFramebuffer(GL_FRAMEBUFFER, DefRenderer::Get());
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	currentScene->Render(currentScene->GetSceneCamera());
+	DefRenderer::BeginLightGather();
+	int count = currentScene->GetLightCount();
+	for (int i = 0; i < count; i++)
+	{
+		Renderer *r = currentScene->GetLight(i);
+		DefRenderer::StencilPass(camera, r);
+		DefRenderer::LightPass(camera, r);
+	}
+	DefRenderer::EndLightGather();
 
 	if (debugMode)
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -250,7 +263,7 @@ void Game::Render(float deltaTime)
 	sprintf(msg, "verts:%u", verticesRendered);
 	Font* tF = resourceManager->GetFont("OratorStd.otf");
 	tF->Render(string(msg), { 0, 25, 100, 25 });
-	sprintf(msg, "objts:%u(%u)", objectsRendered - 1, currentScene->gameObjects.size());
+	sprintf(msg, "objts:%u(%u)", currentScene->GetVisibleGOCount(), currentScene->GetGOCount());
 	tF->Render(string(msg), { 0, 50, 100, 25 });
 	free(msg);
 

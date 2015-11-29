@@ -26,8 +26,11 @@ private:
 	Camera *camera;
 	ResourceManager* resourceManager;
 	map<string, componentID> componentIDValues;
-public:
+
 	vector<GameObject*> gameObjects;
+	vector<GameObject*> visibleGOs;
+	vector<GameObject*> lights;
+public:
 	Scene(ResourceManager* rM);
 	~Scene();
 
@@ -42,6 +45,14 @@ public:
 	//Deletes all the things!
 	void ReleaseResources();
 	void Update(float deltaTime);
+	void VisibilityCheck();
+	void Sort(bool (*comparer)(GameObject *a, GameObject *b));
 	void Render(Camera* camera);
+
+	int GetLightCount() { return lights.size(); }
+	Renderer* GetLight(int i) { return lights[i]->GetRenderer(); }
+
+	int GetGOCount() { return gameObjects.size(); }
+	int GetVisibleGOCount() { return visibleGOs.size(); }
 };
 #endif 

@@ -33,7 +33,6 @@ public:
 	void Render(float deltaTime);
 
 	static uint verticesRendered;
-	static uint objectsRendered;
 	static uint drawCalls;
 };
 

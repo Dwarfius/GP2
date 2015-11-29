@@ -56,7 +56,8 @@ void Scene::AttachComponent(string & compID, GameObject * go, XMLElement* attrib
 		cout << "Component " << compID << " does not exist" << endl;
 		return;
 		break;
-	case CAMERA_BEHAVIOUR: {
+	case CAMERA_BEHAVIOUR: 
+	{
 		float fTemp;
 		attributesElement->QueryFloatAttribute("speed", &fTemp);
 		go->AttachComponent(new CameraBehaviour(camera, fTemp));
@@ -89,12 +90,10 @@ void Scene::AttachComponent(string & compID, GameObject * go, XMLElement* attrib
 		string tF = attributesElement->Attribute("font");
 		go->AttachComponent(new TimeDay(resourceManager->GetFont(tF)));
 	}
-	break;
+		break;
 	case MOVEGOBEHAVIOUR:
-	{
 		go->AttachComponent(new MoveGameObjectBehaviour());
-	}
-	break;
+		break;
 	}
 }
 
@@ -125,9 +124,47 @@ void Scene::Update(float deltaTime)
 	}
 }
 
+void Scene::VisibilityCheck()
+{
+	//clearing out info from last frame
+	visibleGOs.clear();
+	lights.clear();
+
+	//repopulating!
+	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
+	{
+		Renderer *r = (*iter)->GetRenderer();
+		if (r)
+		{
+			Model *m = r->GetModel();
+			
+			//view frustrum culling
+			if (m->UsesBoundSphereTest())
+			{
+				Sphere sphere = m->GetBoundingSphere((*iter)->GetModelMatrix());
+
+				if (!camera->CheckSphere(sphere.pos, sphere.rad))
+					continue;
+			}
+			
+			Light *l = (*iter)->GetLight();
+			if (l)
+				lights.push_back(*iter);
+			else
+				visibleGOs.push_back(*iter);
+		}
+	}
+}
+
+//arg is a comparer function
+void Scene::Sort(bool (*comparer)(GameObject *a, GameObject *b))
+{
+	sort(visibleGOs.begin(), visibleGOs.end(), comparer);
+}
+
 void Scene::Render(Camera* camera)
 {
-	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
+	for (auto iter = visibleGOs.begin(); iter != visibleGOs.end(); iter++)
 		(*iter)->Render(camera);
 }
 

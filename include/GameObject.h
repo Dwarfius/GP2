@@ -4,6 +4,7 @@
 #include "Common.h"
 #include "BaseComponent.h"
 #include "Renderer.h"
+#include "Light.h"
 #include "Camera.h"
 #include <map>
 
@@ -13,6 +14,7 @@ private:
 	vec3 pos, rotation, size;
 	mat4 modelMatrix;
 	Renderer *renderer = NULL;
+	Light *light = NULL;
 	map<string, BaseComponent*> components;
 	string name = "default";
 
@@ -24,6 +26,7 @@ public:
 	string GetName() { return name; }
 
 	Renderer* GetRenderer() { return renderer; }
+	Light* GetLight() { return light; }
 
 	void Update(float deltaTime);
 	void Render(Camera *camera);

@@ -3,6 +3,7 @@
 
 #include "Common.h"
 #include "Renderer.h"
+#include "Camera.h"
 
 class DefRenderer
 {
@@ -13,6 +14,7 @@ private:
 	static Texture *textures[3];
 	static Model *model;
 	static ShaderProgram *program;
+	static ShaderProgram *nullProg;
 	static Renderer *renderer;
 
 	static vec3 sunDir;
@@ -26,6 +28,12 @@ public:
 	static void CleanUp();
 	//get the deferred renderer frame buffer
 	static GLuint Get() { return fbo; }
+	static void BeginGeomGather();
+	static void EndGeomGather();
+	static void BeginLightGather();
+	static void EndLightGather();
+	static void StencilPass(Camera *cam, Renderer *r);
+	static void LightPass(Camera *cam, Renderer *r);
 	static void RenderGather();
 
 	static vec3 GetSunDir() { return sunDir; }

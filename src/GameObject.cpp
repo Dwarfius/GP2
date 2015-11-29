@@ -35,15 +35,6 @@ void GameObject::Render(Camera *camera)
 	modelMatrix = scale(modelMatrix, size);
 	modelMatrix = translate(modelMatrix, -m->GetCenter());
 
-	//view frustrum culling
-	if (m->UsesBoundSphereTest())
-	{
-		Sphere sphere = m->GetBoundingSphere(modelMatrix);
-
-		if (!camera->CheckSphere(sphere.pos, sphere.rad))
-			return;
-	}
-
 	renderer->Ready();
 	ShaderProgram *program = renderer->GetProgram();
 	mat4 MVP = camera->Get() * modelMatrix;
@@ -81,7 +72,6 @@ void GameObject::Render(Camera *camera)
 		(*(it->second)).OnRender(camera);
 
 	renderer->Render();
-	Game::objectsRendered++;
 }
 
 void GameObject::AttachComponent(BaseComponent * com)
@@ -91,9 +81,14 @@ void GameObject::AttachComponent(BaseComponent * com)
 		return;
 	}
 	
+	//caching
 	Renderer *r = dynamic_cast<Renderer*>(com);
 	if (r)
 		renderer = r;
+
+	Light *l = dynamic_cast<Light*>(com);
+	if (l)
+		light = l;
 
 	components[typeid(*com).name()] = com;
 	cout << typeid(*com).name() << endl;
