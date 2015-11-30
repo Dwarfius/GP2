@@ -7,11 +7,13 @@
 class Light : public BaseComponent
 {
 private:
-	vec3 color;
+	vec4 color;
 
 public:
-	Light(vec3 color);
+	Light(vec4 color);
 	~Light();
+
+	vec4 GetColor() { return color; }
 };
 
 #endif

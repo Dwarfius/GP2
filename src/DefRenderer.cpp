@@ -12,7 +12,7 @@ Renderer* DefRenderer::renderer;
 vec3 DefRenderer::sunDir = vec3(0, -1, 0);
 vec4 DefRenderer::sunColor = vec4(0.5f, 0.5f, 0.5f, 1);
 
-#define TEXTURE_COUNT 2
+#define TEXTURES 2
 
 void DefRenderer::Init()
 {
@@ -22,15 +22,15 @@ void DefRenderer::Init()
 	ivec2 screen = Graphics::GetViewport();
 
 	glGenFramebuffers(1, &fbo);
-	GLuint FBOtexture[TEXTURE_COUNT]; //color, normal
-	glGenTextures(TEXTURE_COUNT, FBOtexture);
+	GLuint FBOtexture[TEXTURES]; //color, normal
+	glGenTextures(TEXTURES, FBOtexture);
 	glGenRenderbuffers(1, &rbo); //depth & stencil
 	CHECK_GL_ERROR();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 	//initialization of the textures and buffers
-	for (int i = 0; i < TEXTURE_COUNT; i++)
+	for (int i = 0; i < TEXTURES; i++)
 	{
 		glBindTexture(GL_TEXTURE_2D, FBOtexture[i]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, screen.x, screen.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
@@ -54,7 +54,7 @@ void DefRenderer::Init()
 	//marking that frag shader will render to the 2 bound textures
 	//depth is handled in a different pipeline stage - no need to bother about it
 	GLenum bufferToDraw[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-	glDrawBuffers(2, bufferToDraw);
+	glDrawBuffers(TEXTURES, bufferToDraw);
 	CHECK_GL_ERROR();
 
 	//check if we succeeded
@@ -78,7 +78,7 @@ void DefRenderer::Init()
 	program->Link();
 
 	renderer = new Renderer();
-	for (int i = 0; i < TEXTURE_COUNT; i++)
+	for (int i = 0; i < TEXTURES; i++)
 		renderer->AddTexture(textures[i]);
 	renderer->SetModel(model, GL_TRIANGLE_FAN);
 	renderer->SetShaderProgram(program);
@@ -91,7 +91,7 @@ void DefRenderer::CleanUp()
 	delete program;
 	delete nullProg;
 	delete model;
-	for (int i = 0; i < TEXTURE_COUNT; i++)
+	for (int i = 0; i < TEXTURES; i++)
 		delete textures[i];
 	delete renderer;
 }
@@ -101,7 +101,10 @@ void DefRenderer::CleanUp()
 void DefRenderer::BeginGeomGather()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glDepthMask(GL_TRUE);
+	glEnable(GL_DEPTH_TEST); //enable depth testing
+	glDepthMask(GL_TRUE); //and allow depth writing
+	GLenum bufferToDraw[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(TEXTURES, bufferToDraw);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
@@ -117,6 +120,7 @@ void DefRenderer::BeginLightGather()
 
 void DefRenderer::EndLightGather()
 {
+	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_STENCIL_TEST);
 }
 
@@ -146,7 +150,7 @@ void DefRenderer::StencilPass(Camera *cam, Renderer *r)
 
 	r->Ready();
 	mat4 mvp = cam->Get() * r->GetParentGO()->GetModelMatrix();
-	nullProg->SetUniform("MVP", value_ptr(mvp));
+	r->GetProgram()->SetUniform("MVP", value_ptr(mvp));
 	r->Render();
 	r->SetShaderProgram(temp);
 }
@@ -171,15 +175,22 @@ void DefRenderer::LightPass(Camera *cam, Renderer *r)
 	glCullFace(GL_FRONT);
 
 	r->Ready();
-	mat4 mvp = cam->Get() * r->GetParentGO()->GetModelMatrix();
-	nullProg->SetUniform("MVP", value_ptr(mvp));
-	vec4 color(1, 1, 1, 1); //TEMPRORARY VALUE
+	mat4 model = r->GetParentGO()->GetModelMatrix();
+	mat4 mvp = cam->Get() * model;
+	r->GetProgram()->SetUniform("Model", value_ptr(model));
+	r->GetProgram()->SetUniform("MVP", value_ptr(mvp));
+	vec4 deviceCenter = vec4(mvp * vec4(0, 0, 0, 1)); //center in device coords
+	vec3 center = r->GetParentGO()->GetPos();
+	r->GetProgram()->SetUniform("Center", &center);
+	Light *l = r->GetParentGO()->GetLight();
+	vec4 color = l->GetColor();
 	r->GetProgram()->SetUniform("Color", &color);
 	r->Render();
 
 	glCullFace(GL_BACK);
 
 	glDisable(GL_BLEND);
+	CHECK_GL_ERROR();
 }
 
 void DefRenderer::RenderGather()

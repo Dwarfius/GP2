@@ -1,7 +1,8 @@
 #include "Light.h"
 
-Light::Light(vec3 color)
+Light::Light(vec4 color)
 {
+	this->color = color;
 }
 
 Light::~Light()

@@ -84,12 +84,32 @@
 			</ComponentList>
 		</GameObject>
 		<GameObject name="Light1" hasRenderer="true" texture="" model="sphere.fbx" 
-			shader="PointLight" posx="0" posy="0" posz="0" rotx="0" roty="0" rotz="0" 
+			shader="PointLight" posx="-15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
 			scalex="1" scaley="1" scalez="1">
 			<ComponentList>
-				<Component ID="Light"/>
+				<Component ID="Light">
+					<Attributes color="0,0,1,1"/>
+				</Component>
 			</ComponentList>
-		</GameObject>	
+		</GameObject>
+		<GameObject name="Light2" hasRenderer="true" texture="" model="sphere.fbx" 
+			shader="PointLight" posx="-13" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+			scalex="1" scaley="1" scalez="1">
+			<ComponentList>
+				<Component ID="Light">
+					<Attributes color="0,1,0,1"/>
+				</Component>
+			</ComponentList>
+		</GameObject>
+		<GameObject name="Light3" hasRenderer="true" texture="" model="sphere.fbx" 
+			shader="PointLight" posx="-10" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+			scalex="1" scaley="1" scalez="1">
+			<ComponentList>
+				<Component ID="Light">
+					<Attributes color="-1,0,0,1"/>
+				</Component>
+			</ComponentList>
+		</GameObject>
 		<GameObject name="TestModel" hasRenderer="true" texture="creature1Albedo.png,creature1Normal.png,creature1Specular.png" model="creature1.fbx" 
 			shader = "diffuseNormalSpecMap" posx="60" posy="30" posz="5" rotx="0" roty="0" rotz="0" 
 			scalex="0.1" scaley="0.1" scalez="0.1">

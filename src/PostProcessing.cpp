@@ -109,6 +109,7 @@ void PostProcessing::Pass(ShaderProgram *newProgram)
 void PostProcessing::RenderResult()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDisable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	renderer->SetTexture(0, texture[activeInd]);
 	renderer->Ready();

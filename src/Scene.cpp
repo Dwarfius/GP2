@@ -97,7 +97,16 @@ void Scene::AttachComponent(string & compID, GameObject * go, XMLElement* attrib
 			go->AttachComponent(new MoveGameObjectBehaviour());
 			break;
 		case LIGHT:
-			go->AttachComponent(new Light(vec3(1, 1, 1)));
+		{
+			string colorString = attributesElement->Attribute("color");
+			vector<string> splits = split(colorString, ',');
+			float r = atof(splits[0].c_str());
+			float g = atof(splits[1].c_str());
+			float b = atof(splits[2].c_str());
+			float a = atof(splits[3].c_str());
+			vec4 color(r, g, b, a);
+			go->AttachComponent(new Light(color));
+		}
 			break;
 	}
 }
@@ -160,7 +169,6 @@ void Scene::VisibilityCheck()
 	}
 }
 
-//arg is a comparer function
 void Scene::Sort(bool (*comparer)(GameObject *a, GameObject *b))
 {
 	sort(visibleGOs.begin(), visibleGOs.end(), comparer);
