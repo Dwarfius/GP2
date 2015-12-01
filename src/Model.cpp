@@ -25,6 +25,7 @@ Model::Model(const string& fileName)
 	vertices = new vector<Vertex>();
 	indices = new vector<int>();
 
+	printf("Loading %s\n", fileName.c_str());
 	if (!loadFBXFromFile(fileName))
 	{
 		printf("Error loading model!\n");
@@ -309,14 +310,25 @@ void Model::processMesh(FbxMesh *mesh, int level)
 
 void Model::processMeshTextCoords(FbxMesh *mesh, Vertex *verts, int numVerts)
 {
+	int matCount = mesh->GetElementMaterialCount();
+	FbxLayerElementMaterial *matElem = NULL;
+	if (matCount) //only supporting 1 material layer max
+		matElem = mesh->GetElementMaterial(0);
 	int polCount = mesh->GetPolygonCount();
 	for (int polInd = 0; polInd < polCount; polInd++)
 	{
+		int textureId = 0;
+		if (matElem)
+		{
+			textureId = matElem->GetIndexArray().GetAt(polInd);
+		}
 		for (unsigned polVert = 0; polVert < 3; polVert++)
 		{
 			int cornerIndex = mesh->GetPolygonVertex(polInd, polVert);
 			FbxVector2 UV = FbxVector2(0, 0);
-			FbxLayerElementUV *layerUV = mesh->GetLayer(0)->GetUVs();
+			FbxLayer *layer = mesh->GetLayer(0);
+			FbxLayerElementUV *layerUV = layer->GetUVs();
+			FbxLayerElementTexture *layerTexture = layer->GetTextures(FbxLayerElement::eTextureDiffuse);
 			if (layerUV)
 			{
 				int UVindex = 0;
@@ -334,6 +346,7 @@ void Model::processMeshTextCoords(FbxMesh *mesh, Vertex *verts, int numVerts)
 				}
 
 				UV = layerUV->GetDirectArray().GetAt(UVindex);
+				verts[cornerIndex].color.x = textureId;
 				verts[cornerIndex].texture.x = UV[0];
 				verts[cornerIndex].texture.y = 1.f - UV[1];
 			}

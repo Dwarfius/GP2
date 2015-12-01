@@ -30,6 +30,7 @@ private:
 
 	vector<GameObject*> gameObjects;
 	vector<GameObject*> visibleGOs;
+	vector<GameObject*> transparentGOs;
 	vector<GameObject*> lights;
 public:
 	Scene(ResourceManager* rM);

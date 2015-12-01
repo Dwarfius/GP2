@@ -10,5 +10,5 @@ out vec3 WorldPos;
 void main()
 {
 	gl_Position = MVP * vec4(Position, 1);
-	WorldPos = (Model * vec4(Position, 1)).xyz;
+	WorldPos = gl_Position.xyz;
 }

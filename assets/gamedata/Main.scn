@@ -6,17 +6,20 @@
 		<Model>NormalMapTest2.FBX</Model>
 		<Model>creature1.fbx</Model>
 		<Model>sphere.fbx</Model>
+		<Model>Tree.fbx</Model>
     </ModelList>
 	<TextureList>
 		<Texture>texture.png</Texture>
 		<Texture>grass.png</Texture>
 		<Texture>ground.jpg</Texture>
-		<Texture>rock.jpg</Texture>	
+		<Texture>rock.jpg</Texture>
 		<Texture>BrickFacade.jpg</Texture>	
 		<Texture>BrickFacade_normal.jpg</Texture>	
 		<Texture>creature1Albedo.png</Texture>
 		<Texture>creature1Normal.png</Texture>
 		<Texture>creature1Specular.png</Texture>
+		<Texture>TreeBark.png</Texture>
+		<Texture>TreeLeaves.png</Texture>
 	</TextureList>
 	<FontList>
 		<Font>OratorStd.otf</Font>
@@ -35,6 +38,11 @@
 				</Component>
 			</ComponentList>
 		</GameObject>
+		<GameObject name="Tree" hasRenderer="true" transparent="true" texture="TreeBark.png,TreeBark.png,TreeLeaves.png" model="Tree.fbx" shader="Tree"
+			posx="50" posy="40" posz="100" rotx="-90" roty="0" rotz="0" scalex="1" scaley="1" scalez="1">
+			<ComponentList>
+			</ComponentList>
+		</GameObject>
 		<GameObject name="CameraBehaviourObject" hasRenderer="false" texture="" model="" shader="" 
 			posx="0" posy="0" posz="0" 
 			rotx="0" roty="0" rotz="0" 
@@ -46,38 +54,38 @@
 			</ComponentList>
 		</GameObject>
 		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" 
-			shader = "Specular" posx="-15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+			shader="Specular" posx="-15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
 			scalex="0.1" scaley="0.1" scalez="0.1">
 			<ComponentList>		
 			</ComponentList>
 		</GameObject>
 		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" 
-			shader = "Specular" posx="-5" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+			shader="Specular" posx="-5" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
 			scalex="0.3" scaley="0.3" scalez="0.3">
 			<ComponentList>		
 			</ComponentList>
 		</GameObject>
 		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" 
-			shader = "Specular" posx="15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+			shader="Specular" posx="15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
 			scalex="0.6" scaley="0.6" scalez="0.6">
 			<ComponentList>		
 			</ComponentList>
 		</GameObject>
 		<GameObject name="Man" hasRenderer="true" texture="texture.png" model="3d-model.fbx" 
-			shader = "Specular" posx="40" posy="0" posz="5" rotx="-90" roty="0" rotz="0" 
+			shader="Specular" posx="40" posy="0" posz="5" rotx="-90" roty="0" rotz="0" 
 			scalex="0.3" scaley="0.3" scalez="0.3">
 			<ComponentList>		
 			</ComponentList>
 		</GameObject>
 		<GameObject name="TestCylinder" hasRenderer="true" texture="BrickFacade.jpg,BrickFacade_normal.jpg" model="NormalMapTest.FBX" 
-			shader = "NormalMapping" posx="30" posy="30" posz="5" rotx="-90" roty="0" rotz="0" 
+			shader="NormalMapping" posx="30" posy="30" posz="5" rotx="-90" roty="0" rotz="0" 
 			scalex="0.3" scaley="0.3" scalez="0.3">
 			<ComponentList>
 				<Component ID="MoveGOBehaviour"/>
 			</ComponentList>
 		</GameObject>	
 		<GameObject name="TestBox2" hasRenderer="true" texture="BrickFacade.jpg,BrickFacade_normal.jpg" model="NormalMapTest2.FBX" 
-			shader = "NormalMapping" posx="10" posy="20" posz="5" rotx="0" roty="0" rotz="0" 
+			shader="NormalMapping" posx="10" posy="20" posz="5" rotx="0" roty="0" rotz="0" 
 			scalex="0.3" scaley="0.3" scalez="0.3">
 			<ComponentList>		
 				<Component ID="MoveGOBehaviour"/>
@@ -111,7 +119,7 @@
 			</ComponentList>
 		</GameObject>
 		<GameObject name="TestModel" hasRenderer="true" texture="creature1Albedo.png,creature1Normal.png,creature1Specular.png" model="creature1.fbx" 
-			shader = "diffuseNormalSpecMap" posx="60" posy="30" posz="5" rotx="0" roty="0" rotz="0" 
+			shader="diffuseNormalSpecMap" posx="60" posy="30" posz="5" rotx="0" roty="0" rotz="0" 
 			scalex="0.1" scaley="0.1" scalez="0.1">
 			<ComponentList>		
 				<Component ID="MoveGOBehaviour"/>

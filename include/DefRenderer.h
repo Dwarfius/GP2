@@ -19,7 +19,7 @@ private:
 	static Renderer *renderer;
 
 	static vec3 sunDir;
-	static vec4 sunColor;
+	static vec3 sunColor;
 
 	DefRenderer() {}
 public:
@@ -40,8 +40,8 @@ public:
 	static vec3 GetSunDir() { return sunDir; }
 	static void SetSunDir(vec3 dir) { sunDir = dir; }
 
-	static vec4 GetSunColor() { return sunColor; }
-	static void SetSunColor(vec4 color) { sunColor = color; }
+	static vec3 GetSunColor() { return sunColor; }
+	static void SetSunColor(vec3 color) { sunColor = color; }
 };
 
 #endif

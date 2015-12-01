@@ -122,6 +122,8 @@ XMLError SceneManager::LoadScene(int sceneOrder, Scene* currentScene)
 		string textures = sceneItem->Attribute("texture");
 		vector<string> splits = split(textures, ',');
 
+		string transpString = 
+
 		tModelName = sceneItem->Attribute("model");
 		tShaderProgramName = sceneItem->Attribute("shader");
 
@@ -139,8 +141,10 @@ XMLError SceneManager::LoadScene(int sceneOrder, Scene* currentScene)
 		sceneItem->QueryFloatAttribute("scalez", &tScale.z);
 
 		GameObject *go;
-		if (hasRenderer) {
+		if (hasRenderer) 
+		{
 			Renderer *renderer = new Renderer();
+			renderer->SetTransparent(sceneItem->Attribute("transparent", "true"));
 			if (tModelName.length() > 0)
 			{
 				Model *m = resourceManager->GetModel(tModelName);

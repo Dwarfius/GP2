@@ -142,6 +142,7 @@ void Scene::VisibilityCheck()
 	//clearing out info from last frame
 	visibleGOs.clear();
 	lights.clear();
+	transparentGOs.clear();
 
 	//repopulating!
 	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
@@ -163,6 +164,8 @@ void Scene::VisibilityCheck()
 			Light *l = (*iter)->GetLight();
 			if (l)
 				lights.push_back(*iter);
+			else if (r->GetTransparent())
+				transparentGOs.push_back(*iter);
 			else
 				visibleGOs.push_back(*iter);
 		}
@@ -178,5 +181,17 @@ void Scene::Render(Camera* camera)
 {
 	for (auto iter = visibleGOs.begin(); iter != visibleGOs.end(); iter++)
 		(*iter)->Render(camera);
-}
 
+	//after the scene normal geometry was rendered
+	//render out the semitransparent geometry
+	if (transparentGOs.size())
+	{
+		glDisable(GL_CULL_FACE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		for (auto iter = transparentGOs.begin(); iter != transparentGOs.end(); iter++)
+			(*iter)->Render(camera);
+		glDisable(GL_BLEND);
+		glEnable(GL_CULL_FACE);
+	}
+}

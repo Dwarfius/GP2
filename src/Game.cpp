@@ -160,6 +160,13 @@ void Game::LoadResources()
 	s->Link();
 	resourceManager->AddShader(s, "SkyBox");
 
+	s = new ShaderProgram(SHADER_PATH + "treeVS.glsl", SHADER_PATH + "treeFS.glsl");
+	s->BindAttribLoc(0, "vertexPosition");
+	s->BindAttribLoc(1, "colors");
+	s->BindAttribLoc(2, "uvs");
+	s->BindAttribLoc(3, "normals");
+	s->Link();
+	resourceManager->AddShader(s, "Tree");
 	//======================== SCENEMANAGEMENT  ====================
 	sceneManager->LoadSceneDirectories();
 	sceneManager->LoadScene("Main", currentScene);

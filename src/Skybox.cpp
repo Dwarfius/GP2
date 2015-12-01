@@ -62,7 +62,7 @@ void Skybox::Update(float deltaTime)
 			color = mix(nightColor, dayColor, k);
 		else
 			color = mix(dayColor, nightColor, k);
-		DefRenderer::SetSunColor(vec4(color, 1));
+		DefRenderer::SetSunColor(color);
 	}
 }
 

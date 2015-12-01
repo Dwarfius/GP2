@@ -19,6 +19,7 @@ private:
 	Model *model = NULL;
 	int renderMode = 0;
 	int textCount = 0;
+	bool transparent = false;
 
 	static GLuint activeProg, activeVao;
 	static GLuint activeTexts[TEXTURE_COUNT];
@@ -39,6 +40,10 @@ public:
 	void AddTexture(Texture *t, bool cubeMap = false) { textures[textCount++] = t; isCubeMap = cubeMap; }
 	void SetTexture(int i, Texture *t, bool cubeMap = false) { textures[i] = t; isCubeMap = cubeMap; }
 	Texture* GetTexture(int i) { return textures[i]; }
+
+	void SetTransparent(bool flag) { transparent = flag; }
+	//if the object is transparent. used to render in separate queue
+	bool GetTransparent() { return transparent; }
 
 	//binds the shader so that uniforms can be sent
 	void Ready();

@@ -10,7 +10,7 @@ ShaderProgram* DefRenderer::program;
 ShaderProgram* DefRenderer::nullProg;
 Renderer* DefRenderer::renderer;
 vec3 DefRenderer::sunDir = vec3(0, -1, 0);
-vec4 DefRenderer::sunColor = vec4(0.5f, 0.5f, 0.5f, 1);
+vec3 DefRenderer::sunColor = vec3(0.5f, 0.5f, 0.5f);
 
 #define TEXTURES 2
 
@@ -111,6 +111,7 @@ void DefRenderer::BeginGeomGather()
 void DefRenderer::EndGeomGather()
 {
 	glDepthMask(GL_FALSE);
+	glDisable(GL_BLEND);
 }
 
 void DefRenderer::BeginLightGather()
@@ -168,9 +169,9 @@ void DefRenderer::LightPass(Camera *cam, Renderer *r)
 	
 	//using additive blending to mix the light and scene fragments
 	glEnable(GL_BLEND);
-	glBlendEquation(GL_FUNC_ADD);
 	glBlendFunc(GL_ONE, GL_ONE);
 
+	//try to render from the back to preserve depth information
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 
@@ -180,9 +181,11 @@ void DefRenderer::LightPass(Camera *cam, Renderer *r)
 	r->GetProgram()->SetUniform("Model", value_ptr(model));
 	r->GetProgram()->SetUniform("MVP", value_ptr(mvp));
 	vec4 deviceCenter = vec4(mvp * vec4(0, 0, 0, 1)); //center in device coords
-	vec3 center = r->GetParentGO()->GetPos();
+	vec3 center(deviceCenter.x, deviceCenter.y, deviceCenter.z);
 	r->GetProgram()->SetUniform("Center", &center);
 	Light *l = r->GetParentGO()->GetLight();
+	float intensity = l->GetIntensity();
+	r->GetProgram()->SetUniform("Intensity", &intensity);
 	vec4 color = l->GetColor();
 	r->GetProgram()->SetUniform("Color", &color);
 	r->Render();
