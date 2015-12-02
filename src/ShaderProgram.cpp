@@ -36,7 +36,7 @@ void ShaderProgram::Link()
 	//going to iterate through every uniform and cache info about it
 	GLint uniformCount = 0;
 	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &uniformCount);
-	printf("Contains %d uniforms:\n", uniformCount);
+	//printf("Contains %d uniforms:\n", uniformCount);
 	const int maxLength = 100;
 	char nameChars[maxLength];
 	for (int i = 0; i < uniformCount; i++)
@@ -50,7 +50,7 @@ void ShaderProgram::Link()
 		locations[name] = loc;
 		types[name] = type;
 
-		printf("\t%d(%d). %s - %d\n", i, loc, name.c_str(), type);
+		//printf("\t%d(%d). %s - %d\n", i, loc, name.c_str(), type);
 	}
 }
 

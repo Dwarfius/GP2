@@ -8,10 +8,7 @@ Skybox::Skybox(Texture *skybox, Model *model, ShaderProgram *shader, Texture *sk
 	this->model = model;
 	this->shader = shader;
 	isTimeDay = iTD;
-	if (isTimeDay) {
-		skyNight = skyN;
-	}
-	else { skyNight = skybox; }
+	skyNight = isTimeDay ? skyN : skybox;
 }
 
 Skybox::~Skybox()

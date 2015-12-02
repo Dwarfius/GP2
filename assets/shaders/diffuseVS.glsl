@@ -1,7 +1,7 @@
 #version 330
 
-in vec3 vertexPosition;
-in vec3 vertexNormal;
+layout(location = 0) in vec3 vertexPosition;
+layout(location = 3) in vec3 vertexNormal;
 
 out vec3 worldNormal;
 

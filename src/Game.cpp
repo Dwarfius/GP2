@@ -81,10 +81,7 @@ void Game::LoadResources()
 	CHECK_GL_ERROR();
 
 	//======================== TEXTURES ========================
-	resourceManager->AddTexture("Tank1DF.png");
-	resourceManager->AddTexture("grass.png");
-	resourceManager->AddTexture("ground.jpg");
-	resourceManager->AddTexture("rock.jpg");
+	//HIDE THIS AWAY IN TO SCENE MANAGER LOADER!
 	Texture* skyTexture = new Texture(TEXTURE_PATH + "right.jpg", TEXTURE_PATH + "left.jpg", TEXTURE_PATH + "top.jpg", TEXTURE_PATH + "bottom.jpg", TEXTURE_PATH + "back.jpg", TEXTURE_PATH + "front.jpg");
 	resourceManager->AddTexture("skyTexture", skyTexture);
 	Texture* skyNightTexture = new Texture(TEXTURE_PATH + "night_right.jpg", TEXTURE_PATH + "night_left.jpg", TEXTURE_PATH + "night_top.jpg", TEXTURE_PATH + "night_bottom.jpg", TEXTURE_PATH + "night_back.jpg", TEXTURE_PATH + "night_front.jpg");
@@ -107,66 +104,6 @@ void Game::LoadResources()
 	skyModel->SetUpAttrib(0, 3, GL_FLOAT, 0);
 	resourceManager->AddModel("skyModel", skyModel);
 
-	//========================  SHADERS ========================
-	ShaderProgram *s = new ShaderProgram(SHADER_PATH + "specularVS.glsl", SHADER_PATH + "specularFS.glsl");
-	s->BindAttribLoc(0, "vertexPosition");
-	s->BindAttribLoc(3, "vertexNormal");
-	s->Link();
-	resourceManager->AddShader(s, "Specular");
-
-	s = new ShaderProgram(SHADER_PATH + "normalMappingVS.glsl", SHADER_PATH + "normalMappingFS.glsl");
-	s->BindAttribLoc(0, "vertexPosition");
-	s->BindAttribLoc(2, "vertexTexCoords");
-	s->BindAttribLoc(3, "vertexNormal");
-	s->BindAttribLoc(4, "vertexTangent");
-	s->BindAttribLoc(5, "vertexBinormal");
-	s->Link();
-	resourceManager->AddShader(s, "NormalMapping");
-
-	s = new ShaderProgram(SHADER_PATH + "diffuseNormalSpecMapVS.glsl", SHADER_PATH + "diffuseNormalSpecMapFS.glsl");
-	s->BindAttribLoc(0, "vertexPosition");
-	s->BindAttribLoc(2, "vertexTexCoords");
-	s->BindAttribLoc(3, "vertexNormal");
-	s->BindAttribLoc(4, "vertexTangent");
-	s->BindAttribLoc(5, "vertexBinormal");
-	s->Link();
-	resourceManager->AddShader(s, "diffuseNormalSpecMap");
-
-	s = new ShaderProgram(SHADER_PATH + "postProcVS.glsl", SHADER_PATH + "colorCorr1.glsl");
-	s->BindAttribLoc(0, "vertexPosition");
-	s->Link();
-	resourceManager->AddShader(s, "PostProcess1");
-
-	s = new ShaderProgram(SHADER_PATH + "postProcVS.glsl", SHADER_PATH + "colorCorr2.glsl");
-	s->BindAttribLoc(0, "vertexPosition");
-	s->Link();
-	resourceManager->AddShader(s, "PostProcess2");
-
-	s = new ShaderProgram(SHADER_PATH + "terrainVS.glsl", SHADER_PATH + "terrainFS.glsl");
-	s->BindAttribLoc(0, "vertexPosition");
-	s->BindAttribLoc(1, "colors");
-	s->BindAttribLoc(2, "uvs");
-	s->BindAttribLoc(3, "normals");
-	s->Link();
-	resourceManager->AddShader(s, "Terrain");
-
-	s = new ShaderProgram(SHADER_PATH + "pointLightVS.glsl", SHADER_PATH + "pointLightFS.glsl");
-	s->BindAttribLoc(0, "Position");
-	s->Link();
-	resourceManager->AddShader(s, "PointLight");
-
-	s = new ShaderProgram(SHADER_PATH + "skyboxVS.glsl", SHADER_PATH + "skyboxFS.glsl");
-	s->BindAttribLoc(0, "vertexPosition");
-	s->Link();
-	resourceManager->AddShader(s, "SkyBox");
-
-	s = new ShaderProgram(SHADER_PATH + "treeVS.glsl", SHADER_PATH + "treeFS.glsl");
-	s->BindAttribLoc(0, "vertexPosition");
-	s->BindAttribLoc(1, "colors");
-	s->BindAttribLoc(2, "uvs");
-	s->BindAttribLoc(3, "normals");
-	s->Link();
-	resourceManager->AddShader(s, "Tree");
 	//======================== SCENEMANAGEMENT  ====================
 	sceneManager->LoadSceneDirectories();
 	sceneManager->LoadScene("Main", currentScene);
