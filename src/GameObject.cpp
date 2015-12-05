@@ -42,8 +42,10 @@ void GameObject::Render(Camera *camera)
 
 	renderer->Ready();
 	ShaderProgram *program = renderer->GetProgram();
-	mat4 MVP = camera->Get() * GetModelMatrix();
+	mat4 VP = camera->Get();
+	mat4 MVP = VP * GetModelMatrix();
 	program->SetUniform("MVP", value_ptr(MVP));
+	program->SetUniform("VP", value_ptr(VP));
 
 	vec3 camPos = camera->GetPos();
 	program->SetUniform("cameraPosition", &camPos);

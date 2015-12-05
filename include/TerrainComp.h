@@ -10,6 +10,7 @@ class TerrainComp : public BaseComponent
 private:
 	vector<Vertex> *vertices;
 	vector<int> *indices;
+	int width, height;
 
 	//returns normalized vector of RGB color
 	vec3 GetPixel(SDL_Surface *s, int x, int y);

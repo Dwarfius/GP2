@@ -1,5 +1,6 @@
 #include "TerrainComp.h"
 #include "GameObject.h"
+#include "Game.h"
 
 TerrainComp::TerrainComp(const string &fileName, vec3 size)
 {
@@ -10,15 +11,15 @@ TerrainComp::TerrainComp(const string &fileName, vec3 size)
 	SDL_Surface *surf = IMG_Load(fileName.c_str());
 	if (!surf)
 		printf("Couldn't load image %s-%s\n", fileName.c_str(), IMG_GetError());
-	int w = surf->w;
-	float wStep = size.x / w;
-	int h = surf->h;
-	float hStep = size.z / h;
+	width = surf->w;
+	float wStep = size.x / width;
+	height = surf->h;
+	float hStep = size.z / height;
 	
 	//first, creating the vertices
-	for (int y = 0; y < h; y++)
+	for (int y = 0; y < height; y++)
 	{
-		for (int x = 0; x < w; x++)
+		for (int x = 0; x < width; x++)
 		{
 			vec3 pixel = GetPixel(surf, x, y);
 			Vertex v;
@@ -33,13 +34,13 @@ TerrainComp::TerrainComp(const string &fileName, vec3 size)
 	}
 
 	//now creating indices
-	for (int y = 0; y < h - 1; y++)
+	for (int y = 0; y < height - 1; y++)
 	{
-		for (int x = 0; x < w - 1; x++)
+		for (int x = 0; x < width - 1; x++)
 		{
-			int tl = y * w + x;
+			int tl = y * width + x;
 			int tr = tl + 1;
-			int bl = tl + w;
+			int bl = tl + width;
 			int br = bl + 1;
 			indices->push_back(tl);
 			indices->push_back(bl);
@@ -67,6 +68,45 @@ void TerrainComp::SetParentGO(GameObject *pGO)
 	model->SetIndices(indices, GL_STATIC_DRAW, true);
 	model->Normalize();
 	model->FlushBuffers();
+
+	//next up, tree population
+	//setting up the object for instanced tree rendering
+	ResourceManager *mngr = Game::resourceManager;
+	Scene *scene = Game::currentScene;
+	Model *tree = mngr->GetModel("Tree.fbx");
+	tree->SetBoundSphereUse(false);
+	ShaderProgram *prog = mngr->GetShader("Tree");
+	Texture *bark = mngr->GetTexture("TreeBark.png");
+	Texture *leaves = mngr->GetTexture("TreeLeaves.png");
+	GameObject *treesParent = new GameObject();
+	Renderer *treesRenderer = new Renderer();
+	treesRenderer->SetModel(tree, GL_TRIANGLES);
+	treesRenderer->SetShaderProgram(prog);
+	treesRenderer->AddTexture(bark);
+	treesRenderer->AddTexture(bark);
+	treesRenderer->AddTexture(leaves);
+	treesRenderer->SetTransparent(true);
+	
+	//create all the MVP matrices
+	const int treeCount = 100;
+	vector<mat4> mvps;
+	srand(time(NULL));
+	mat4 VP = scene->GetSceneCamera()->Get();
+	for (int i = 0; i < treeCount; i++)
+	{
+		int x = rand() % width;
+		int z = rand() % height;
+		int y = vertices->at(z * width + x).pos.y;
+
+		mat4 model = translate(mat4(1), vec3(x, y, z));
+		model = rotate(model, radians(-90.f), vec3(1, 0, 0));
+		mvps.push_back(model);
+	}
+
+	//push it in to the scene
+	treesRenderer->SetInstanceMatrices(&mvps);
+	treesParent->AttachComponent(treesRenderer);
+	scene->AddGameObject(treesParent);
 }
 
 //http://stackoverflow.com/questions/17270538/how-to-change-rgb-values-in-sdl-surface

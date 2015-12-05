@@ -21,9 +21,8 @@ void Skybox::SetParentGO(GameObject *pGO)
 	tD = dynamic_cast<TimeDay*>(pGameObject->GetComponent("TimeDay"));
 	renderer = pGameObject->GetRenderer();
 	renderer->SetTexture(0, skybox, true);
-	if (isTimeDay) {
+	if (isTimeDay)
 		renderer->SetTexture(1, skyNight, true);
-	}
 	renderer->SetModel(model, GL_TRIANGLES);
 	renderer->SetShaderProgram(shader);
 }

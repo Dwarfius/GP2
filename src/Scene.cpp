@@ -186,12 +186,12 @@ void Scene::Render(Camera* camera)
 	//render out the semitransparent geometry
 	if (transparentGOs.size())
 	{
-		glDisable(GL_CULL_FACE);
+		//glDisable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		for (auto iter = transparentGOs.begin(); iter != transparentGOs.end(); iter++)
 			(*iter)->Render(camera);
 		glDisable(GL_BLEND);
-		glEnable(GL_CULL_FACE);
+		//glEnable(GL_CULL_FACE);
 	}
 }

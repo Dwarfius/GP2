@@ -14,12 +14,14 @@ class Renderer: public BaseComponent
 {
 private:
 	Texture* textures[TEXTURE_COUNT];
-	Texture* normalMaps[TEXTURE_COUNT];
 	ShaderProgram *shaderProg = NULL;
 	Model *model = NULL;
 	int renderMode = 0;
 	int textCount = 0;
 	bool transparent = false;
+	GLuint matVbo = 0;
+	bool instancedRender = false;
+	uint instanceCount = 0;
 
 	static GLuint activeProg, activeVao;
 	static GLuint activeTexts[TEXTURE_COUNT];
@@ -50,7 +52,8 @@ public:
 	//call Ready() before this!
 	void Render();
 	//NYI! Call Ready() before this!
-	void RenderInstanced(Camera *cam, int count);
+	void RenderInstanced();
+	void SetInstanceMatrices(vector<mat4> *matrices);
 };
 
 #endif

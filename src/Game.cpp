@@ -7,33 +7,37 @@
 
 uint Game::verticesRendered;
 uint Game::drawCalls;
+Scene* Game::currentScene;
+ResourceManager* Game::resourceManager;
+
+#define SKYBOX_DIST 2
 
 vector<Vertex> skyBoxverts = {
 	//Front
-	{ vec3(-1, 1, 1),
-	vec4(1.0f, 0.0f, 1.0f, 1.0f), vec2(0.0f, 0.0f) },// Top Left
+	{ vec3(-SKYBOX_DIST, SKYBOX_DIST, SKYBOX_DIST),
+	vec4(0), vec2(0.0f, 0.0f) },// Top Left
 
-	{ vec3(-1, -1, 1),
-	vec4(1.0f, 1.0f, 0.0f, 1.0f), vec2(0.0f, 1.0f) },// Bottom Left
+	{ vec3(-SKYBOX_DIST, -SKYBOX_DIST, SKYBOX_DIST),
+	vec4(0), vec2(0.0f, 1.0f) },// Bottom Left
 
-	{ vec3(1, -1, 1),
-	vec4(0.0f, 1.0f, 1.0f, 1.0f), vec2(1.0f, 1.0f) }, //Bottom Right
+	{ vec3(SKYBOX_DIST, -SKYBOX_DIST, SKYBOX_DIST),
+	vec4(0), vec2(1.0f, 1.0f) }, //Bottom Right
 
-	{ vec3(1, 1, 1),
-	vec4(1.0f, 0.0f, 1.0f, 1.0f), vec2(1.0f, 0.0f) },// Top Right
+	{ vec3(SKYBOX_DIST, SKYBOX_DIST, SKYBOX_DIST),
+	vec4(0), vec2(1.0f, 0.0f) },// Top Right
 
-													 //back
-	{ vec3(-1, 1, -1),
-	vec4(1.0f, 0.0f, 1.0f, 1.0f), vec2(0.0f, 0.0f) },// Top Left
+	//Back
+	{ vec3(-SKYBOX_DIST, SKYBOX_DIST, -SKYBOX_DIST),
+	vec4(0), vec2(0.0f, 0.0f) },// Top Left
 
-	{ vec3(-1, -1, -1),
-	vec4(1.0f, 1.0f, 0.0f, 1.0f), vec2(0.0f, 1.0f) },// Bottom Left
+	{ vec3(-SKYBOX_DIST, -SKYBOX_DIST, -SKYBOX_DIST),
+	vec4(0), vec2(0.0f, 1.0f) },// Bottom Left
 
-	{ vec3(1, -1, -1),
-	vec4(0.0f, 1.0f, 1.0f, 1.0f), vec2(1.0f, 1.0f) }, //Bottom Right
+	{ vec3(SKYBOX_DIST, -SKYBOX_DIST, -SKYBOX_DIST),
+	vec4(0), vec2(1.0f, 1.0f) }, //Bottom Right
 
-	{ vec3(1, 1, -1),
-	vec4(1.0f, 0.0f, 1.0f, 1.0f), vec2(1.0f, 0.0f) },// Top Right
+	{ vec3(SKYBOX_DIST, SKYBOX_DIST, -SKYBOX_DIST),
+	vec4(0), vec2(1.0f, 0.0f) },// Top Right
 };
 
 vector<int> skyBoxIndices = {

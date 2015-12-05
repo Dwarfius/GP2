@@ -30,8 +30,8 @@ void ShaderProgram::Link()
 	CHECK_GL_ERROR();
 
 	//if they were linked we no longer need them
-	delete vShader;
-	delete fShader;
+	//delete vShader;
+	//delete fShader;
 
 	//going to iterate through every uniform and cache info about it
 	GLint uniformCount = 0;

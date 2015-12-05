@@ -13,9 +13,7 @@
 class Game
 {
 private:
-	SceneManager * sceneManager;
-	Scene * currentScene;
-	ResourceManager* resourceManager;
+	SceneManager* sceneManager;
 
 	int fpsCounter = 0;
 	int fpsDisplay = 0;
@@ -34,6 +32,8 @@ public:
 
 	static uint verticesRendered;
 	static uint drawCalls;
+	static Scene* currentScene;
+	static ResourceManager* resourceManager;
 };
 
 #endif

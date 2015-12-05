@@ -49,11 +49,6 @@
 				</Component>
 			</ComponentList>
 		</GameObject>
-		<GameObject name="Tree" hasRenderer="true" transparent="true" texture="TreeBark.png,TreeBark.png,TreeLeaves.png" model="Tree.fbx" shader="Tree"
-			posx="50" posy="40" posz="100" rotx="-90" roty="0" rotz="0" scalex="1" scaley="1" scalez="1">
-			<ComponentList>
-			</ComponentList>
-		</GameObject>
 		<GameObject name="CameraBehaviourObject" hasRenderer="false" texture="" model="" shader="" 
 			posx="0" posy="0" posz="0" 
 			rotx="0" roty="0" rotz="0" 
