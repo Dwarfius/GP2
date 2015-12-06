@@ -109,15 +109,14 @@ void TerrainComp::SetParentGO(GameObject *pGO)
 
 	//rock population, 5 variances
 	prog = mngr->GetShader("Rock");
-	int rockCount = 500;
-	char varNameBuf[10];
-	for (int i = 0; i < 5; i++)
+	int instCount = 500;
+	vector<string> mNames = { "Rock1.fbx", "Rock2.fbx", "Rock3.fbx", "Rock4.fbx", "Rock5.fbx" };
+	vector<string> tNames = { "Rock1.jpg", "Rock2.jpg", "Rock3.jpg", "Rock4.jpg", "Rock5.jpg" };
+	for (int i = 0; i < mNames.size(); i++)
 	{
-		sprintf(varNameBuf, "Rock%d", i+1);
-		string varName(varNameBuf);
-		Model *rock = mngr->GetModel(varName + ".fbx");
+		Model *rock = mngr->GetModel(mNames[i]);
 		rock->SetBoundSphereUse(false);
-		Texture *text = mngr->GetTexture(varName + ".jpg");
+		Texture *text = mngr->GetTexture(tNames[i]);
 		GameObject *go = new GameObject();
 		Renderer *r = new Renderer();
 		r->SetModel(rock, GL_TRIANGLES);
@@ -125,12 +124,45 @@ void TerrainComp::SetParentGO(GameObject *pGO)
 		r->AddTexture(text);
 
 		modelMats.clear();
-		for (int j = 0; j < rockCount; j++)
+		for (int j = 0; j < instCount; j++)
 		{
 			int x = rand() % width;
 			int z = rand() % height;
 			int y = vertices->at(z * width + x).pos.y;
 			float randScale = (float)(rand() % 10) / 10 + 0.5f;
+
+			mat4 model = translate(mat4(1), vec3(x, y, z));
+			model = scale(model, vec3(randScale));
+			modelMats.push_back(model);
+		}
+		r->SetInstanceMatrices(&modelMats);
+		go->AttachComponent(r);
+		scene->AddGameObject(go);
+	}
+
+	//ferns now
+	instCount = 500;
+	mNames = { "Fern1.fbx", "Fern2.fbx" };
+	tNames = { "Fern1.png", "Fern2.png" };
+	for (int i = 0; i < mNames.size(); i++)
+	{
+		Model *rock = mngr->GetModel(mNames[i]);
+		rock->SetBoundSphereUse(false);
+		Texture *text = mngr->GetTexture(tNames[i]);
+		GameObject *go = new GameObject();
+		Renderer *r = new Renderer();
+		r->SetModel(rock, GL_TRIANGLES);
+		r->SetShaderProgram(prog);
+		r->AddTexture(text);
+		r->SetTransparent(true);
+
+		modelMats.clear();
+		for (int j = 0; j < instCount; j++)
+		{
+			int x = rand() % width;
+			int z = rand() % height;
+			int y = vertices->at(z * width + x).pos.y;
+			float randScale = (float)(rand() % 5) / 100 + 0.05;
 
 			mat4 model = translate(mat4(1), vec3(x, y, z));
 			model = scale(model, vec3(randScale));

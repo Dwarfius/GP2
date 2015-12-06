@@ -11,5 +11,6 @@ layout(location = 1) out vec3 Normal;
 void main()
 {
 	FragColor = texture(texture0, uvsOut);
+	//FragColor = vec4(uvsOut, 0, 1);
 	Normal = normal * 0.5 + 0.5;
 }
