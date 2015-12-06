@@ -18,6 +18,7 @@ void main()
 		case 0:
 		{
 			FragColor = texture(texture0, uvsOut);
+			FragColor.a = 1;
 			//vec4 texelColor = texture(texture0, uvsOut);
 			//FragColor = vec4(1, 0, 0, 1);
 		}
@@ -25,6 +26,7 @@ void main()
 		case 1:
 		{
 			FragColor = texture(texture1, uvsOut);
+			FragColor.a = 1;
 			//vec4 texelColor = texture(texture1, uvsOut);
 			//FragColor = vec4(0, 1, 0, 1);
 		}
@@ -35,6 +37,7 @@ void main()
 			if(texelColor.a < 0.5)
 				discard;
 			FragColor = texelColor;
+			FragColor.a = 1;
 			//FragColor = vec4(0, 0, 1, 1);
 		}
 			break;

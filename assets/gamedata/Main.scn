@@ -7,6 +7,11 @@
 		<Model>creature1.fbx</Model>
 		<Model>sphere.fbx</Model>
 		<Model>Tree.fbx</Model>
+		<Model>Rock1.fbx</Model>
+		<Model>Rock2.fbx</Model>
+		<Model>Rock3.fbx</Model>
+		<Model>Rock4.fbx</Model>
+		<Model>Rock5.fbx</Model>
     </ModelList>
 	<TextureList>
 		<Texture>texture.png</Texture>
@@ -20,6 +25,11 @@
 		<Texture>creature1Specular.png</Texture>
 		<Texture>TreeBark.png</Texture>
 		<Texture>TreeLeaves.png</Texture>
+		<Texture>Rock1.jpg</Texture>
+		<Texture>Rock2.jpg</Texture>
+		<Texture>Rock3.jpg</Texture>
+		<Texture>Rock4.jpg</Texture>
+		<Texture>Rock5.jpg</Texture>
 	</TextureList>
 	<ShaderList>
 		<Shader vert="specularVS.glsl" frag="specularFS.glsl">Specular</Shader>
@@ -31,6 +41,7 @@
 		<Shader vert="pointLightVS.glsl" frag="pointLightFS.glsl">PointLight</Shader>
 		<Shader vert="skyboxVS.glsl" frag="skyboxFS.glsl">SkyBox</Shader>
 		<Shader vert="treeVS.glsl" frag="treeFS.glsl">Tree</Shader>
+		<Shader vert="rockVS.glsl" frag="rockFS.glsl">Rock</Shader>
 	</ShaderList>
 	<FontList>
 		<Font>OratorStd.otf</Font>

@@ -89,9 +89,8 @@ void TerrainComp::SetParentGO(GameObject *pGO)
 	
 	//create all the MVP matrices
 	const int treeCount = 100;
-	vector<mat4> mvps;
+	vector<mat4> modelMats;
 	srand(time(NULL));
-	mat4 VP = scene->GetSceneCamera()->Get();
 	for (int i = 0; i < treeCount; i++)
 	{
 		int x = rand() % width;
@@ -100,13 +99,47 @@ void TerrainComp::SetParentGO(GameObject *pGO)
 
 		mat4 model = translate(mat4(1), vec3(x, y, z));
 		model = rotate(model, radians(-90.f), vec3(1, 0, 0));
-		mvps.push_back(model);
+		modelMats.push_back(model);
 	}
 
 	//push it in to the scene
-	treesRenderer->SetInstanceMatrices(&mvps);
+	treesRenderer->SetInstanceMatrices(&modelMats);
 	treesParent->AttachComponent(treesRenderer);
 	scene->AddGameObject(treesParent);
+
+	//rock population, 5 variances
+	prog = mngr->GetShader("Rock");
+	int rockCount = 500;
+	char varNameBuf[10];
+	for (int i = 0; i < 5; i++)
+	{
+		sprintf(varNameBuf, "Rock%d", i+1);
+		string varName(varNameBuf);
+		Model *rock = mngr->GetModel(varName + ".fbx");
+		rock->SetBoundSphereUse(false);
+		Texture *text = mngr->GetTexture(varName + ".jpg");
+		GameObject *go = new GameObject();
+		Renderer *r = new Renderer();
+		r->SetModel(rock, GL_TRIANGLES);
+		r->SetShaderProgram(prog);
+		r->AddTexture(text);
+
+		modelMats.clear();
+		for (int j = 0; j < rockCount; j++)
+		{
+			int x = rand() % width;
+			int z = rand() % height;
+			int y = vertices->at(z * width + x).pos.y;
+			float randScale = (float)(rand() % 10) / 10 + 0.5f;
+
+			mat4 model = translate(mat4(1), vec3(x, y, z));
+			model = scale(model, vec3(randScale));
+			modelMats.push_back(model);
+		}
+		r->SetInstanceMatrices(&modelMats);
+		go->AttachComponent(r);
+		scene->AddGameObject(go);
+	}
 }
 
 //http://stackoverflow.com/questions/17270538/how-to-change-rgb-values-in-sdl-surface
