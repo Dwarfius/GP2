@@ -103,19 +103,19 @@ void DefRenderer::BeginGeomGather()
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glEnable(GL_DEPTH_TEST); //enable depth testing
 	glDepthMask(GL_TRUE); //and allow depth writing
-	GLenum bufferToDraw[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	GLenum bufferToDraw[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 }; //write to color and normal buffers
 	glDrawBuffers(TEXTURES, bufferToDraw);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void DefRenderer::EndGeomGather()
 {
-	glDepthMask(GL_FALSE);
 	glDisable(GL_BLEND);
 }
 
 void DefRenderer::BeginLightGather()
 {
+	glDepthMask(GL_FALSE); //lights don't write to depth
 	glEnable(GL_STENCIL_TEST);
 }
 

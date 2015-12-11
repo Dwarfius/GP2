@@ -19,5 +19,6 @@ void main()
 	float coeff = -dot(normal, sunDir);
 	
 	FragColor = color + vec4(coeff * sunColor, 0);
+	//FragColor = vec4(coeff * sunColor, 0);
 	//FragColor = vec4(normal, 1);
 }

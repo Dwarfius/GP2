@@ -18,5 +18,5 @@ void main()
 	gl_Position =  MVP * vec4(vertexPosition, 1);
 	uvsOut = uvs;
 	textId = int(colors.x);
-	normal = (MVP * vec4(normals, 0)).xyz;
+	normal = (model * vec4(normals, 0)).xyz;
 }

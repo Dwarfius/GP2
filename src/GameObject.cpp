@@ -42,15 +42,15 @@ void GameObject::Render(Camera *camera)
 
 	renderer->Ready();
 	ShaderProgram *program = renderer->GetProgram();
+	program->SetUniform("Model", value_ptr(modelMatrix));
 	mat4 VP = camera->Get();
+	program->SetUniform("VP", value_ptr(VP));
 	mat4 MVP = VP * GetModelMatrix();
 	program->SetUniform("MVP", value_ptr(MVP));
-	program->SetUniform("VP", value_ptr(VP));
 
 	vec3 camPos = camera->GetPos();
 	program->SetUniform("cameraPosition", &camPos);
 
-	program->SetUniform("Model", value_ptr(modelMatrix));
 	vec3 lightDir(0, 0, 1);
 	program->SetUniform("lightDirection", &lightDir);
 
