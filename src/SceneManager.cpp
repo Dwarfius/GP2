@@ -1,4 +1,5 @@
 #include "SceneManager.h"
+#include "ShaderProgram.h"
 #include "GameObject.h"
 
 SceneManager::SceneManager(ResourceManager* rM)
@@ -60,58 +61,60 @@ XMLError SceneManager::LoadScene(int sceneOrder, Scene* currentScene)
 	XMLDocument* gamedataXML = new XMLDocument();
 	loadXML(GAMEDATA_PATH + scenes[sceneOrder], gamedataXML);
 	XMLNode * sceneRoot = gamedataXML->FirstChild();
-	if (sceneRoot == nullptr) {
+	if (sceneRoot == nullptr)
 		return XML_ERROR_FILE_READ_ERROR;
-	}
 
-	XMLElement * sceneData = sceneRoot->FirstChildElement("ModelList");
-	if (sceneData == nullptr) {
+	XMLElement *sceneData = sceneRoot->FirstChildElement("ModelList");
+	if (sceneData == nullptr)
 		return XML_ERROR_PARSING_ELEMENT;
-	}
-	XMLElement * sceneItem = sceneData->FirstChildElement("Model");
-	if (sceneData == nullptr) {
-		return XML_ERROR_PARSING_ELEMENT;
-	}
-	while (sceneItem != nullptr) {
+	XMLElement *sceneItem = sceneData->FirstChildElement("Model");
+	while (sceneItem) 
+	{
 		resourceManager->AddModel(sceneItem->GetText());
 		sceneItem = sceneItem->NextSiblingElement("Model");
 	}
 
-	sceneData = sceneData->NextSiblingElement("TextureList");
-	if (sceneData == nullptr) {
+	sceneData = sceneRoot->FirstChildElement("TextureList");
+	if (sceneData == nullptr)
 		return XML_ERROR_PARSING_ELEMENT;
-	}
 	sceneItem = sceneData->FirstChildElement("Texture");
-	if (sceneData == nullptr) {
-		return XML_ERROR_PARSING_ELEMENT;
-	}
-	while (sceneItem != nullptr) {
+	while (sceneItem) 
+	{
 		resourceManager->AddTexture(sceneItem->GetText());
 		sceneItem = sceneItem->NextSiblingElement("Texture");
 	}
 
-	sceneData = sceneData->NextSiblingElement("FontList");
-	if (sceneData == nullptr) {
+	sceneData = sceneRoot->FirstChildElement("FontList");
+	if (sceneData == nullptr)
 		return XML_ERROR_PARSING_ELEMENT;
-	}
 	sceneItem = sceneData->FirstChildElement("Font");
-	if (sceneData == nullptr) {
-		return XML_ERROR_PARSING_ELEMENT;
-	}
-	while (sceneItem != nullptr) {
+	while (sceneItem) 
+	{
 		resourceManager->AddFont(sceneItem->GetText());
 		sceneItem = sceneItem->NextSiblingElement("Font");
 	}
 
-	sceneData = sceneData->NextSiblingElement("GameObjectList");
-	if (sceneData == nullptr) {
+	sceneData = sceneRoot->FirstChildElement("ShaderList");
+	if (!sceneData)
 		return XML_ERROR_PARSING_ELEMENT;
+	sceneItem = sceneData->FirstChildElement("Shader");
+	while (sceneItem)
+	{
+		string name = sceneItem->GetText();
+		string vert = sceneItem->Attribute("vert");
+		string frag = sceneItem->Attribute("frag");
+		ShaderProgram *shader = new ShaderProgram(SHADER_PATH + vert, SHADER_PATH + frag);
+		shader->Link();
+		resourceManager->AddShader(shader, name);
+		sceneItem = sceneItem->NextSiblingElement("Shader");
 	}
+
+	sceneData = sceneRoot->FirstChildElement("GameObjectList");
+	if (sceneData == nullptr)
+		return XML_ERROR_PARSING_ELEMENT;
 	sceneItem = sceneData->FirstChildElement("GameObject");
-	if (sceneData == nullptr) {
-		return XML_ERROR_PARSING_ELEMENT;
-	}
-	while (sceneItem != nullptr) {
+	while (sceneItem) 
+	{
 		string tName ="";
 		string tTextureName;
 		string tModelName;
@@ -139,8 +142,10 @@ XMLError SceneManager::LoadScene(int sceneOrder, Scene* currentScene)
 		sceneItem->QueryFloatAttribute("scalez", &tScale.z);
 
 		GameObject *go;
-		if (hasRenderer) {
+		if (hasRenderer) 
+		{
 			Renderer *renderer = new Renderer();
+			renderer->SetTransparent(sceneItem->Attribute("transparent", "true"));
 			if (tModelName.length() > 0)
 			{
 				Model *m = resourceManager->GetModel(tModelName);

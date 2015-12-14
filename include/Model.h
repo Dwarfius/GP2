@@ -57,6 +57,7 @@ public:
 	int GetVertCount() { return vertices->size(); }
 	int GetIndCount() { return indices->size(); }
 
+	void SetBoundSphereUse(bool flag) { usesBoundSphere = flag; }
 	bool UsesBoundSphereTest() { return usesBoundSphere; }
 	Sphere GetBoundingSphere(const mat4& transform) { return boundSphere.Transform(transform); }
 	vec3 GetCenter() { return boundSphere.pos; }

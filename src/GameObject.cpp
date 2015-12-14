@@ -21,11 +21,8 @@ void GameObject::Update(float deltaTime)
 	}
 }
 
-void GameObject::Render(Camera *camera)
+void GameObject::UpdateMatrix()
 {
-	if (!renderer)
-		return;
-
 	Model *m = renderer->GetModel();
 
 	modelMatrix = translate(mat4(1), pos);
@@ -35,24 +32,25 @@ void GameObject::Render(Camera *camera)
 	modelMatrix = scale(modelMatrix, size);
 	modelMatrix = translate(modelMatrix, -m->GetCenter());
 
-	//view frustrum culling
-	if (m->UsesBoundSphereTest())
-	{
-		Sphere sphere = m->GetBoundingSphere(modelMatrix);
+	modelDirty = false;
+}
 
-		if (!camera->CheckSphere(sphere.pos, sphere.rad))
-			return;
-	}
+void GameObject::Render(Camera *camera)
+{
+	if (!renderer)
+		return;
 
 	renderer->Ready();
 	ShaderProgram *program = renderer->GetProgram();
-	mat4 MVP = camera->Get() * modelMatrix;
+	program->SetUniform("Model", value_ptr(modelMatrix));
+	mat4 VP = camera->Get();
+	program->SetUniform("VP", value_ptr(VP));
+	mat4 MVP = VP * GetModelMatrix();
 	program->SetUniform("MVP", value_ptr(MVP));
 
 	vec3 camPos = camera->GetPos();
 	program->SetUniform("cameraPosition", &camPos);
 
-	program->SetUniform("Model", value_ptr(modelMatrix));
 	vec3 lightDir(0, 0, 1);
 	program->SetUniform("lightDirection", &lightDir);
 
@@ -81,35 +79,31 @@ void GameObject::Render(Camera *camera)
 		(*(it->second)).OnRender(camera);
 
 	renderer->Render();
-	Game::objectsRendered++;
 }
 
 void GameObject::AttachComponent(BaseComponent * com)
 {
-	if (components.count(typeid(*com).name()) >= 1) {
-		cout << "Component " << typeid(*com).name() << " is already attached to GO: " << name << endl;
+	if (components.count(typeid(*com).name()) >= 1) 
 		return;
-	}
 	
+	//caching
 	Renderer *r = dynamic_cast<Renderer*>(com);
 	if (r)
 		renderer = r;
 
+	Light *l = dynamic_cast<Light*>(com);
+	if (l)
+		light = l;
+
 	components[typeid(*com).name()] = com;
-	cout << typeid(*com).name() << endl;
 	com->SetParentGO(this);
-	cout << "Component " << typeid(*com).name() << " is attached to GO: " << name << endl;
 }
 
 BaseComponent * GameObject::GetComponent(string componentType)
 {
-	if(components.count("class " + componentType) == 0){
-		cout << "Component "<< componentType <<" does not exist or is not attached to GO: " << name << endl;
+	if(components.count("class " + componentType) == 0)
 		return NULL;
-	}
-	else {
-		//cout << "Component: " << componentType << " returned." << endl;
+	else 
 		return components.find("class " + componentType)->second;
-	}
 }
 

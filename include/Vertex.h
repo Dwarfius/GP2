@@ -6,7 +6,7 @@
 struct Vertex
 {
 	vec3 pos = vec3(0, 0, 0);
-	vec4 color = vec4(1, 1, 1, 1);
+	vec4 color = vec4(0, 0, 0, 0);
 	vec2 texture = vec2(0, 0);
 	vec3 normal = vec3(0, 0, 0);
 	vec3 tangent = vec3(0, 0, 0);

@@ -8,10 +8,7 @@ Skybox::Skybox(Texture *skybox, Model *model, ShaderProgram *shader, Texture *sk
 	this->model = model;
 	this->shader = shader;
 	isTimeDay = iTD;
-	if (isTimeDay) {
-		skyNight = skyN;
-	}
-	else { skyNight = skybox; }
+	skyNight = isTimeDay ? skyN : skybox;
 }
 
 Skybox::~Skybox()
@@ -24,9 +21,8 @@ void Skybox::SetParentGO(GameObject *pGO)
 	tD = dynamic_cast<TimeDay*>(pGameObject->GetComponent("TimeDay"));
 	renderer = pGameObject->GetRenderer();
 	renderer->SetTexture(0, skybox, true);
-	if (isTimeDay) {
+	if (isTimeDay)
 		renderer->SetTexture(1, skyNight, true);
-	}
 	renderer->SetModel(model, GL_TRIANGLES);
 	renderer->SetShaderProgram(shader);
 }
@@ -62,7 +58,7 @@ void Skybox::Update(float deltaTime)
 			color = mix(nightColor, dayColor, k);
 		else
 			color = mix(dayColor, nightColor, k);
-		DefRenderer::SetSunColor(vec4(color, 1));
+		DefRenderer::SetSunColor(color);
 	}
 }
 

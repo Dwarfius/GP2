@@ -6,35 +6,38 @@
 #include "DefRenderer.h"
 
 uint Game::verticesRendered;
-uint Game::objectsRendered;
 uint Game::drawCalls;
+Scene* Game::currentScene;
+ResourceManager* Game::resourceManager;
+
+#define SKYBOX_DIST 2
 
 vector<Vertex> skyBoxverts = {
 	//Front
-	{ vec3(-1, 1, 1),
-	vec4(1.0f, 0.0f, 1.0f, 1.0f), vec2(0.0f, 0.0f) },// Top Left
+	{ vec3(-SKYBOX_DIST, SKYBOX_DIST, SKYBOX_DIST),
+	vec4(0), vec2(0.0f, 0.0f) },// Top Left
 
-	{ vec3(-1, -1, 1),
-	vec4(1.0f, 1.0f, 0.0f, 1.0f), vec2(0.0f, 1.0f) },// Bottom Left
+	{ vec3(-SKYBOX_DIST, -SKYBOX_DIST, SKYBOX_DIST),
+	vec4(0), vec2(0.0f, 1.0f) },// Bottom Left
 
-	{ vec3(1, -1, 1),
-	vec4(0.0f, 1.0f, 1.0f, 1.0f), vec2(1.0f, 1.0f) }, //Bottom Right
+	{ vec3(SKYBOX_DIST, -SKYBOX_DIST, SKYBOX_DIST),
+	vec4(0), vec2(1.0f, 1.0f) }, //Bottom Right
 
-	{ vec3(1, 1, 1),
-	vec4(1.0f, 0.0f, 1.0f, 1.0f), vec2(1.0f, 0.0f) },// Top Right
+	{ vec3(SKYBOX_DIST, SKYBOX_DIST, SKYBOX_DIST),
+	vec4(0), vec2(1.0f, 0.0f) },// Top Right
 
-													 //back
-	{ vec3(-1, 1, -1),
-	vec4(1.0f, 0.0f, 1.0f, 1.0f), vec2(0.0f, 0.0f) },// Top Left
+	//Back
+	{ vec3(-SKYBOX_DIST, SKYBOX_DIST, -SKYBOX_DIST),
+	vec4(0), vec2(0.0f, 0.0f) },// Top Left
 
-	{ vec3(-1, -1, -1),
-	vec4(1.0f, 1.0f, 0.0f, 1.0f), vec2(0.0f, 1.0f) },// Bottom Left
+	{ vec3(-SKYBOX_DIST, -SKYBOX_DIST, -SKYBOX_DIST),
+	vec4(0), vec2(0.0f, 1.0f) },// Bottom Left
 
-	{ vec3(1, -1, -1),
-	vec4(0.0f, 1.0f, 1.0f, 1.0f), vec2(1.0f, 1.0f) }, //Bottom Right
+	{ vec3(SKYBOX_DIST, -SKYBOX_DIST, -SKYBOX_DIST),
+	vec4(0), vec2(1.0f, 1.0f) }, //Bottom Right
 
-	{ vec3(1, 1, -1),
-	vec4(1.0f, 0.0f, 1.0f, 1.0f), vec2(1.0f, 0.0f) },// Top Right
+	{ vec3(SKYBOX_DIST, SKYBOX_DIST, -SKYBOX_DIST),
+	vec4(0), vec2(1.0f, 0.0f) },// Top Right
 };
 
 vector<int> skyBoxIndices = {
@@ -82,14 +85,12 @@ void Game::LoadResources()
 	CHECK_GL_ERROR();
 
 	//======================== TEXTURES ========================
-	resourceManager->AddTexture("Tank1DF.png");
-	resourceManager->AddTexture("grass.png");
-	resourceManager->AddTexture("ground.jpg");
-	resourceManager->AddTexture("rock.jpg");
+	//HIDE THIS AWAY IN TO SCENE MANAGER LOADER!
 	Texture* skyTexture = new Texture(TEXTURE_PATH + "right.jpg", TEXTURE_PATH + "left.jpg", TEXTURE_PATH + "top.jpg", TEXTURE_PATH + "bottom.jpg", TEXTURE_PATH + "back.jpg", TEXTURE_PATH + "front.jpg");
 	resourceManager->AddTexture("skyTexture", skyTexture);
 	Texture* skyNightTexture = new Texture(TEXTURE_PATH + "night_right.jpg", TEXTURE_PATH + "night_left.jpg", TEXTURE_PATH + "night_top.jpg", TEXTURE_PATH + "night_bottom.jpg", TEXTURE_PATH + "night_back.jpg", TEXTURE_PATH + "night_front.jpg");
 	resourceManager->AddTexture("skyNightTexture", skyNightTexture);
+
 	//========================  MODELS  ========================
 	Model *terrainModel = new Model();
 	terrainModel->SetUpAttrib(0, 3, GL_FLOAT, 0); //pos
@@ -106,54 +107,6 @@ void Game::LoadResources()
 	skyModel->FlushBuffers();
 	skyModel->SetUpAttrib(0, 3, GL_FLOAT, 0);
 	resourceManager->AddModel("skyModel", skyModel);
-
-	//========================  SHADERS ========================
-	ShaderProgram *s = new ShaderProgram(SHADER_PATH + "specularVS.glsl", SHADER_PATH + "specularFS.glsl");
-	s->BindAttribLoc(0, "vertexPosition");
-	s->BindAttribLoc(3, "vertexNormal");
-	s->Link();
-	resourceManager->AddShader(s, "Specular");
-
-	s = new ShaderProgram(SHADER_PATH + "normalMappingVS.glsl", SHADER_PATH + "normalMappingFS.glsl");
-	s->BindAttribLoc(0, "vertexPosition");
-	s->BindAttribLoc(2, "vertexTexCoords");
-	s->BindAttribLoc(3, "vertexNormal");
-	s->BindAttribLoc(4, "vertexTangent");
-	s->BindAttribLoc(5, "vertexBinormal");
-	s->Link();
-	resourceManager->AddShader(s, "NormalMapping");
-
-	s = new ShaderProgram(SHADER_PATH + "diffuseNormalSpecMapVS.glsl", SHADER_PATH + "diffuseNormalSpecMapFS.glsl");
-	s->BindAttribLoc(0, "vertexPosition");
-	s->BindAttribLoc(2, "vertexTexCoords");
-	s->BindAttribLoc(3, "vertexNormal");
-	s->BindAttribLoc(4, "vertexTangent");
-	s->BindAttribLoc(5, "vertexBinormal");
-	s->Link();
-	resourceManager->AddShader(s, "diffuseNormalSpecMap");
-
-	s = new ShaderProgram(SHADER_PATH + "postProcVS.glsl", SHADER_PATH + "colorCorr1.glsl");
-	s->BindAttribLoc(0, "vertexPosition");
-	s->Link();
-	resourceManager->AddShader(s, "PostProcess1");
-
-	s = new ShaderProgram(SHADER_PATH + "postProcVS.glsl", SHADER_PATH + "colorCorr2.glsl");
-	s->BindAttribLoc(0, "vertexPosition");
-	s->Link();
-	resourceManager->AddShader(s, "PostProcess2");
-
-	s = new ShaderProgram(SHADER_PATH + "terrainVS.glsl", SHADER_PATH + "terrainFS.glsl");
-	s->BindAttribLoc(0, "vertexPosition");
-	s->BindAttribLoc(1, "colors");
-	s->BindAttribLoc(2, "uvs");
-	s->BindAttribLoc(3, "normals");
-	s->Link();
-	resourceManager->AddShader(s, "Terrain");
-
-	s = new ShaderProgram(SHADER_PATH + "skyboxVS.glsl", SHADER_PATH + "skyboxFS.glsl");
-	s->BindAttribLoc(0, "vertexPosition");
-	s->Link();
-	resourceManager->AddShader(s, "SkyBox");
 
 	//======================== SCENEMANAGEMENT  ====================
 	sceneManager->LoadSceneDirectories();
@@ -219,18 +172,26 @@ bool Comparer(GameObject *a, GameObject *b)
 
 void Game::Render(float deltaTime)
 {
- 	drawCalls = verticesRendered = objectsRendered = 0;
+ 	drawCalls = verticesRendered = 0;
 
-	//premature optimization, but should help with large amounts of objects
-	//sort the gameobjects for rendering to avoid extra calls to glBind of VAO/Texture/Shader
-	sort(currentScene->gameObjects.begin(), currentScene->gameObjects.end(), Comparer);
+	Camera *camera = currentScene->GetSceneCamera();
+	camera->Recalculate();
+	currentScene->VisibilityCheck();
+	currentScene->Sort(Comparer);
 
-	currentScene->GetSceneCamera()->Recalculate();
+	DefRenderer::BeginGeomGather();
+	currentScene->Render(camera);
+	DefRenderer::EndGeomGather();
 
-	glBindFramebuffer(GL_FRAMEBUFFER, DefRenderer::Get());
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	currentScene->Render(currentScene->GetSceneCamera());
+	DefRenderer::BeginLightGather();
+	int count = currentScene->GetLightCount();
+	for (int i = 0; i < count; i++)
+	{
+		Renderer *r = currentScene->GetLight(i);
+		DefRenderer::StencilPass(camera, r);
+		DefRenderer::LightPass(camera, r);
+	}
+	DefRenderer::EndLightGather();
 
 	if (debugMode)
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -250,7 +211,7 @@ void Game::Render(float deltaTime)
 	sprintf(msg, "verts:%u", verticesRendered);
 	Font* tF = resourceManager->GetFont("OratorStd.otf");
 	tF->Render(string(msg), { 0, 25, 100, 25 });
-	sprintf(msg, "objts:%u(%u)", objectsRendered - 1, currentScene->gameObjects.size());
+	sprintf(msg, "objts:%u(%u)", currentScene->GetVisibleGOCount(), currentScene->GetGOCount());
 	tF->Render(string(msg), { 0, 50, 100, 25 });
 	free(msg);
 

@@ -1,5 +1,6 @@
-#version 150
-in vec3 vertexPosition;
+#version 330
+
+layout(location = 0) in vec3 vertexPosition;
 
 out vec3 TexCoords;
 

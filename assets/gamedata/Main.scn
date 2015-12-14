@@ -5,23 +5,53 @@
 		<Model>NormalMapTest.FBX</Model>
 		<Model>NormalMapTest2.FBX</Model>
 		<Model>creature1.fbx</Model>
+		<Model>sphere.fbx</Model>
+		<Model>Tree.fbx</Model>
+		<Model>Rock1.fbx</Model>
+		<Model>Rock2.fbx</Model>
+		<Model>Rock3.fbx</Model>
+		<Model>Rock4.fbx</Model>
+		<Model>Rock5.fbx</Model>
+		<Model>Fern1.fbx</Model>
+		<Model>Fern2.fbx</Model>
     </ModelList>
 	<TextureList>
 		<Texture>texture.png</Texture>
 		<Texture>grass.png</Texture>
 		<Texture>ground.jpg</Texture>
-		<Texture>rock.jpg</Texture>	
+		<Texture>rock.jpg</Texture>
 		<Texture>BrickFacade.jpg</Texture>	
 		<Texture>BrickFacade_normal.jpg</Texture>	
 		<Texture>creature1Albedo.png</Texture>
 		<Texture>creature1Normal.png</Texture>
 		<Texture>creature1Specular.png</Texture>
+		<Texture>TreeBark.png</Texture>
+		<Texture>TreeLeaves.png</Texture>
+		<Texture>Rock1.jpg</Texture>
+		<Texture>Rock2.jpg</Texture>
+		<Texture>Rock3.jpg</Texture>
+		<Texture>Rock4.jpg</Texture>
+		<Texture>Rock5.jpg</Texture>
+		<Texture>Fern1.png</Texture>
+		<Texture>Fern2.png</Texture>
 	</TextureList>
+	<ShaderList>
+		<Shader vert="specularVS.glsl" frag="specularFS.glsl">Specular</Shader>
+		<Shader vert="normalMappingVS.glsl" frag="normalMappingFS.glsl">NormalMapping</Shader>
+		<Shader vert="diffuseNormalSpecMapVS.glsl" frag="diffuseNormalSpecMapFS.glsl">diffuseNormalSpecMap</Shader>
+		<Shader vert="postProcVS.glsl" frag="colorCorr1FS.glsl">PostProcess1</Shader>
+		<Shader vert="postProcVS.glsl" frag="colorCorr2FS.glsl">PostProcess2</Shader>
+		<Shader vert="terrainVS.glsl" frag="terrainFS.glsl">Terrain</Shader>
+		<Shader vert="pointLightVS.glsl" frag="pointLightFS.glsl">PointLight</Shader>
+		<Shader vert="skyboxVS.glsl" frag="skyboxFS.glsl">SkyBox</Shader>
+		<Shader vert="treeVS.glsl" frag="treeFS.glsl">Tree</Shader>
+		<Shader vert="rockVS.glsl" frag="rockFS.glsl">Rock</Shader>
+	</ShaderList>
 	<FontList>
 		<Font>OratorStd.otf</Font>
 	</FontList>
 	<GameObjectList>		
-		<GameObject name="SceneManagementObject" hasRenderer="true" texture="" model="" shader = "" 
+		<GameObject name="SceneManagementObject" hasRenderer="true" texture="" model="" shader="" 
 			posx="0" posy="0" posz="0" 
 			rotx="0" roty="0" rotz="0" 
 			scalex="1" scaley="1" scalez="1">
@@ -34,7 +64,7 @@
 				</Component>
 			</ComponentList>
 		</GameObject>
-		<GameObject name="CameraBehaviourObject" hasRenderer="false" texture="" model="" shader = "" 
+		<GameObject name="CameraBehaviourObject" hasRenderer="false" texture="" model="" shader="" 
 			posx="0" posy="0" posz="0" 
 			rotx="0" roty="0" rotz="0" 
 			scalex="1" scaley="1" scalez="1">
@@ -44,52 +74,79 @@
 				</Component>
 			</ComponentList>
 		</GameObject>
-		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" 
-			shader = "Specular" posx="-15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" shader="Specular" 
+			posx="-15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
 			scalex="0.1" scaley="0.1" scalez="0.1">
 			<ComponentList>		
 			</ComponentList>
 		</GameObject>
-		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" 
-			shader = "Specular" posx="-5" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" shader="Specular" 
+			posx="-5" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
 			scalex="0.3" scaley="0.3" scalez="0.3">
 			<ComponentList>		
 			</ComponentList>
 		</GameObject>
-		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" 
-			shader = "Specular" posx="15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" shader="Specular" 
+			posx="15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
 			scalex="0.6" scaley="0.6" scalez="0.6">
 			<ComponentList>		
 			</ComponentList>
 		</GameObject>
-		<GameObject name="Man" hasRenderer="true" texture="texture.png" model="3d-model.fbx" 
-			shader = "Specular" posx="40" posy="0" posz="5" rotx="-90" roty="0" rotz="0" 
+		<GameObject name="Man" hasRenderer="true" texture="texture.png" model="3d-model.fbx" shader="Specular" 
+			posx="40" posy="0" posz="5" rotx="-90" roty="0" rotz="0" 
 			scalex="0.3" scaley="0.3" scalez="0.3">
 			<ComponentList>		
 			</ComponentList>
 		</GameObject>
-		<GameObject name="TestCylinder" hasRenderer="true" texture="BrickFacade.jpg,BrickFacade_normal.jpg" model="NormalMapTest.FBX" 
-			shader = "NormalMapping" posx="30" posy="30" posz="5" rotx="-90" roty="0" rotz="0" 
+		<GameObject name="TestCylinder" hasRenderer="true" texture="BrickFacade.jpg,BrickFacade_normal.jpg" model="NormalMapTest.FBX" shader="NormalMapping" 
+			posx="30" posy="30" posz="5" rotx="-90" roty="0" rotz="0" 
 			scalex="0.3" scaley="0.3" scalez="0.3">
 			<ComponentList>
 				<Component ID="MoveGOBehaviour"/>
 			</ComponentList>
 		</GameObject>	
-		<GameObject name="TestBox2" hasRenderer="true" texture="BrickFacade.jpg,BrickFacade_normal.jpg" model="NormalMapTest2.FBX" 
-			shader = "NormalMapping" posx="10" posy="20" posz="5" rotx="0" roty="0" rotz="0" 
+		<GameObject name="TestBox2" hasRenderer="true" texture="BrickFacade.jpg,BrickFacade_normal.jpg" model="NormalMapTest2.FBX" shader="NormalMapping" 
+			posx="10" posy="20" posz="5" rotx="0" roty="0" rotz="0" 
 			scalex="0.3" scaley="0.3" scalez="0.3">
 			<ComponentList>		
 				<Component ID="MoveGOBehaviour"/>
 			</ComponentList>
-		</GameObject>		
-		<GameObject name="TestModel" hasRenderer="true" texture="creature1Albedo.png,creature1Normal.png,creature1Specular.png" model="creature1.fbx" 
-			shader = "diffuseNormalSpecMap" posx="60" posy="30" posz="5" rotx="0" roty="0" rotz="0" 
+		</GameObject>
+		<GameObject name="Light1" hasRenderer="true" texture="" model="sphere.fbx" shader="PointLight" 
+			posx="-15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+			scalex="1" scaley="1" scalez="1">
+			<ComponentList>
+				<Component ID="Light">
+					<Attributes color="0,0,1,1"/>
+				</Component>
+			</ComponentList>
+		</GameObject>
+		<GameObject name="Light2" hasRenderer="true" texture="" model="sphere.fbx" shader="PointLight" 
+			posx="-13" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+			scalex="1" scaley="1" scalez="1">
+			<ComponentList>
+				<Component ID="Light">
+					<Attributes color="0,1,0,1"/>
+				</Component>
+			</ComponentList>
+		</GameObject>
+		<GameObject name="Light3" hasRenderer="true" texture="" model="sphere.fbx" shader="PointLight" 
+			posx="-10" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+			scalex="1" scaley="1" scalez="1">
+			<ComponentList>
+				<Component ID="Light">
+					<Attributes color="-1,0,0,1"/>
+				</Component>
+			</ComponentList>
+		</GameObject>
+		<GameObject name="TestModel" hasRenderer="true" texture="creature1Albedo.png,creature1Normal.png,creature1Specular.png" model="creature1.fbx" shader="diffuseNormalSpecMap" 
+			posx="60" posy="30" posz="5" rotx="0" roty="0" rotz="0" 
 			scalex="0.1" scaley="0.1" scalez="0.1">
 			<ComponentList>		
 				<Component ID="MoveGOBehaviour"/>
 			</ComponentList>
 		</GameObject>		
-		<GameObject name="Terrain" hasRenderer="true" texture="grass.png,ground.jpg,rock.jpg" model="Terrain" shader="Terrain"
+		<GameObject name="Terrain" hasRenderer="true" texture="grass.png,ground.jpg,rock.jpg" model="Terrain" shader="Terrain" 
 			posx="0" posy="0" posz="0" rotx="0" roty="0" rotz="0" scalex="1" scaley="1" scalez="1">
 			<ComponentList>
 				<Component ID="Terrain">

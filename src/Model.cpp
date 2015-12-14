@@ -25,12 +25,13 @@ Model::Model(const string& fileName)
 	vertices = new vector<Vertex>();
 	indices = new vector<int>();
 
+	printf("Loading %s\n", fileName.c_str());
 	if (!loadFBXFromFile(fileName))
 	{
 		printf("Error loading model!\n");
 		return;
 	}
-	printf("Verts: %d Ints: %d\n", vertices->size(), indices->size());
+	//printf("Verts: %d Ints: %d\n", vertices->size(), indices->size());
 
 	//generate and bind vao so that it keeps the current vbo and ebo and attribs
 	glGenVertexArrays(1, &vao);
@@ -126,11 +127,14 @@ void Model::FlushBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, activeBuffer);
 
 	//indexBuffer
-	glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &activeBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * GetIndCount(), indices->data(), indUsageFlag);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, activeBuffer);
-	CHECK_GL_ERROR();
+	if (indices->size())
+	{
+		glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &activeBuffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * GetIndCount(), indices->data(), indUsageFlag);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, activeBuffer);
+		CHECK_GL_ERROR();
+	}
 }
 
 void Model::SetUpAttrib(int index, int count, int type, size_t offset)
@@ -217,7 +221,7 @@ bool Model::loadFBXFromFile(const string& fileName)
 	FbxNode *root = scene->GetRootNode();
 	if (root)
 	{
-		printf("Root Node: %s\n", root->GetName());
+		//printf("Root Node: %s\n", root->GetName());
 		int childCount = root->GetChildCount();
 		for (int i = 0; i < childCount; i++)
 			processNode(root->GetChild(i), 1);
@@ -228,16 +232,16 @@ bool Model::loadFBXFromFile(const string& fileName)
 
 void Model::processNode(FbxNode *node, int level)
 {
-	PrintTabs(level);
+	//PrintTabs(level);
 	const char* name = node->GetName();
 	FbxDouble3 translation = node->LclTranslation.Get();
 	FbxDouble3 rotation = node->LclRotation.Get();
 	FbxDouble3 scaling = node->LclScaling.Get();
 
-	printf("Node %s(%.1f, %.1f, %.1f)/(%.1f, %.1f, %.1f)/(%.1f, %.1f, %.1f)\n", 
+	/*printf("Node %s(%.1f, %.1f, %.1f)/(%.1f, %.1f, %.1f)/(%.1f, %.1f, %.1f)\n", 
 		name, translation[0], translation[1], translation[2],
 		rotation[0], rotation[1], rotation[2], scaling[0], scaling[1],
-		scaling[2]);
+		scaling[2]);*/
 
 	int count = node->GetNodeAttributeCount();
 	for (int i = 0; i < count; i++)
@@ -247,7 +251,7 @@ void Model::processNode(FbxNode *node, int level)
 	for (int i = 0; i < count; i++)
 		processNode(node->GetChild(i), level + 1);
 
-	PrintTabs(level);
+	//PrintTabs(level);
 }
 
 void Model::processAttrib(FbxNodeAttribute *attrib, int level)
@@ -256,8 +260,8 @@ void Model::processAttrib(FbxNodeAttribute *attrib, int level)
 
 	FbxString typeName = GetAttribTypeName(attrib->GetAttributeType());
 	FbxString attrName = attrib->GetName();
-	PrintTabs(level);
-	printf("Attribute %s Name %s\n", typeName.Buffer(), attrName);
+	//PrintTabs(level);
+	//printf("Attribute %s Name %s\n", typeName.Buffer(), attrName);
 	switch (attrib->GetAttributeType())
 	{
 	case FbxNodeAttribute::eMesh: 
@@ -298,22 +302,33 @@ void Model::processMesh(FbxMesh *mesh, int level)
 	for (int i = 0; i < numInds; i++)
 		indices->push_back(initVertCount + pIndices[i]);
 
-	PrintTabs(level);
-	printf("Vertices %d Indices %d\n", numVerts, numInds);
+	//PrintTabs(level);
+	//printf("Vertices %d Indices %d\n", numVerts, numInds);
 
 	delete[] pVerts;
 }
 
 void Model::processMeshTextCoords(FbxMesh *mesh, Vertex *verts, int numVerts)
 {
+	int matCount = mesh->GetElementMaterialCount();
+	FbxLayerElementMaterial *matElem = NULL;
+	if (matCount) //only supporting 1 material layer max
+		matElem = mesh->GetElementMaterial(0);
 	int polCount = mesh->GetPolygonCount();
 	for (int polInd = 0; polInd < polCount; polInd++)
 	{
+		int textureId = 0;
+		if (matElem)
+		{
+			textureId = matElem->GetIndexArray().GetAt(polInd);
+		}
 		for (unsigned polVert = 0; polVert < 3; polVert++)
 		{
 			int cornerIndex = mesh->GetPolygonVertex(polInd, polVert);
 			FbxVector2 UV = FbxVector2(0, 0);
-			FbxLayerElementUV *layerUV = mesh->GetLayer(0)->GetUVs();
+			FbxLayer *layer = mesh->GetLayer(0);
+			FbxLayerElementUV *layerUV = layer->GetUVs();
+			FbxLayerElementTexture *layerTexture = layer->GetTextures(FbxLayerElement::eTextureDiffuse);
 			if (layerUV)
 			{
 				int UVindex = 0;
@@ -331,6 +346,7 @@ void Model::processMeshTextCoords(FbxMesh *mesh, Vertex *verts, int numVerts)
 				}
 
 				UV = layerUV->GetDirectArray().GetAt(UVindex);
+				verts[cornerIndex].color.x = textureId;
 				verts[cornerIndex].texture.x = UV[0];
 				verts[cornerIndex].texture.y = 1.f - UV[1];
 			}
@@ -404,7 +420,7 @@ void Model::GenerateBoundSphere()
 	float radius = length(maxPos - center);
 	boundSphere = { center, radius };
 
-	printf("Center: %f,%f,%f Radius:%f\n", center.x, center.y, center.z, radius);
+	//printf("Center: %f,%f,%f Radius:%f\n", center.x, center.y, center.z, radius);
 }
 
 /*vec3 Model::processMeshTangent(FbxMesh * mesh, int vertsIndex)

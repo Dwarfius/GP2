@@ -24,6 +24,12 @@ void Renderer::Ready()
 
 void Renderer::Render()
 {
+	if (instancedRender)
+	{
+		RenderInstanced();
+		return;
+	}
+
 	//and sending settings
 	GLint loc;
 	if (isCubeMap)
@@ -84,7 +90,7 @@ void Renderer::Render()
 	Game::drawCalls++;
 }
 
-void Renderer::RenderInstanced(Camera *cam, int count)
+void Renderer::RenderInstanced()
 {
 	//and sending settings
 	GLint loc;
@@ -112,28 +118,13 @@ void Renderer::RenderInstanced(Camera *cam, int count)
 		activeVao = vao;
 	}
 
-	if (cam)
-	{
-		mat4 modelMat = pGameObject ? pGameObject->GetModelMatrix() : mat4(1);
-		mat4 MVP = cam->Get() * modelMat;
-		shaderProg->SetUniform("MVP", value_ptr(MVP));
-
-		vec3 camPos = cam->GetPos();
-		shaderProg->SetUniform("cameraPosition", &camPos);
-	}
-	if (!pGameObject)
-	{
-		mat4 model(1);
-		shaderProg->SetUniform("Model", value_ptr(model));
-	}
-
 	switch (renderMode)
 	{
 	case GL_TRIANGLES:
-		glDrawElementsInstanced(GL_TRIANGLES, model->GetIndCount(), GL_UNSIGNED_INT, 0, count);
+		glDrawElementsInstanced(GL_TRIANGLES, model->GetIndCount(), GL_UNSIGNED_INT, 0, instanceCount);
 		break;
 	case GL_TRIANGLE_FAN:
-		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, model->GetVertCount(), count);
+		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, model->GetVertCount(), instanceCount);
 		break;
 	default:
 		printf("Render mode unsupported!");
@@ -141,6 +132,33 @@ void Renderer::RenderInstanced(Camera *cam, int count)
 	}
 	CHECK_GL_ERROR();
 
-	Game::verticesRendered += model->GetVertCount() * count;
+	Game::verticesRendered += model->GetVertCount() * instanceCount;
 	Game::drawCalls++;
+}
+
+void Renderer::SetInstanceMatrices(vector<mat4> *matrices)
+{
+	instancedRender = true;
+	instanceCount = matrices->size();
+
+	if (matVbo == 0)
+	{
+		glBindVertexArray(model->Get());
+		glGenBuffers(1, &matVbo);
+		glBindBuffer(GL_ARRAY_BUFFER, matVbo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(mat4) * instanceCount, NULL, GL_STATIC_DRAW);
+		/*glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), 0);
+		glVertexAttribDivisor(4, 1);*/
+		for (int i = 0; i < 4; i++)
+		{
+			glEnableVertexAttribArray(4 + i);
+			glVertexAttribPointer(4 + i, 4, GL_FLOAT, GL_FALSE, sizeof(mat4), (void*)(i * sizeof(vec4)));
+			glVertexAttribDivisor(4 + i, 1);
+		}
+		glBindVertexArray(0);
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, matVbo);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(mat4) * instanceCount, matrices->data());
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
