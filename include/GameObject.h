@@ -32,7 +32,7 @@ public:
 	Light* GetLight() { return light; }
 
 	void Update(float deltaTime);
-	void Render(Camera *camera);
+	void Render(Camera *camera, ShaderProgram *OverrideProgram = nullptr);
 
 	vec3 GetPos() { return pos; }
 	void SetPos(vec3 pPos) { pos = pPos; modelDirty = true; }

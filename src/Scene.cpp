@@ -147,6 +147,11 @@ void Scene::VisibilityCheck()
 	//repopulating!
 	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 	{
+		if ((*iter)->GetComponent("Skybox") != NULL)
+		{
+			visibleGOs.insert(visibleGOs.begin(), *iter);
+			continue;
+		}
 		Renderer *r = (*iter)->GetRenderer();
 		if (r)
 		{
@@ -174,13 +179,13 @@ void Scene::VisibilityCheck()
 
 void Scene::Sort(bool (*comparer)(GameObject *a, GameObject *b))
 {
-	sort(visibleGOs.begin(), visibleGOs.end(), comparer);
+	sort(visibleGOs.begin()+1, visibleGOs.end(), comparer);
 }
 
-void Scene::Render(Camera* camera)
+void Scene::Render(Camera* camera, ShaderProgram *OverrideProgram)
 {
 	for (auto iter = visibleGOs.begin(); iter != visibleGOs.end(); iter++)
-		(*iter)->Render(camera);
+		(*iter)->Render(camera, OverrideProgram);
 
 	//after the scene normal geometry was rendered
 	//render out the semitransparent geometry
@@ -190,7 +195,7 @@ void Scene::Render(Camera* camera)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		for (auto iter = transparentGOs.begin(); iter != transparentGOs.end(); iter++)
-			(*iter)->Render(camera);
+			(*iter)->Render(camera, OverrideProgram);
 		glDisable(GL_BLEND);
 		//glEnable(GL_CULL_FACE);
 	}

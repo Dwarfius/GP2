@@ -46,6 +46,7 @@
 		<Shader vert="skyboxVS.glsl" frag="skyboxFS.glsl">SkyBox</Shader>
 		<Shader vert="treeVS.glsl" frag="treeFS.glsl">Tree</Shader>
 		<Shader vert="rockVS.glsl" frag="rockFS.glsl">Rock</Shader>
+		<Shader vert="simpleDepthVS.glsl" frag="simpleDepthFS.glsl">SimpleDepth</Shader>
 	</ShaderList>
 	<FontList>
 		<Font>OratorStd.otf</Font>
@@ -150,7 +151,7 @@
 			posx="0" posy="0" posz="0" rotx="0" roty="0" rotz="0" scalex="1" scaley="1" scalez="1">
 			<ComponentList>
 				<Component ID="Terrain">
-					<Attributes texture="heightmap.png" scalex="500" scaley="10" scalez="500"/>
+					<Attributes texture="heightmap.png" scalex="500" scaley="5" scalez="500"/>
 				</Component>
 			</ComponentList>
 		</GameObject>

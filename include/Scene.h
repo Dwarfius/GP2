@@ -49,7 +49,7 @@ public:
 	void Update(float deltaTime);
 	void VisibilityCheck();
 	void Sort(bool (*comparer)(GameObject *a, GameObject *b));
-	void Render(Camera* camera);
+	void Render(Camera* camera, ShaderProgram *OverrideProgram = nullptr);
 
 	int GetLightCount() { return lights.size(); }
 	Renderer* GetLight(int i) { return lights[i]->GetRenderer(); }

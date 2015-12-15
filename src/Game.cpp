@@ -179,6 +179,11 @@ void Game::Render(float deltaTime)
 	currentScene->VisibilityCheck();
 	currentScene->Sort(Comparer);
 
+	DefRenderer::BeginShadowGather();
+	Camera *lCamera = DefRenderer::ConfigureDirLightCamera();
+	currentScene->Render(lCamera, resourceManager->GetShader("SimpleDepth"));
+	DefRenderer::EndShadowGather();
+
 	DefRenderer::BeginGeomGather();
 	currentScene->Render(camera);
 	DefRenderer::EndGeomGather();
@@ -192,6 +197,8 @@ void Game::Render(float deltaTime)
 		DefRenderer::LightPass(camera, r);
 	}
 	DefRenderer::EndLightGather();
+
+
 
 	if (debugMode)
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

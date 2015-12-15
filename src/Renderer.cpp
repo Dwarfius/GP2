@@ -24,12 +24,12 @@ void Renderer::Ready()
 
 void Renderer::Render()
 {
+	if (isCubeMap)glDepthMask(GL_FALSE);
 	if (instancedRender)
 	{
 		RenderInstanced();
 		return;
 	}
-
 	//and sending settings
 	GLint loc;
 	if (isCubeMap)
@@ -88,6 +88,7 @@ void Renderer::Render()
 
 	Game::verticesRendered += model->GetVertCount();
 	Game::drawCalls++;
+	glDepthMask(GL_TRUE);
 }
 
 void Renderer::RenderInstanced()

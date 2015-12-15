@@ -35,13 +35,15 @@ void GameObject::UpdateMatrix()
 	modelDirty = false;
 }
 
-void GameObject::Render(Camera *camera)
+void GameObject::Render(Camera *camera, ShaderProgram *OverrideProgram)
 {
 	if (!renderer)
 		return;
 
 	renderer->Ready();
-	ShaderProgram *program = renderer->GetProgram();
+	ShaderProgram *program;
+	if(OverrideProgram == nullptr)program = renderer->GetProgram();
+	else program = OverrideProgram;
 	program->SetUniform("Model", value_ptr(modelMatrix));
 	mat4 VP = camera->Get();
 	program->SetUniform("VP", value_ptr(VP));
