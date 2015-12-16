@@ -33,11 +33,8 @@ public:
 	static void EndGeomGather();
 	static void BeginLightGather();
 	static void EndLightGather();
-	static void BeginShadowGather();
-	static void EndShadowGather();
 	static void StencilPass(Camera *cam, Renderer *r);
 	static void LightPass(Camera *cam, Renderer *r);
-	static Camera* DefRenderer::ConfigureDirLightCamera();
 	static void RenderGather();
 
 	static vec3 GetSunDir() { return sunDir; }

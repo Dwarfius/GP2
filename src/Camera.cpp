@@ -52,10 +52,10 @@ void Camera::SetProjPersp(float fov, float ratio, float nearPlane, float farPlan
 	frustrum.SetFrustrumDef(fov, ratio, nearPlane, farPlane);
 }
 
-void Camera::SetProjOrtho(float left, float right, float bottom, float top)
+void Camera::SetProjOrtho(float left, float right, float bottom, float top, float nearPlane, float farPlane)
 {
 	orthoMode = true;
 
-	projMatrix = ortho(left, right, bottom, top);
+	projMatrix = ortho(left, right, bottom, top, nearPlane, farPlane);
 	VP = projMatrix;
 }

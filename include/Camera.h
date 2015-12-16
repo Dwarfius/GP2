@@ -103,7 +103,7 @@ public:
 	//sets the perspective projection
 	void SetProjPersp(float fov, float ratio, float nearPlane, float farPlane);
 	//sets the ortho projection
-	void SetProjOrtho(float left, float right, float bottom, float top);
+	void SetProjOrtho(float left, float right, float bottom, float top, float nearPlane = 0.5f, float farPlane = 100.0f);
 
 	bool CheckSphere(const vec3& pos, const float rad) { return frustrum.CheckSphere(pos, rad); }
 };

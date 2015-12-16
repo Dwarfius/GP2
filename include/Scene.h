@@ -7,6 +7,7 @@
 #include "tinyxml2.h"
 
 #include "CameraBehaviour.h"
+#include "DirectionalLightComp.h"
 
 static enum componentID {
 	COMPONENT_NOTFOUND,
@@ -15,7 +16,9 @@ static enum componentID {
 	SKYBOX,
 	TIMEDAY,
 	MOVEGOBEHAVIOUR,
-	LIGHT
+	LIGHT,
+	DIRLIGHTCOMP,
+	SHADOWCOMP
 };
 
 using namespace tinyxml2;
@@ -32,6 +35,8 @@ private:
 	vector<GameObject*> visibleGOs;
 	vector<GameObject*> transparentGOs;
 	vector<GameObject*> lights;
+
+	DirectionalLightComp *mainDirLight;
 public:
 	Scene(ResourceManager* rM);
 	~Scene();
@@ -49,8 +54,9 @@ public:
 	void Update(float deltaTime);
 	void VisibilityCheck();
 	void Sort(bool (*comparer)(GameObject *a, GameObject *b));
-	void Render(Camera* camera, ShaderProgram *OverrideProgram = nullptr);
-
+	void Render(Camera* camera);
+	void SetMainDirLight();
+	DirectionalLightComp *GetMainDirLight();
 	int GetLightCount() { return lights.size(); }
 	Renderer* GetLight(int i) { return lights[i]->GetRenderer(); }
 
