@@ -25,7 +25,6 @@ Model::Model(const string& fileName)
 	vertices = new vector<Vertex>();
 	indices = new vector<int>();
 
-	printf("Loading %s\n", fileName.c_str());
 	if (!loadFBXFromFile(fileName))
 	{
 		printf("Error loading model!\n");

@@ -52,24 +52,17 @@ Font * ResourceManager::GetFont(const string & name)
 void ResourceManager::FlushFonts(float deltaTime)
 {
 	for (auto iter = fonts.begin(); iter != fonts.end(); iter++)
-	{
 		iter->second->Flush(deltaTime);
-	}
 }
 
 void ResourceManager::ReleaseResources()
 {
 	for (auto iter = textures.begin(); iter != textures.end(); iter++)
-	{
 		delete iter->second;
-	}
 
 	for (auto iter = models.begin(); iter != models.end(); iter++)
-	{
 		delete iter->second;
-	}
+
 	for (auto iter = fonts.begin(); iter != fonts.end(); iter++)
-	{
 		delete iter->second;
-	}
 }

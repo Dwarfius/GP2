@@ -12,13 +12,12 @@ SceneManager::~SceneManager()
 {
 }
 
-void xmlErrorCheck(XMLError error, string msg) {
-	if (error == XML_SUCCESS) {
+void xmlErrorCheck(XMLError error, string msg) 
+{
+	if (error == XML_SUCCESS)
 		cout << "XML: " << msg << " success!" << endl;
-	}
-	else {
+	else
 		cout << "ERROR XML: " << msg << " failed!" << endl;
-	}
 }
 
 void SceneManager::loadXML(string filename, XMLDocument* xml)
@@ -29,21 +28,20 @@ void SceneManager::loadXML(string filename, XMLDocument* xml)
 
 XMLError SceneManager::LoadSceneDirectories()
 {
-	XMLDocument* gamedataXML = new XMLDocument();
+	XMLDocument *gamedataXML = new XMLDocument();
 	loadXML(sceneMgrConfigPath, gamedataXML);
-	XMLNode * SMCroot = gamedataXML->FirstChild();
-	if (SMCroot == nullptr) {
+
+	XMLNode *SMCroot = gamedataXML->FirstChild();
+	if (!SMCroot)
 		return XML_ERROR_FILE_READ_ERROR;
-	}
-	XMLElement * SMCdirectories = SMCroot->FirstChildElement("SceneDirectories");
-	if (SMCdirectories == nullptr){
+
+	XMLElement *SMCdirectories = SMCroot->FirstChildElement("SceneDirectories");
+	if (!SMCdirectories)
 		return XML_ERROR_PARSING_ELEMENT;
-	}
-	XMLElement * DirectoryItem = SMCdirectories->FirstChildElement("Scene");
-	if (SMCdirectories == nullptr) {
-		return XML_ERROR_PARSING_ELEMENT;
-	}
-	while (DirectoryItem != nullptr) {
+	
+	XMLElement *DirectoryItem = SMCdirectories->FirstChildElement("Scene");
+	while (DirectoryItem)
+	{
 		int tOrder;
 		string tDirectory;
 		eResult = DirectoryItem->QueryIntAttribute("order", &tOrder);
@@ -58,49 +56,86 @@ XMLError SceneManager::LoadSceneDirectories()
 
 XMLError SceneManager::LoadScene(int sceneOrder, Scene* currentScene)
 {
-	XMLDocument* gamedataXML = new XMLDocument();
+	XMLDocument *gamedataXML = new XMLDocument();
 	loadXML(GAMEDATA_PATH + scenes[sceneOrder], gamedataXML);
-	XMLNode * sceneRoot = gamedataXML->FirstChild();
-	if (sceneRoot == nullptr)
+	XMLNode *sceneRoot = gamedataXML->FirstChild();
+	if (!sceneRoot)
 		return XML_ERROR_FILE_READ_ERROR;
 
 	XMLElement *sceneData = sceneRoot->FirstChildElement("ModelList");
-	if (sceneData == nullptr)
+	if (!sceneData)
 		return XML_ERROR_PARSING_ELEMENT;
+
+	//a quick routine to count all the child elements
+	int count = 0;
+	for (XMLElement *elem = sceneData->FirstChildElement("Model");
+		elem; elem = elem->NextSiblingElement("Model"))
+		count++;
+
+	int curr = 1;
 	XMLElement *sceneItem = sceneData->FirstChildElement("Model");
 	while (sceneItem) 
 	{
-		resourceManager->AddModel(sceneItem->GetText());
+		string name = sceneItem->GetText();
+		printf("Loading model %d/%d - %s\n", curr++, count, name.c_str());
+		resourceManager->AddModel(name);
 		sceneItem = sceneItem->NextSiblingElement("Model");
 	}
 
+	
 	sceneData = sceneRoot->FirstChildElement("TextureList");
-	if (sceneData == nullptr)
+	if (!sceneData)
 		return XML_ERROR_PARSING_ELEMENT;
+	
+	count = 0;
+	for (XMLElement *elem = sceneData->FirstChildElement("Texture");
+	elem; elem = elem->NextSiblingElement("Texture"))
+		count++;
+
+	curr = 1;
 	sceneItem = sceneData->FirstChildElement("Texture");
 	while (sceneItem) 
 	{
-		resourceManager->AddTexture(sceneItem->GetText());
+		string name = sceneItem->GetText();
+		printf("Loading texture %d/%d - %s\n", curr++, count, name.c_str());
+		resourceManager->AddTexture(name);
 		sceneItem = sceneItem->NextSiblingElement("Texture");
 	}
 
 	sceneData = sceneRoot->FirstChildElement("FontList");
-	if (sceneData == nullptr)
+	if (!sceneData)
 		return XML_ERROR_PARSING_ELEMENT;
+
+	count = 0;
+	for (XMLElement *elem = sceneData->FirstChildElement("Font");
+	elem; elem = elem->NextSiblingElement("Font"))
+		count++;
+
+	curr = 1;
 	sceneItem = sceneData->FirstChildElement("Font");
 	while (sceneItem) 
 	{
-		resourceManager->AddFont(sceneItem->GetText());
+		string name = sceneItem->GetText();
+		printf("Loading font %d/%d - %s\n", curr++, count, name.c_str());
+		resourceManager->AddFont(name);
 		sceneItem = sceneItem->NextSiblingElement("Font");
 	}
 
 	sceneData = sceneRoot->FirstChildElement("ShaderList");
 	if (!sceneData)
 		return XML_ERROR_PARSING_ELEMENT;
+
+	count = 0;
+	for (XMLElement *elem = sceneData->FirstChildElement("Shader");
+	elem; elem = elem->NextSiblingElement("Shader"))
+		count++;
+
+	curr = 1;
 	sceneItem = sceneData->FirstChildElement("Shader");
 	while (sceneItem)
 	{
 		string name = sceneItem->GetText();
+		printf("Loading shader %d/%d - %s\n", curr++, count, name.c_str());
 		string vert = sceneItem->Attribute("vert");
 		string frag = sceneItem->Attribute("frag");
 		ShaderProgram *shader = new ShaderProgram(SHADER_PATH + vert, SHADER_PATH + frag);
@@ -110,23 +145,27 @@ XMLError SceneManager::LoadScene(int sceneOrder, Scene* currentScene)
 	}
 
 	sceneData = sceneRoot->FirstChildElement("GameObjectList");
-	if (sceneData == nullptr)
+	if (!sceneData)
 		return XML_ERROR_PARSING_ELEMENT;
+
+	count = 0;
+	for (XMLElement *elem = sceneData->FirstChildElement("GameObject");
+	elem; elem = elem->NextSiblingElement("GameObject"))
+		count++;
+
+	curr = 1;
 	sceneItem = sceneData->FirstChildElement("GameObject");
 	while (sceneItem) 
 	{
-		string tName ="";
-		string tTextureName;
-		string tModelName;
-		string tShaderProgramName;
+		string tName = sceneItem->Attribute("name");
+		printf("Instantiating gameobject %d/%d - %s\n", curr++, count, tName.c_str());
 		bool hasRenderer = true;
-		tName = sceneItem->Attribute("name");
 		sceneItem->QueryBoolAttribute("hasRenderer", &hasRenderer);
 		string textures = sceneItem->Attribute("texture");
 		vector<string> splits = split(textures, ',');
 
-		tModelName = sceneItem->Attribute("model");
-		tShaderProgramName = sceneItem->Attribute("shader");
+		string tModelName = sceneItem->Attribute("model");
+		string tShaderProgramName = sceneItem->Attribute("shader");
 
 		vec3 tPos;
 		sceneItem->QueryFloatAttribute("posx", &tPos.x);
@@ -164,11 +203,16 @@ XMLError SceneManager::LoadScene(int sceneOrder, Scene* currentScene)
 			}
 			go = currentScene->AddGameObject(tName, tPos, tRot, tScale, renderer);
 		}
-		else { go = currentScene->AddGameObject(tName, tPos, tRot, tScale); }
+		else 
+			go = currentScene->AddGameObject(tName, tPos, tRot, tScale);
 
-		XMLElement * gameObjectElement = sceneItem->FirstChildElement("ComponentList");
-		XMLElement * componentElement = gameObjectElement->FirstChildElement("Component");
-		while (componentElement != nullptr) {
+		XMLElement *gameObjectElement = sceneItem->FirstChildElement("ComponentList");
+		if (!gameObjectElement)
+			return XML_ERROR_PARSING_ELEMENT;
+
+		XMLElement *componentElement = gameObjectElement->FirstChildElement("Component");
+		while (componentElement) 
+		{
 			string compID = componentElement->Attribute("ID");
 			XMLElement * attributesElement = componentElement->FirstChildElement("Attributes");
 			currentScene->AttachComponent(compID, go, attributesElement);
@@ -182,17 +226,14 @@ XMLError SceneManager::LoadScene(int sceneOrder, Scene* currentScene)
 
 XMLError SceneManager::LoadScene(string lvlName, Scene* currentScene)
 {
-	int sceneOrder = NULL;
+	int sceneOrder = -1;
 	for (auto iter = scenes.begin(); iter != scenes.end(); iter++)
 	{
-		if (iter->second == lvlName + ".scn") {
+		if (iter->second == lvlName + ".scn")
 			sceneOrder = iter->first;
-		}
 	}
-	if (sceneOrder != NULL) {
+	if (sceneOrder == -1) //failed to find a proper scene
 		return XML_ERROR_FILE_NOT_FOUND;
-	}
-	else {
-		return LoadScene(sceneOrder, currentScene);
-	}
+	
+	return LoadScene(sceneOrder, currentScene);
 }
