@@ -13,7 +13,7 @@ DirectionalLightComp::DirectionalLightComp()
 		SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
@@ -33,10 +33,11 @@ DirectionalLightComp::~DirectionalLightComp()
 Camera * DirectionalLightComp::ConfigureDirLightCamera()
 {
 	Camera *lightCamera = new Camera(true);
-	GLfloat nearPlane = 1.0f, farPlane = 7.5f;
+	GLfloat nearPlane = 1.0f, farPlane = 100.0f;
 	lightCamera->SetProjOrtho(-40.0f, 40.0f, -40.0f, 40.0f, nearPlane, farPlane);
 	lightCamera->SetPos(pos);
-	lightCamera->LookAt(pos - direction);
+	lightCamera->LookAt(pos + direction);
+	lightCamera->Recalculate();
 	return lightCamera;
 }
 

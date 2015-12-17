@@ -179,7 +179,7 @@ void Game::Render(float deltaTime)
 	currentScene->VisibilityCheck();
 	currentScene->Sort(Comparer);
 
-	currentScene->RenderDirShadowMap(camera);
+	currentScene->RenderDirShadowMap();
 
 	DefRenderer::BeginGeomGather();
 	currentScene->Render(camera);
