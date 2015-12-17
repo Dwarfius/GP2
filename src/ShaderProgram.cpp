@@ -63,9 +63,6 @@ void ShaderProgram::SetUniform(const string& name, void *value)
 	case GL_INT:
 		glUniform1i(locations[name], *(GLint*)value);
 		break;
-	case GL_UNSIGNED_INT:
-		glUniform1ui(locations[name], *(GLuint*)value);
-		break;
 	case GL_FLOAT:
 		glUniform1f(locations[name], *(GLfloat*)value);
 		break;

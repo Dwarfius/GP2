@@ -6,7 +6,6 @@ layout(location = 1) out vec3 Normal;
 in vec2 vertexTexCoordsOut;
 in mat3 TBN;
 in vec3 cameraDirectionOut;
-in vec3 FragPos;
 in vec4 FragPosLightSpace;
 
 uniform vec3 lightDirection;

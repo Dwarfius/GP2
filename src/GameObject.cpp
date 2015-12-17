@@ -39,13 +39,18 @@ void GameObject::Render(Camera *camera, ShaderProgram *OverrideProgram)
 {
 	if (!renderer)
 		return;
+	ShaderProgram *program, *tprogram;
 
-	renderer->Ready();
-	ShaderProgram *program;
 	if(OverrideProgram == nullptr)program = renderer->GetProgram();
-	else program = OverrideProgram;
+	else 
+	{
+		tprogram = renderer->GetProgram();
+		program = OverrideProgram;
+		renderer->SetShaderProgram(program);
+	}
+	renderer->Ready();
 	program->SetUniform("Model", value_ptr(modelMatrix));
-	mat4 VP = camera->Get();
+	mat4 VP = camera->Get(); 
 	program->SetUniform("VP", value_ptr(VP));
 	mat4 MVP = VP * GetModelMatrix();
 	program->SetUniform("MVP", value_ptr(MVP));
@@ -53,7 +58,7 @@ void GameObject::Render(Camera *camera, ShaderProgram *OverrideProgram)
 	vec3 camPos = camera->GetPos();
 	program->SetUniform("cameraPosition", &camPos);
 
-	vec3 lightDir(0, 0, 1);
+	vec3 lightDir(0, 0, 1); 
 	program->SetUniform("lightDirection", &lightDir);
 
 	vec4 ambMatColor(1, 0, 0, 1);
@@ -81,6 +86,7 @@ void GameObject::Render(Camera *camera, ShaderProgram *OverrideProgram)
 		(*(it->second)).OnRender(camera);
 
 	renderer->Render();
+	if (OverrideProgram != nullptr)renderer->SetShaderProgram(tprogram);
 }
 
 void GameObject::AttachComponent(BaseComponent * com)

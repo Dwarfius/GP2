@@ -20,8 +20,10 @@ void ShadowComp::OnRender(Camera * camera)
 {
 	Renderer *r = dynamic_cast<Renderer*>(pGameObject->GetComponent("Renderer"));
 	ShaderProgram *s = r->GetProgram();
-	GLint temp = 35;
-	s->SetUniform("shadowMap", &temp);  
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, shadowMap);
+	int id = 0;
+	s->SetUniform("shadowMap", &id);
 	s->SetUniform("lightSpaceMatrix", value_ptr(LSM));
 }
 

@@ -174,12 +174,12 @@ void Game::Render(float deltaTime)
 {
  	drawCalls = verticesRendered = 0;
 
-	currentScene->RenderDirShadowMap();
-
 	Camera *camera = currentScene->GetSceneCamera();
 	camera->Recalculate();
 	currentScene->VisibilityCheck();
 	currentScene->Sort(Comparer);
+
+	currentScene->RenderDirShadowMap(camera);
 
 	DefRenderer::BeginGeomGather();
 	currentScene->Render(camera);
