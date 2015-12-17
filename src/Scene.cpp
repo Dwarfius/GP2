@@ -197,7 +197,7 @@ void Scene::Sort(bool (*comparer)(GameObject *a, GameObject *b))
 void Scene::RenderDirShadowMap() {
 	mainDirLight->ShadowMapRenderStart();
 	Camera *lCamera = mainDirLight->ConfigureDirLightCamera();
-	camera = lCamera;
+	//camera = lCamera;
 	for (auto iter = visibleGOs.begin()+1; iter != visibleGOs.end(); iter++) 
 	{
 		ShadowComp *sC = dynamic_cast<ShadowComp*>((*iter)->GetComponent("ShadowComp"));
