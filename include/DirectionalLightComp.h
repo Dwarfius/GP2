@@ -8,9 +8,9 @@ class DirectionalLightComp :
 	public BaseComponent
 {
 private:
-	vec4 color;
-	vec3 direction;
-	vec3 pos;
+	vec4 color = vec4(0.8, 0.8, 0.8, 1);
+	vec3 direction = vec3(1, -0.5, 0);
+	vec3 pos = vec3(0, 0, 0);
 
 	const GLuint SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 	GLuint depthMapFBO;
@@ -23,6 +23,7 @@ public:
 	vec3 GetDirection() { return direction; }
 	void SetColor(vec4 value) { color = value; }
 	void SetDirection(vec3 value) { direction = value; }
+	GLuint GetShadowMap() { return depthMap; }
 
 	Camera* ConfigureDirLightCamera();
 	void ShadowMapRenderStart();

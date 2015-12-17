@@ -4,6 +4,7 @@
 #include "TimeDay.h"
 #include "MoveGameObjectBehaviour.h"
 #include "Light.h"
+#include "ShadowComp.h"
 
 Scene::Scene(ResourceManager* rM)
 {
@@ -110,6 +111,15 @@ void Scene::AttachComponent(string & compID, GameObject * go, XMLElement* attrib
 			go->AttachComponent(new Light(color));
 		}
 			break;
+		case DIRLIGHTCOMP:
+		{
+			go->AttachComponent(new DirectionalLightComp());
+		}
+		break;
+		case SHADOWCOMP:
+		{
+			go->AttachComponent(new ShadowComp());
+		}
 	}
 }
 
@@ -184,12 +194,15 @@ void Scene::Sort(bool (*comparer)(GameObject *a, GameObject *b))
 	sort(visibleGOs.begin()+1, visibleGOs.end(), comparer);
 }
 
-void Scene::Render(Camera* camera)
-{
+void Scene::RenderDirShadowMap() {
 	mainDirLight->ShadowMapRenderStart();
 	Camera *lCamera = mainDirLight->ConfigureDirLightCamera();
-	for (auto iter = visibleGOs.begin(); iter != visibleGOs.end(); iter++)
+	for (auto iter = visibleGOs.begin(); iter != visibleGOs.end(); iter++) 
+	{
+		ShadowComp *sC = dynamic_cast<ShadowComp*>((*iter)->GetComponent("ShadowComp"));
+		if (sC != nullptr)sC->SetShadowUniforms(lCamera->Get(), mainDirLight->GetShadowMap());
 		(*iter)->Render(lCamera, resourceManager->GetShader("SimpleDepth"));
+	}
 
 	//after the scene normal geometry was rendered
 	//render out the semitransparent geometry
@@ -199,12 +212,15 @@ void Scene::Render(Camera* camera)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		for (auto iter = transparentGOs.begin(); iter != transparentGOs.end(); iter++)
-			(*iter)->Render(lCamera);
+			(*iter)->Render(lCamera, resourceManager->GetShader("SimpleDepth"));
 		glDisable(GL_BLEND);
 		//glEnable(GL_CULL_FACE);
 	}
 	mainDirLight->ShadowMapRenderEnd();
+}
 
+void Scene::Render(Camera* camera)
+{
 	for (auto iter = visibleGOs.begin(); iter != visibleGOs.end(); iter++)
 		(*iter)->Render(camera);
 
@@ -228,7 +244,7 @@ void Scene::SetMainDirLight()
 	{
 		if ((*iter)->GetComponent("DirectionalLightComp") != nullptr) mainDirLight = dynamic_cast<DirectionalLightComp*>((*iter)->GetComponent("DirectionalLightComp"));
 	}
-	cout << "No Directional Light in scene" << endl;
+	if(mainDirLight == nullptr) cout << "No Directional Light in scene" << endl;
 }
 
 DirectionalLightComp *Scene::GetMainDirLight()

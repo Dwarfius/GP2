@@ -63,6 +63,7 @@
 				<Component ID="Skybox">
 					<Attributes texture1="skyTexture" texture2="skyNightTexture" isTimeDay="true"/>
 				</Component>
+				<Component ID="DirectionalLightComp"></Component>
 			</ComponentList>
 		</GameObject>
 		<GameObject name="CameraBehaviourObject" hasRenderer="false" texture="" model="" shader="" 
@@ -71,7 +72,7 @@
 			scalex="1" scaley="1" scalez="1">
 			<ComponentList>
 				<Component ID="CameraBehaviour">
-					<Attributes speed="5"/>
+					<Attributes speed="20"/>
 				</Component>
 			</ComponentList>
 		</GameObject>
@@ -141,10 +142,11 @@
 			</ComponentList>
 		</GameObject>
 		<GameObject name="TestModel" hasRenderer="true" texture="creature1Albedo.png,creature1Normal.png,creature1Specular.png" model="creature1.fbx" shader="diffuseNormalSpecMap" 
-			posx="60" posy="30" posz="5" rotx="0" roty="0" rotz="0" 
+			posx="60" posy="30" posz="100" rotx="0" roty="0" rotz="0" 
 			scalex="0.1" scaley="0.1" scalez="0.1">
 			<ComponentList>		
 				<Component ID="MoveGOBehaviour"/>
+				<Component ID="ShadowComp"/>
 			</ComponentList>
 		</GameObject>		
 		<GameObject name="Terrain" hasRenderer="true" texture="grass.png,ground.jpg,rock.jpg" model="Terrain" shader="Terrain" 

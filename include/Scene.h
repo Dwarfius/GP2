@@ -54,6 +54,7 @@ public:
 	void Update(float deltaTime);
 	void VisibilityCheck();
 	void Sort(bool (*comparer)(GameObject *a, GameObject *b));
+	void RenderDirShadowMap();
 	void Render(Camera* camera);
 	void SetMainDirLight();
 	DirectionalLightComp *GetMainDirLight();

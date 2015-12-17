@@ -192,7 +192,7 @@ void DefRenderer::LightPass(Camera *cam, Renderer *r)
 	r->Render();
 
 	glCullFace(GL_BACK);
-
+	 
 	glDisable(GL_BLEND);
 	CHECK_GL_ERROR();
 }

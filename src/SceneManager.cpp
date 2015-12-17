@@ -176,6 +176,7 @@ XMLError SceneManager::LoadScene(int sceneOrder, Scene* currentScene)
 		}
 		sceneItem = sceneItem->NextSiblingElement("GameObject");
 	}
+	currentScene->SetMainDirLight();
 	delete gamedataXML;
 	return XML_SUCCESS;
 }

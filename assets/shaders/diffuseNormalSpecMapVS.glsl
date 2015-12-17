@@ -9,10 +9,13 @@ layout(location = 5) in vec3 vertexBinormal;
 out vec2 vertexTexCoordsOut;
 out mat3 TBN;
 out vec3 cameraDirectionOut;
+out vec3 FragPos;
+out vec4 FragPosLightSpace;
 
 uniform mat4 MVP;
 uniform mat4 Model;
 uniform vec3 cameraPosition;
+uniform mat4 lightSpaceMatrix;
 
 void main()
 {
@@ -27,5 +30,7 @@ void main()
 
 	TBN = mat3(T, B, N);  
 	vertexTexCoordsOut = vertexTexCoords;
+	FragPos = vec3(Model * vec4(vertexPosition, 1.0));
+	FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
 	gl_Position = MVP * vec4(vertexPosition, 1.0);
 }
