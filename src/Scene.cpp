@@ -4,6 +4,7 @@
 #include "TimeDay.h"
 #include "MoveGameObjectBehaviour.h"
 #include "Light.h"
+#include "WaterComp.h"
 
 Scene::Scene(ResourceManager* rM)
 {
@@ -16,6 +17,7 @@ Scene::Scene(ResourceManager* rM)
 	componentIDValues["TimeDay"] = TIMEDAY;
 	componentIDValues["MoveGOBehaviour"] = MOVEGOBEHAVIOUR;
 	componentIDValues["Light"] = LIGHT;
+	componentIDValues["WaterComp"] = WATERCOMP;
 	camera = new Camera();
 }
 
@@ -106,6 +108,11 @@ void Scene::AttachComponent(string & compID, GameObject * go, XMLElement* attrib
 			float a = atof(splits[3].c_str());
 			vec4 color(r, g, b, a);
 			go->AttachComponent(new Light(color));
+		}
+			break;
+		case WATERCOMP:
+		{
+			go->AttachComponent(new WaterComp());
 		}
 			break;
 	}
