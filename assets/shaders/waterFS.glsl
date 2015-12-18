@@ -33,7 +33,7 @@ void main()
 	worldNormal = normalize(worldNormal * 2.0 - 1.0);   
 	worldNormal = normalize(TBN * worldNormal); 
 
-	FragColor = texture(texture0, texCoords);
+	FragColor = texture(texture0, vec2(texCoords.x, texCoords.y - timer));
 	//FragColor = vec4(worldNormal, 0.0);
 	Normal = worldNormal;
 }
