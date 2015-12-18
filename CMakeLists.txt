@@ -19,7 +19,7 @@ add_executable(GP2BaseCode
 	src/BaseComponent.cpp src/CameraBehaviour.cpp src/Font.cpp
 	src/PostProcessing.cpp src/TerrainComp.cpp src/Scene.cpp src/SceneManager.cpp 
 	src/tinyxml2.cpp src/ResourceManager.cpp src/DefRenderer.cpp src/Skybox.cpp
-	src/TimeDay.cpp src/MoveGameObjectBehaviour.cpp src/Light.cpp
+	src/TimeDay.cpp src/MoveGameObjectBehaviour.cpp src/Light.cpp src/WaterComp.cpp
 	include/Common.h include/Graphics.h include/Input.h 
 	include/Shader.h include/Camera.h include/GameObject.h
 	include/Renderer.h include/ShaderProgram.h
@@ -28,7 +28,7 @@ add_executable(GP2BaseCode
 	include/Font.h include/PostProcessing.h include/TerrainComp.h include/Scene.h
 	include/SceneManager.h include/tinyxml2.h include/ResourceManager.h
 	include/DefRenderer.h include/Skybox.h include/TimeDay.h include/MoveGameObjectBehaviour.h
-	include/Light.h)
+	include/Light.h include/WaterComp.h)
 
 include_directories(GP2BaseCode include/ ${OPENGL_INCLUDE_DIRS} 
 		${SDL2_INCLUDE_DIR} ${GLEW_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS}
