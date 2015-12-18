@@ -51,7 +51,7 @@ void GameObject::Render(Camera *camera)
 	vec3 camPos = camera->GetPos();
 	program->SetUniform("cameraPosition", &camPos);
 
-	vec3 lightDir(0, 0, 1);
+	vec3 lightDir = normalize(camPos - pos);
 	program->SetUniform("lightDirection", &lightDir);
 
 	vec4 ambMatColor(1, 0, 0, 1);

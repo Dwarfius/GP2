@@ -8,7 +8,7 @@ class Light : public BaseComponent
 {
 private:
 	vec4 color;
-	float intensity = 0.5f;
+	float intensity = 10.0f;
 
 public:
 	Light(vec4 color);

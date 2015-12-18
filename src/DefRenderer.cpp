@@ -110,7 +110,6 @@ void DefRenderer::BeginGeomGather()
 
 void DefRenderer::EndGeomGather()
 {
-	glDisable(GL_BLEND);
 }
 
 void DefRenderer::BeginLightGather()

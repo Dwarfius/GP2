@@ -100,6 +100,7 @@ void PostProcessing::Pass(ShaderProgram *newProgram)
 	activeInd = ++activeInd % 2;
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo[activeInd]);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	renderer->Ready();
 	renderer->Render();
 
 	//restore the shader

@@ -19,6 +19,7 @@ private:
 	int fpsDisplay = 0;
 	float fpsTimer = 0;
 	bool debugMode = false;
+	bool negMode = false;
 
 public:
 	Game();

@@ -85,7 +85,7 @@ void Game::LoadResources()
 	CHECK_GL_ERROR();
 
 	//======================== TEXTURES ========================
-	//HIDE THIS AWAY IN TO SCENE MANAGER LOADER!
+	//HIDE THIS AWAY IN TO SCENE MANAGER LOADER AT SOME POINT!
 	Texture* skyTexture = new Texture(TEXTURE_PATH + "right.jpg", TEXTURE_PATH + "left.jpg", TEXTURE_PATH + "top.jpg", TEXTURE_PATH + "bottom.jpg", TEXTURE_PATH + "back.jpg", TEXTURE_PATH + "front.jpg");
 	resourceManager->AddTexture("skyTexture", skyTexture);
 	Texture* skyNightTexture = new Texture(TEXTURE_PATH + "night_right.jpg", TEXTURE_PATH + "night_left.jpg", TEXTURE_PATH + "night_top.jpg", TEXTURE_PATH + "night_bottom.jpg", TEXTURE_PATH + "night_back.jpg", TEXTURE_PATH + "night_front.jpg");
@@ -131,6 +131,8 @@ void Game::Update(float deltaTime)
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
+	if (Input::GetKeyDown(SDLK_b))
+		negMode = !negMode;
 
 	fpsCounter++;
 	if ((fpsTimer += deltaTime) > 1)
@@ -147,6 +149,11 @@ void Game::Update(float deltaTime)
 
 bool Comparer(GameObject *a, GameObject *b)
 {
+	if (a->GetComponent("SkyBox")) //skybox should be rendered last
+		return false;
+	if (b->GetComponent("SkyBox")) //so that depth testing has bigger impact
+		return true;
+
 	Renderer *aRenderer = a->GetRenderer();
 	Renderer *bRenderer = b->GetRenderer();
 	if (!aRenderer) //all gameobjects without renderer go last
@@ -179,31 +186,35 @@ void Game::Render(float deltaTime)
 	currentScene->VisibilityCheck();
 	currentScene->Sort(Comparer);
 
-	DefRenderer::BeginGeomGather();
-	currentScene->Render(camera);
-	DefRenderer::EndGeomGather();
-
-	DefRenderer::BeginLightGather();
-	int count = currentScene->GetLightCount();
-	for (int i = 0; i < count; i++)
-	{
-		Renderer *r = currentScene->GetLight(i);
-		DefRenderer::StencilPass(camera, r);
-		DefRenderer::LightPass(camera, r);
-	}
-	DefRenderer::EndLightGather();
-
 	if (debugMode)
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	{
+		glEnable(GL_DEPTH_TEST);
+		glDepthMask(GL_TRUE);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		currentScene->Render(camera);
+	}
 	else
+	{
+		DefRenderer::BeginGeomGather();
+		currentScene->Render(camera);
+		DefRenderer::EndGeomGather();
+
+		DefRenderer::BeginLightGather();
+		int count = currentScene->GetLightCount();
+		for (int i = 0; i < count; i++)
+		{
+			Renderer *r = currentScene->GetLight(i);
+			DefRenderer::StencilPass(camera, r);
+			DefRenderer::LightPass(camera, r);
+		}
+		DefRenderer::EndLightGather();
+
 		glBindFramebuffer(GL_FRAMEBUFFER, PostProcessing::Get());
 
-	DefRenderer::RenderGather();
+		DefRenderer::RenderGather();
 
-	if (!debugMode)
-	{
-		//PostProcessing::Pass(shaders[1]);
-		//PostProcessing::Pass(shaders[2]); //if you apply shader[1] again you should see the initial image
+		if(negMode)
+			PostProcessing::Pass(resourceManager->GetShader("PostProcess1"));
 		PostProcessing::RenderResult();
 	}
 

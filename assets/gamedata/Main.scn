@@ -65,7 +65,7 @@
 			</ComponentList>
 		</GameObject>
 		<GameObject name="CameraBehaviourObject" hasRenderer="false" texture="" model="" shader="" 
-			posx="0" posy="0" posz="0" 
+			posx="15" posy="10" posz="0" 
 			rotx="0" roty="0" rotz="0" 
 			scalex="1" scaley="1" scalez="1">
 			<ComponentList>
@@ -74,47 +74,21 @@
 				</Component>
 			</ComponentList>
 		</GameObject>
-		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" shader="Specular" 
-			posx="-15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
-			scalex="0.1" scaley="0.1" scalez="0.1">
-			<ComponentList>		
-			</ComponentList>
-		</GameObject>
-		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" shader="Specular" 
-			posx="-5" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
-			scalex="0.3" scaley="0.3" scalez="0.3">
-			<ComponentList>		
-			</ComponentList>
-		</GameObject>
-		<GameObject name="Tea Pot" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" shader="Specular" 
-			posx="15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
+		<GameObject name="Tea Pot - Big" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" shader="Specular" 
+			posx="15" posy="10" posz="-20" rotx="0" roty="0" rotz="0" 
 			scalex="0.6" scaley="0.6" scalez="0.6">
-			<ComponentList>		
-			</ComponentList>
-		</GameObject>
-		<GameObject name="Man" hasRenderer="true" texture="texture.png" model="3d-model.fbx" shader="Specular" 
-			posx="40" posy="0" posz="5" rotx="-90" roty="0" rotz="0" 
-			scalex="0.3" scaley="0.3" scalez="0.3">
-			<ComponentList>		
-			</ComponentList>
-		</GameObject>
-		<GameObject name="TestCylinder" hasRenderer="true" texture="BrickFacade.jpg,BrickFacade_normal.jpg" model="NormalMapTest.FBX" shader="NormalMapping" 
-			posx="30" posy="30" posz="5" rotx="-90" roty="0" rotz="0" 
-			scalex="0.3" scaley="0.3" scalez="0.3">
 			<ComponentList>
-				<Component ID="MoveGOBehaviour"/>
 			</ComponentList>
-		</GameObject>	
-		<GameObject name="TestBox2" hasRenderer="true" texture="BrickFacade.jpg,BrickFacade_normal.jpg" model="NormalMapTest2.FBX" shader="NormalMapping" 
-			posx="10" posy="20" posz="5" rotx="0" roty="0" rotz="0" 
-			scalex="0.3" scaley="0.3" scalez="0.3">
-			<ComponentList>		
-				<Component ID="MoveGOBehaviour"/>
+		</GameObject>
+		<GameObject name="Tea Pot - Small" hasRenderer="true" texture="texture.png" model="utah-teapot.fbx" shader="Specular" 
+			posx="-10" posy="10" posz="-20" rotx="0" roty="0" rotz="0" 
+			scalex="0.2" scaley="0.2" scalez="0.2">
+			<ComponentList>
 			</ComponentList>
 		</GameObject>
 		<GameObject name="Light1" hasRenderer="true" texture="" model="sphere.fbx" shader="PointLight" 
-			posx="-15" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
-			scalex="1" scaley="1" scalez="1">
+			posx="0" posy="0" posz="0" rotx="0" roty="0" rotz="0" 
+			scalex="20" scaley="20" scalez="20">
 			<ComponentList>
 				<Component ID="Light">
 					<Attributes color="0,0,1,1"/>
@@ -122,8 +96,8 @@
 			</ComponentList>
 		</GameObject>
 		<GameObject name="Light2" hasRenderer="true" texture="" model="sphere.fbx" shader="PointLight" 
-			posx="-13" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
-			scalex="1" scaley="1" scalez="1">
+			posx="50" posy="0" posz="50" rotx="0" roty="0" rotz="0" 
+			scalex="30" scaley="30" scalez="30">
 			<ComponentList>
 				<Component ID="Light">
 					<Attributes color="0,1,0,1"/>
@@ -131,16 +105,16 @@
 			</ComponentList>
 		</GameObject>
 		<GameObject name="Light3" hasRenderer="true" texture="" model="sphere.fbx" shader="PointLight" 
-			posx="-10" posy="-5" posz="5" rotx="0" roty="0" rotz="0" 
-			scalex="1" scaley="1" scalez="1">
+			posx="100" posy="0" posz="100" rotx="0" roty="0" rotz="0" 
+			scalex="40" scaley="40" scalez="40">
 			<ComponentList>
 				<Component ID="Light">
-					<Attributes color="-1,0,0,1"/>
+					<Attributes color="1,0,0,1"/>
 				</Component>
 			</ComponentList>
 		</GameObject>
 		<GameObject name="TestModel" hasRenderer="true" texture="creature1Albedo.png,creature1Normal.png,creature1Specular.png" model="creature1.fbx" shader="diffuseNormalSpecMap" 
-			posx="60" posy="30" posz="5" rotx="0" roty="0" rotz="0" 
+			posx="60" posy="30" posz="-30" rotx="0" roty="0" rotz="0" 
 			scalex="0.1" scaley="0.1" scalez="0.1">
 			<ComponentList>		
 				<Component ID="MoveGOBehaviour"/>

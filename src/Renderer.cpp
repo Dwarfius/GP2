@@ -31,7 +31,6 @@ void Renderer::Render()
 	}
 
 	//and sending settings
-	GLint loc;
 	if (isCubeMap)
 	{
 		glActiveTexture(GL_TEXTURE0);
@@ -62,6 +61,7 @@ void Renderer::Render()
 			}
 		}
 	}
+	CHECK_GL_ERROR();
 
 	//binding the vao
 	GLuint vao = model->Get();
@@ -70,6 +70,7 @@ void Renderer::Render()
 		glBindVertexArray(vao);
 		activeVao = vao;
 	}
+	CHECK_GL_ERROR();
 
 	//now on to draw stuff
 	switch (renderMode)
@@ -92,8 +93,6 @@ void Renderer::Render()
 
 void Renderer::RenderInstanced()
 {
-	//and sending settings
-	GLint loc;
 	for (int i = 0; i < textCount; i++)
 	{
 		GLuint text = textures[i]->Get();
@@ -103,7 +102,7 @@ void Renderer::RenderInstanced()
 			glBindTexture(GL_TEXTURE_2D, text);
 
 			string name = string("texture") + (char)(48 + i);
-			loc = glGetUniformLocation(shaderProg->Get(), name.c_str());
+			GLint loc = glGetUniformLocation(shaderProg->Get(), name.c_str());
 			glUniform1i(loc, i);
 
 			activeTexts[i] = text;
