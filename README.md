@@ -10,7 +10,7 @@ Our names are:
 The project provides C++ sources, the project solutions are created using CMake 3.3.0.
 The project uses SDL2, SDL2 Image, SDL2 TTF, Autodesk FBX SDK 2016.1, GLEW 1.12, GLM, tinyxml2.
 
-Demo Controls: 	w,a,s,d - camera movement
-		mouse movement - camera rotation
-		k - debugmode toggle
+Demo Controls: 	w,a,s,d - camera movement,
+		mouse movement - camera rotation,
+		k - debugmode toggle,
 		r,t,z,x,c,v - certain objects(like the alien model) in the scene can be rotated.
