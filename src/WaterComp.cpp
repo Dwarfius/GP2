@@ -19,7 +19,7 @@ void WaterComp::Update(float deltaTime)
 }
 
 void WaterComp::OnRender(Camera * camera)  
-{
+{ 
 	Renderer *r = dynamic_cast<Renderer*>(pGameObject->GetComponent("Renderer"));
 	ShaderProgram *s = r->GetProgram();
 	s->SetUniform("timer", &timer);
