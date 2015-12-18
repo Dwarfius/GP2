@@ -10,7 +10,7 @@ uint Game::drawCalls;
 Scene* Game::currentScene;
 ResourceManager* Game::resourceManager;
 
-#define SKYBOX_DIST 2
+#define SKYBOX_DIST 5
 
 vector<Vertex> skyBoxverts = {
 	//Front

@@ -46,6 +46,7 @@
 		<Shader vert="skyboxVS.glsl" frag="skyboxFS.glsl">SkyBox</Shader>
 		<Shader vert="treeVS.glsl" frag="treeFS.glsl">Tree</Shader>
 		<Shader vert="rockVS.glsl" frag="rockFS.glsl">Rock</Shader>
+		<Shader vert="parallaxMappingVS.glsl" frag="parallaxMappingFS.glsl">ParallaxMapping</Shader>
 	</ShaderList>
 	<FontList>
 		<Font>OratorStd.otf</Font>
@@ -146,6 +147,13 @@
 				<Component ID="MoveGOBehaviour"/>
 			</ComponentList>
 		</GameObject>		
+		<GameObject name="TestModel" hasRenderer="true" texture="WaterPlain_COLOR.png,WaterPlain_NRM.png,WaterPlain_SPEC.png" model="Plane.fbx" shader="ParallaxMapping" 
+			posx="60" posy="30" posz="5" rotx="0" roty="0" rotz="0" 
+			scalex="0.1" scaley="0.1" scalez="0.1">
+			<ComponentList>		
+				<Component ID="MoveGOBehaviour"/>
+			</ComponentList>
+		</GameObject>	
 		<GameObject name="Terrain" hasRenderer="true" texture="grass.png,ground.jpg,rock.jpg" model="Terrain" shader="Terrain" 
 			posx="0" posy="0" posz="0" rotx="0" roty="0" rotz="0" scalex="1" scaley="1" scalez="1">
 			<ComponentList>
