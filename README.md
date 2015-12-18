@@ -14,3 +14,5 @@ Demo Controls: 	w,a,s,d - camera movement,
 		mouse movement - camera rotation,
 		k - debugmode toggle,
 		r,t,z,x,c,v - certain objects(like the alien model) in the scene can be rotated.
+		
+Project was developed and tested on windows machines with nvidia GPUs. It should work on other platforms theoretically.
