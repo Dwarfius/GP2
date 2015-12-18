@@ -14,6 +14,7 @@ uniform sampler2D texture1;
 uniform sampler2D texture2;
   
 uniform float heightScale;
+uniform float timer;
   
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 { 
@@ -24,8 +25,9 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 
 void main()
 {
+	vec2 newVertexTexCoordsOut = vec2(vertexTexCoordsOut.x, vertexTexCoordsOut.y + timer);
     vec3 viewDir   = normalize(tangentViewPos - tangentFragPos);
-    vec2 texCoords = ParallaxMapping(vertexTexCoordsOut,  viewDir);
+    vec2 texCoords = ParallaxMapping(newVertexTexCoordsOut,  viewDir);
 	
 	vec3 worldNormal = texture(texture1, texCoords).rgb;
 	worldNormal = normalize(worldNormal * 2.0 - 1.0);   

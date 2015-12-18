@@ -87,7 +87,7 @@ Font::Font(const string& fileName)
 	renderer->SetShaderProgram(shader);
 	renderer->AddTexture(t);
 }
-
+ 
 Font::~Font()
 {
 	delete t;

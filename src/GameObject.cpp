@@ -48,16 +48,16 @@ void GameObject::Render(Camera *camera)
 	mat4 MVP = VP * GetModelMatrix();
 	program->SetUniform("MVP", value_ptr(MVP));
 
-	vec3 camPos = camera->GetPos();
+	vec3 camPos = camera->GetPos(); 
 	program->SetUniform("cameraPosition", &camPos);
 
-	vec3 lightDir(0, 0, 1);
-	program->SetUniform("lightDirection", &lightDir);
-
-	vec4 ambMatColor(1, 0, 0, 1);
+	vec3 lightDir(0, 0, 1); 
+	program->SetUniform("lightDirection", &lightDir); 
+	   
+	vec4 ambMatColor(1, 0, 0, 1);  
 	program->SetUniform("ambientMaterialColor", &ambMatColor);
 
-	vec4 difMatColor(1, 0, 0, 1);
+	vec4 difMatColor(1, 0, 0, 1); 
 	program->SetUniform("diffuseMaterialColor", &difMatColor);
 
 	vec4 specMatColor(1, 1, 1, 1);
@@ -72,13 +72,16 @@ void GameObject::Render(Camera *camera)
 	vec4 difLightColor(1, 0, 0, 1);
 	program->SetUniform("diffuseLightColor", &difLightColor);
 
-	vec4 specLightColor(1, 1, 1, 1);
+	vec4 specLightColor(1, 1, 1, 1); 
 	program->SetUniform("specularLightColor", &specLightColor);
+
+	float heightScale = 5.0f;
+	program->SetUniform("heightScale", &heightScale);
 
 	for (auto it = components.begin(); it != components.end(); it++)
 		(*(it->second)).OnRender(camera);
 
-	renderer->Render();
+	renderer->Render(); 
 }
 
 void GameObject::AttachComponent(BaseComponent * com)

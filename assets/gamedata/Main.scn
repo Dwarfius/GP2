@@ -14,6 +14,7 @@
 		<Model>Rock5.fbx</Model>
 		<Model>Fern1.fbx</Model>
 		<Model>Fern2.fbx</Model>
+		<Model>Plane.FBX</Model>
     </ModelList>
 	<TextureList>
 		<Texture>texture.png</Texture>
@@ -34,6 +35,9 @@
 		<Texture>Rock5.jpg</Texture>
 		<Texture>Fern1.png</Texture>
 		<Texture>Fern2.png</Texture>
+		<Texture>WaterPlain_COLOR.png</Texture>
+		<Texture>WaterPlain_NRM.png</Texture>
+		<Texture>WaterPlain_SPEC.png</Texture>
 	</TextureList>
 	<ShaderList>
 		<Shader vert="specularVS.glsl" frag="specularFS.glsl">Specular</Shader>
@@ -47,6 +51,7 @@
 		<Shader vert="treeVS.glsl" frag="treeFS.glsl">Tree</Shader>
 		<Shader vert="rockVS.glsl" frag="rockFS.glsl">Rock</Shader>
 		<Shader vert="parallaxMappingVS.glsl" frag="parallaxMappingFS.glsl">ParallaxMapping</Shader>
+		<Shader vert="waterVS.glsl" frag="waterFS.glsl">Water</Shader>
 	</ShaderList>
 	<FontList>
 		<Font>OratorStd.otf</Font>
@@ -71,7 +76,7 @@
 			scalex="1" scaley="1" scalez="1">
 			<ComponentList>
 				<Component ID="CameraBehaviour">
-					<Attributes speed="5"/>
+					<Attributes speed="20"/>
 				</Component>
 			</ComponentList>
 		</GameObject>
@@ -147,11 +152,11 @@
 				<Component ID="MoveGOBehaviour"/>
 			</ComponentList>
 		</GameObject>		
-		<GameObject name="TestModel" hasRenderer="true" texture="WaterPlain_COLOR.png,WaterPlain_NRM.png,WaterPlain_SPEC.png" model="Plane.fbx" shader="ParallaxMapping" 
-			posx="60" posy="30" posz="5" rotx="0" roty="0" rotz="0" 
-			scalex="0.1" scaley="0.1" scalez="0.1">
-			<ComponentList>		
-				<Component ID="MoveGOBehaviour"/>
+		<GameObject name="Water" hasRenderer="true" texture="WaterPlain_COLOR.png,WaterPlain_NRM.png,WaterPlain_SPEC.png" model="Plane.FBX" shader="Water" 
+			posx="0" posy="0" posz="100" rotx="-90" roty="0" rotz="0" 
+			scalex="10" scaley="10" scalez="10">
+			<ComponentList>	
+				<Component ID="WaterComp"/>
 			</ComponentList>
 		</GameObject>	
 		<GameObject name="Terrain" hasRenderer="true" texture="grass.png,ground.jpg,rock.jpg" model="Terrain" shader="Terrain" 
