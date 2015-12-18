@@ -40,7 +40,6 @@ void GameObject::Render(Camera *camera, ShaderProgram *OverrideProgram)
 	if (!renderer)
 		return;
 	ShaderProgram *program, *tprogram;
-
 	if(OverrideProgram == nullptr)program = renderer->GetProgram();
 	else 
 	{

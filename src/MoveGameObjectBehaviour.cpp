@@ -37,7 +37,7 @@ void MoveGameObjectBehaviour::Update(float deltaTime)
 		GetParentGO()->Move(vec3(0, -30 * deltaTime, 0));
 	if (Input::GetKey(SDLK_g))
 		GetParentGO()->Move(vec3(30 * deltaTime, 0, 0));
-	if (Input::GetKey(SDLK_k))
+	if (Input::GetKey(SDLK_l))
 		GetParentGO()->Move(vec3(-30 * deltaTime, 0, 0));
 }
 

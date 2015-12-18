@@ -29,6 +29,6 @@ void main()
 
 	TBN = mat3(T, B, N);  
 	vertexTexCoordsOut = vertexTexCoords;
-	FragPosLightSpace = lightSpaceMatrix * vec4(worldPos, 1.0);
+	FragPosLightSpace = lightSpaceMatrix * Model * vec4(vertexPosition, 1.0);
 	gl_Position = MVP * vec4(vertexPosition, 1.0);
 }

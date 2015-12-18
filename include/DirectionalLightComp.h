@@ -9,7 +9,7 @@ class DirectionalLightComp :
 {
 private:
 	vec4 color = vec4(0.8, 0.8, 0.8, 1);
-	vec3 direction = vec3(0, -1, 0);
+	vec3 direction = vec3(0.5f, 2, 2);
 	vec3 pos = vec3(0, 0, 0);
 
 	const GLuint SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;

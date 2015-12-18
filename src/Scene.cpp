@@ -197,11 +197,12 @@ void Scene::Sort(bool (*comparer)(GameObject *a, GameObject *b))
 void Scene::RenderDirShadowMap() {
 	mainDirLight->ShadowMapRenderStart();
 	Camera *lCamera = mainDirLight->ConfigureDirLightCamera();
-	//camera = lCamera;
-	for (auto iter = visibleGOs.begin()+1; iter != visibleGOs.end(); iter++) 
+	//set light camera as main camera
+	//camera = lCamera; 
+	for (auto iter = visibleGOs.begin(); iter != visibleGOs.end(); iter++) 
 	{
 		ShadowComp *sC = dynamic_cast<ShadowComp*>((*iter)->GetComponent("ShadowComp"));
-		if (sC != nullptr)sC->SetShadowUniforms(lCamera->Get(), mainDirLight->GetShadowMap());
+		if (sC != nullptr)sC->SetShadowUniforms((lCamera->Get()), mainDirLight->GetShadowMap());
 		(*iter)->Render(lCamera, resourceManager->GetShader("SimpleDepth"));
 	}
 
@@ -210,11 +211,8 @@ void Scene::RenderDirShadowMap() {
 	if (transparentGOs.size())
 	{
 		//glDisable(GL_CULL_FACE);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		for (auto iter = transparentGOs.begin(); iter != transparentGOs.end(); iter++)
+		for (auto iter = transparentGOs.begin(); iter != transparentGOs.end(); iter++) 
 			(*iter)->Render(lCamera, resourceManager->GetShader("SimpleDepth"));
-		glDisable(GL_BLEND);
 		//glEnable(GL_CULL_FACE);
 	}
 	mainDirLight->ShadowMapRenderEnd();
