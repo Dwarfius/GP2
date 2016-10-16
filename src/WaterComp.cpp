@@ -1,13 +1,10 @@
 #include "WaterComp.h"
 #include "GameObject.h"
 
-
-
 WaterComp::WaterComp()
 {
 	timer = 0;
 }
-
 
 WaterComp::~WaterComp() 
 {

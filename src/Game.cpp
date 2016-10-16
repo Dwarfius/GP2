@@ -110,7 +110,7 @@ void Game::LoadResources()
 
 	//======================== SCENEMANAGEMENT  ====================
 	sceneManager->LoadSceneDirectories();
-	sceneManager->LoadScene("Main", currentScene);
+	sceneManager->LoadScene(0, currentScene);
 }
 
 void Game::ReleaseResources()

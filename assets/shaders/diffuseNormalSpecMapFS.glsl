@@ -25,6 +25,5 @@ void main()
 	float specularTerm = pow(clamp(dot(worldNormal, halfWayVec), 0.f, 1.f), specularPower);
 
 	FragColor = texture(texture0, vertexTexCoordsOut) + (texture(texture2, vertexTexCoordsOut) * specularLightColor * specularTerm);
-	//FragColor = vec4(worldNormal, 0.0);
 	Normal = worldNormal;
 }
