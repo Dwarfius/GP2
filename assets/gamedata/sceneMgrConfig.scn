@@ -1,6 +1,6 @@
 <SceneManagerConfiguration>
     <SceneDirectories>
-    	<Scene order="0">WaterTest.scn</Scene>
-        <Scene order="1">Main.scn</Scene>
+    	<Scene order="1">WaterTest.scn</Scene>
+        <Scene order="0">Main.scn</Scene>
     </SceneDirectories>
 </SceneManagerConfiguration>
